@@ -7,11 +7,12 @@ import {LoginDTO} from '../../dto/login-dto';
 import {FiltroProductoDTO} from '../../dto/filtro-producto-dto';
 import {ProductoDTO} from '../../dto/producto-dto';
 import Swal from 'sweetalert2';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CardGridComponent, FormsModule,ReactiveFormsModule, RouterModule],
+  imports: [CardGridComponent, FormsModule,ReactiveFormsModule, RouterModule, CommonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -27,19 +28,45 @@ export class HomeComponent {
   tipos: string[]=[];
 
   typeSelected: boolean = false;
+
+  // New property for carousel items
+  carouselItems = [
+    {
+      imageUrl: "https://www.muyinteresante.com/wp-content/uploads/sites/5/2023/08/16/64dce698e98ce.jpeg",
+      title: "Encuentra tu comida ideal",
+      subtitle: "Descubre los alimentos que se adaptan a tu estilo de vida"
+    },
+    {
+      imageUrl: "https://www.flora.es/-/media/Project/Upfield/Brands/Becel-NL/Flora-ES/Assets/Cuidate/header-10-alimentos-saludables-que-son-buenos-para-tu-corazon.jpg?rev=92f792036c7f4ef7b5525cee92989a63",
+      title: "Bebidas increíbles",
+      subtitle: "Un deleite para tu paladar"
+    },
+    {
+      imageUrl: "https://agenciadenoticias.unal.edu.co/fileadmin/Agencia_de_Noticias/Imagenes/2022/08-Agosto/395/AgenciaUNAL-01-1008.jpg",
+      title: "Tu próxima reserva",
+      subtitle: "Ofrecemos el mejor servicio"
+    }
+  ];
+
+  activeSlideIndex: number = 0;
+
   constructor(private publicoService: PublicoService, private formBuilder: FormBuilder) {
     this.productos = [];
     this.obtenerProductos(this.currentPage);
     this.obtenerCategorias();
     this.createForm();
 
-    
-
     this.seleccionados = [];
-    
   }
 
-  
+  nextSlide() {
+    this.activeSlideIndex = (this.activeSlideIndex + 1) % this.carouselItems.length;
+  }
+
+  prevSlide() {
+    this.activeSlideIndex = (this.activeSlideIndex - 1 + this.carouselItems.length) % this.carouselItems.length;
+  }
+
   public obtenerProductos(page: number) {
     
   }
@@ -86,7 +113,4 @@ export class HomeComponent {
   public resetForm() {
     this.filterForm.reset();
   }
-
-
 }
-
