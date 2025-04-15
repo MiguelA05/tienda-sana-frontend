@@ -1,1 +1,45 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+   --fresh-green: #5cb85c;       /* Verde fresco para validaciones */
+   --organic-orange: #f0ad4e;    /* Naranja suave para errores */
+   --earth-brown: #8d6e63;       /* Color terroso para bordes */
+   --leaf-green: #4CAF50;        /* Verde hoja para detalles */
+ }
+ 
+ .form-control.ng-invalid.ng-dirty {
+   border-color: var(--organic-orange);
+   padding-right: calc(1.5em + 0.75rem);
+   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='%238d6e63' stroke='%23f0ad4e'%3e%3cpath d='M10.6 1.4L1.4 10.6' stroke-width='2' stroke-linecap='round'/%3e%3cpath d='M1.4 1.4l9.2 9.2' stroke-width='2' stroke-linecap='round'/%3e%3c/svg%3e");
+   background-repeat: no-repeat;
+   background-position: right calc(0.375em + 0.1875rem) center;
+   background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+   box-shadow: 0 0 0 0.25rem rgba(240, 173, 78, 0.25);
+ }
+ 
+ .form-control.ng-valid.ng-dirty {
+   border-color: var(--fresh-green);
+   padding-right: calc(1.5em + 0.75rem);
+   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235cb85c'%3e%3cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3e%3c/svg%3e");
+   background-repeat: no-repeat;
+   background-position: right calc(0.375em + 0.1875rem) center;
+   background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+   box-shadow: 0 0 0 0.25rem rgba(92, 184, 92, 0.25);
+ }
+ 
+ /* Estilos adicionales para tema de restaurante saludable */
+ .form-control {
+   border-radius: 1rem;
+   border: 2px solid var(--earth-brown);
+   transition: all 0.3s ease;
+ }
+ 
+ .form-control:focus {
+   border-color: var(--leaf-green);
+   box-shadow: 0 0 0 0.25rem rgba(76, 175, 80, 0.25);
+ }
+ 
+ .form-label {
+   color: var(--earth-brown);
+   font-weight: 600;
+   margin-bottom: 0.5rem;
+   font-family: 'Helvetica Neue', sans-serif;
+ }

@@ -1,0 +1,25 @@
+.product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(92, 184, 92, 0.1);
+  }
+  
+  .bg-light-green {
+    background-color: #f0fff0;
+  }
+  
+  .bg-light-orange {
+    background-color: #fff8f0;
+  }
+  
+  .text-earth {
+    color: var(--earth-brown);
+  }
+  
+  .rating {
+    color: var(--organic-orange);
+  }

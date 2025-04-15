@@ -1,0 +1,30 @@
+.bg-light-green {
+    background-color: #f8fff8;
+  }
+  
+  .link-brown {
+    color: var(--earth-brown);
+    transition: color 0.3s ease;
+  }
+  
+  .link-brown:hover {
+    color: var(--fresh-green);
+  }
+  
+  .bg-light-green .form-control {
+    border-color: var(--fresh-green);
+  }
+  
+  .bg-light-green .btn-success {
+    background-color: var(--fresh-green);
+    border-color: var(--fresh-green);
+  }
+  
+  .fab {
+    transition: all 0.3s ease;
+  }
+  
+  .fab:hover {
+    color: var(--fresh-green) !important;
+    transform: translateY(-2px);
+  }

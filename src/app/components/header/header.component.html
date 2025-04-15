@@ -1,0 +1,82 @@
+<div class="container-fluid bg-white shadow-sm position-relative">
+  <header class="container">
+    <!-- Primera línea (Logo, búsqueda y acciones) -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between py-3 border-bottom">
+      <a routerLink="" class="d-flex align-items-center text-decoration-none">
+        <i class="fas fa-leaf text-success fs-2"></i>
+        <span class="ms-2 fs-4 fw-bold text-uppercase" style="color: var(--earth-brown);">TiendaSana</span>
+      </a>
+
+      <div class="order-md-1 col-md-4 col-lg-5">
+        <div class="input-group">
+          <input type="text" class="form-control rounded-pill" placeholder="Buscar platos saludables...">
+          <button class="btn btn-success rounded-pill px-4">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+
+      
+    </div>
+
+    <!-- Navegación principal -->
+    <nav class="d-flex flex-wrap align-items-center justify-content-center py-2">
+      <ul class="nav col-12 col-md-auto justify-content-center">
+        <li class="nav-item">
+          <a routerLink="/" class="nav-link text-success fw-medium">Inicio</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-success" data-bs-toggle="dropdown">Menú</a>
+          <ul class="dropdown-menu border-0 shadow">
+            <li><a class="dropdown-item" href="#">Desayunos Saludables</a></li>
+            <li><a class="dropdown-item" href="#">Ensaladas</a></li>
+            <li><a class="dropdown-item" href="#">Bowl Nutritivos</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/reservas" class="nav-link text-success">Reservas</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/nutricion" class="nav-link text-success">Consejos Nutrición</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/contacto" class="nav-link text-success">Contacto</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Menú desplegable de usuario en la esquina superior derecha -->
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+    <div class="dropdown">
+      <button class="btn btn-outline-success rounded-pill dropdown-toggle" 
+              type="button" 
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              aria-label="Menú de usuario">
+        <i class="fas fa-user me-2"></i>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+        <li>
+          <a routerLink="/login" class="dropdown-item d-flex align-items-center">
+            <i class="fas fa-sign-in-alt text-success me-2"></i>
+            Iniciar Sesión
+          </a>
+        </li>
+        <li>
+          <a routerLink="/register" class="dropdown-item d-flex align-items-center">
+            <i class="fas fa-user-plus text-success me-2"></i>
+            Registrarse
+          </a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+          <a class="dropdown-item d-flex align-items-center" href="#">
+            <i class="fas fa-question-circle text-success me-2"></i>
+            Ayuda
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
