@@ -1,0 +1,131 @@
+/* Contenedor principal */
+.card-grid-container {
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Tarjetas individuales */
+  .custom-card {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .custom-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Imagen de la tarjeta */
+  .custom-card-image {
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+  
+  .custom-card-image:hover {
+    transform: scale(1.05);
+    filter: brightness(0.9);
+  }
+  
+  /* Título y texto */
+  .card-title {
+    font-size: 1.2rem;
+    color: #495057;
+  }
+  
+  .card-text {
+    font-size: 1rem;
+    color: #6c757d;
+  }
+  
+  /* Precio */
+  .card-text.text-success {
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+  
+  /* Botón personalizado */
+  .btn-custom {
+    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+    color: #ffffff;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+  }
+  
+  .btn-custom:hover {
+    background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(25, 135, 84, 0.3);
+  }
+  
+  /* Footer de la tarjeta */
+  .card-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    padding: 10px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 576px) {
+    .custom-card-image {
+      height: 150px;
+    }
+  
+    .card-title {
+      font-size: 1rem;
+    }
+  
+    .card-text {
+      font-size: 0.9rem;
+    }
+  
+    .btn-custom {
+      padding: 8px 15px;
+      font-size: 0.9rem;
+    }
+  }
+  
+  /* Dark mode (opcional) */
+  @media (prefers-color-scheme: dark) {
+    .card-grid-container {
+      background: linear-gradient(135deg, #212529 0%, #343a40 100%);
+    }
+  
+    .custom-card {
+      background-color: #2b3035;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+  
+    .custom-card-image:hover {
+      filter: brightness(0.8);
+    }
+  
+    .card-title {
+      color: #e9ecef;
+    }
+  
+    .card-text {
+      color: #adb5bd;
+    }
+  
+    .btn-custom {
+      background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+    }
+  
+    .btn-custom:hover {
+      background: linear-gradient(135deg, #146c43 0%, #198754 100%);
+    }
+  
+    .card-footer {
+      background-color: #343a40;
+      border-top: 1px solid #495057;
+    }
+  }

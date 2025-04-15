@@ -1,1 +1,25 @@
-<p>card works!</p>
+<mat-card class="custom-card">
+    <mat-card-header class="custom-card-header">
+      <mat-card-title>Productos saludables</mat-card-title>
+      <mat-card-subtitle>Con el mejor servicio</mat-card-subtitle>
+    </mat-card-header>
+  
+    <!-- Imagen destacada -->
+    <img
+      mat-card-image
+      src="https://firebasestorage.googleapis.com/v0/b/unieventos-images-service.appspot.com/o/a8e3d7d9-1570-42ac-87c2-e651dc9ca09a-gatoimage.png?alt=media&token=cb69e939-b9d6-40a4-b6a6-6964a0c978ee"
+      alt="Maratón de la ciudad"
+      class="custom-card-image"
+    />
+  
+    <mat-card-content>
+      <p>
+        ¡Ven y prueba la comida más saludable de la ciudad!
+      </p>
+    </mat-card-content>
+  
+    <mat-card-actions align="end" class="custom-card-actions">
+      <button mat-flat-button class="btn-custom">Registrarse</button>
+      <button mat-flat-button class="btn-custom-outline">Ver detalles</button>
+    </mat-card-actions>
+  </mat-card>

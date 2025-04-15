@@ -4,21 +4,21 @@
 
     <div class="carousel-inner">
       <div class="carousel-item active">
-        <img src="https://images.pexels.com/photos/106400/pexels-photo-106400.jpeg" class="d-block w-100" alt="Slide 1" />
+        <img src="https://www.muyinteresante.com/wp-content/uploads/sites/5/2023/08/16/64dce698e98ce.jpeg" class="d-block w-100" alt="Slide 1" />
         <div class="carousel-caption elegant-caption">
           <h3>Encuentra tu comida ideal</h3>
           <p>Descubre los alimentos que se adaptan a tu estilo de vida</p>
         </div>
       </div>
       <div class="carousel-item">
-        <img src="https://images.pexels.com/photos/3473085/pexels-photo-3473085.jpeg" class="d-block w-100" alt="Slide 2" />
+        <img src="https://www.flora.es/-/media/Project/Upfield/Brands/Becel-NL/Flora-ES/Assets/Cuidate/header-10-alimentos-saludables-que-son-buenos-para-tu-corazon.jpg?rev=92f792036c7f4ef7b5525cee92989a63" class="d-block w-100" alt="Slide 2" />
         <div class="carousel-caption elegant-caption">
           <h3>Bebidas increíbles</h3>
           <p>Un deleite para tu paladar</p>
         </div>
       </div>
       <div class="carousel-item">
-        <img src="https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg" class="d-block w-100" alt="Slide 3" />
+        <img src="https://agenciadenoticias.unal.edu.co/fileadmin/Agencia_de_Noticias/Imagenes/2022/08-Agosto/395/AgenciaUNAL-01-1008.jpg" class="d-block w-100" alt="Slide 3" />
         <div class="carousel-caption elegant-caption">
           <h3>Tu próxima reserva</h3>
           <p>Ofrecemos el mejor servicio</p>
@@ -49,7 +49,7 @@
       <div class="filter-field">
         <div class="floating-field">
           <input type="text" id="city" class="form-control" formControlName="city" placeholder=" " />
-          <label for="city">Ciudad</label>
+          <label for="city">Cantidad</label>
         </div>
       </div>
       <div class="filter-field">
@@ -60,7 +60,7 @@
               <option [value]="item">{{ item }}</option>
             }
           </select>
-          <label for="eventType">Tipo</label>
+          <label for="eventType">Categoria</label>
         </div>
       </div>
       <div class="filter-button">
@@ -73,7 +73,7 @@
 </div>
 
 <!-- Productos -->
-<!-- <app-card-grid [productos]="productos"></app-card-grid> -->
+<app-card-grid [products]="productos"></app-card-grid>
 
 <!-- Paginación -->
 <nav class="elegant-pagination">

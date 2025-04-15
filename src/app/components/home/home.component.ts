@@ -33,7 +33,10 @@ export class HomeComponent {
     this.obtenerCategorias();
     this.createForm();
 
+    
+
     this.seleccionados = [];
+    
   }
 
   
