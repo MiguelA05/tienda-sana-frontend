@@ -12,6 +12,6 @@ import { FooterComponent } from './components/footer/footer.component';
 })
 export class AppComponent {
   title = 'tienda-sana-frontend';
-
+  footer = 'Desarrollado por MQISoftware - 2025-2';
   
 }
