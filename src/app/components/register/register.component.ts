@@ -9,7 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   selector: 'app-register',
   imports: [RouterModule, FormsModule, ReactiveFormsModule],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
   registroForm!: FormGroup;

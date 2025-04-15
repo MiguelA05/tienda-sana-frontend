@@ -1,98 +1,89 @@
-// home.component.ts
-import { Component, OnInit } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { CommonModule } from '@angular/common';
-
-interface Product {
-  id: number;
-  name: string;
-  category: string;
-  price: number;
-  image: string;
-  rating: number;
-  reviews: number;
-  discount?: number;
-}
+import { Component } from '@angular/core';
+import { CardGridComponent } from "../card-grid/card-grid.component";
+import { PublicoService } from '../../services/publico.service';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {RouterModule} from '@angular/router';
+import {LoginDTO} from '../../dto/login-dto';
+import {FiltroProductoDTO} from '../../dto/filtro-producto-dto';
+import {ProductoDTO} from '../../dto/producto-dto';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-home',
-  imports: [BrowserModule, CommonModule],
+  standalone: true,
+  imports: [CardGridComponent, FormsModule,ReactiveFormsModule, RouterModule],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit {
-  categories: string[] = [
-    'Desayunos Saludables',
-    'Bowl Nutritivos',
-    'Snacks Orgánicos',
-    'Jugos Detox',
-    'Postres Veganos',
-    'Suplementos'
-  ];
+export class HomeComponent {
 
-  products: Product[] = [
-    {
-      id: 1,
-      name: 'Bowl de Quinoa con Vegetales',
-      category: 'Bowl Nutritivos',
-      price: 12.99,
-      image: 'assets/images/quinoa-bowl.jpg',
-      rating: 4.8,
-      reviews: 150,
-      discount: 30
-    },
-    {
-      id: 2,
-      name: 'Barra Energética de Semillas',
-      category: 'Snacks Orgánicos',
-      price: 4.99,
-      image: 'assets/images/energy-bar.jpg',
-      rating: 4.5,
-      reviews: 89
-    },
-    {
-      id: 3,
-      name: 'Smoothie Detox Verde',
-      category: 'Jugos Detox',
-      price: 6.50,
-      image: 'assets/images/green-smoothie.jpg',
-      rating: 4.7,
-      reviews: 204
-    },
-    {
-      id: 4,
-      name: 'Galletas de Avena Sin Gluten',
-      category: 'Postres Veganos',
-      price: 5.25,
-      image: 'assets/images/oat-cookies.jpg',
-      rating: 4.6,
-      reviews: 132
+  currentPage: number = 0;
+  filterForm!: FormGroup;
+  productos: [] = [];
+  seleccionados: ProductoDTO[];
+  productosDisponibles: boolean = true;
+  pages: number[] = [];
+  filterUsed: boolean = false;
+  tipos: string[]=[];
+
+  typeSelected: boolean = false;
+  constructor(private publicoService: PublicoService, private formBuilder: FormBuilder) {
+    this.productos = [];
+    this.obtenerProductos(this.currentPage);
+    this.obtenerCategorias();
+    this.createForm();
+
+    this.seleccionados = [];
+  }
+
+  
+  public obtenerProductos(page: number) {
+    
+  }
+
+  public obtenerCategorias() {
+    
+  }
+
+  createForm() {
+    this.filterForm = this.formBuilder.group({
+      name: [''],
+      city: [''],
+      eventType: ['OTHER'],
+    });
+  }
+
+  public filter(page: number) {
+    
+  }
+
+  public nextPage() {
+    this.currentPage++;
+    if (this.filterUsed) {
+      this.filter(this.currentPage)
+    } else {
+      this.obtenerProductos(this.currentPage);
     }
-  ];
-
-  constructor() { }
-
-  ngOnInit(): void {
-    // En una implementación real, aquí cargarías los datos de un servicio
+    this.actualizarProductosDisponibles();
   }
 
-  addToCart(product: Product): void {
-    // Lógica para añadir al carrito
-    console.log('Producto añadido:', product);
-    // Implementar lógica real con un servicio de carrito
+  public previousPage() {
+    this.currentPage--;
+    if (this.filterUsed) {
+      this.filter(this.currentPage)
+    } else {
+      this.obtenerProductos(this.currentPage);
+    }
   }
 
-  getDiscountedPrice(price: number, discount?: number): number {
-    if (!discount) return price;
-    return price - (price * discount / 100);
+  public actualizarProductosDisponibles() {
+    this.productosDisponibles = this.currentPage < this.pages.length-1;
   }
 
-  getRatingStars(rating: number): any[] {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
-    return new Array(5).fill(0).map((_, index) => ({
-      full: index < fullStars,
-      half: index === fullStars && hasHalfStar
-    }));
+  public resetForm() {
+    this.filterForm.reset();
   }
+
+
 }
+
