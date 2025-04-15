@@ -1,51 +1,80 @@
-<div class="container d-flex justify-content-center align-items-center min-vh-100">
-    <div class="card shadow-lg rounded p-4 login-card w-100" style="max-width: 500px;">
-      <div class="card-header bg-success text-white rounded-top text-center">
-        <h5 class="mb-0">
-          <i class="fa-solid fa-right-to-bracket me-2"></i>Iniciar Sesión
-        </h5>
-      </div>
-      <div class="card-body">
-        <form [formGroup]="loginForm" (ngSubmit)="login()">
-          <!-- Campo Email -->
-          <div class="mb-3">
-            <label for="email" class="form-label">Correo electrónico:</label>
-            <input
-              type="email"
-              class="form-control"
-              id="email"
-              formControlName="email"
-              placeholder="usuario@ejemplo.com"
-            />
-          </div>
-  
-          <!-- Campo Contraseña -->
-          <div class="mb-3">
-            <label for="password" class="form-label">Contraseña:</label>
-            <input
-              type="password"
-              class="form-control"
-              id="password"
-              formControlName="password"
-              placeholder="Ingrese su contraseña"
-            />
-          </div>
-  
-          <!-- Link de recuperación -->
-          <div class="d-flex justify-content-end mb-3">
-            <a routerLink="/correo-recuperacion" class="text-decoration-none text-success fw-semibold">
-              ¿Olvidó su contraseña?
-            </a>
-          </div>
-  
-          <!-- Botón de enviar -->
-          <div class="d-grid">
-            <button type="submit" class="btn btn-success fw-semibold" [disabled]="loginForm.invalid">
-              <i class="fa-solid fa-arrow-right-to-bracket me-2"></i>Ingresar
-            </button>
-          </div>
+<div class="container">
+    <div class="login-card">
+        <!-- Encabezado -->
+        <div class="card-header">
+            <i class="fa-solid fa-right-to-bracket me-2"></i>Iniciar Sesión
+        </div>
+        
+        <!-- Logo (opcional) -->
+        <!-- <div class="logo">
+            <img src="assets/images/logo.png" alt="Logo">
+        </div> -->
+        
+        <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
+            <!-- Campo Email -->
+            <div class="form-group">
+                <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    formControlName="email"
+                    placeholder=" "
+                    required
+                />
+                <label for="email" class="form-label">Correo electrónico</label>
+                <i class="fa-solid fa-envelope input-icon"></i>
+                
+                <!-- Mensaje de error (opcional) -->
+                <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
+                    Por favor, ingrese un correo electrónico válido
+                </div>
+            </div>
+
+            <!-- Campo Contraseña -->
+            <div class="form-group">
+                <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    formControlName="password"
+                    placeholder=" "
+                    required
+                />
+                <label for="password" class="form-label">Contraseña</label>
+                <i class="fa-solid fa-lock input-icon"></i>
+                
+                <!-- Mensaje de error (opcional) -->
+                <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
+                    La contraseña es requerida
+                </div>
+            </div>
+
+            <!-- Recordarme (opcional) -->
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="remember" formControlName="remember">
+                <label class="form-check-label" for="remember">Recordarme</label>
+            </div>
+
+            <!-- Botón de enviar -->
+            <div class="d-grid">
+                <button 
+                    type="submit" 
+                    class="btn-success" 
+                    [disabled]="loginForm.invalid"
+                    [ngClass]="{'btn-loading': isLoading}"
+                >
+                    <i class="fa-solid fa-arrow-right-to-bracket me-2"></i>Ingresar
+                </button>
+            </div>
+            
+            <!-- Link de recuperación -->
+            <div class="links-container">
+                <a routerLink="/correo-recuperacion">
+                    ¿Olvidó su contraseña?
+                </a>
+            </div>
+            
+            
         </form>
-      </div>
     </div>
-  </div>
-  
+</div>

@@ -1,72 +1,93 @@
-<div id="carouselId" class="carousel slide mb-4" data-bs-ride="carousel">
-  <ol class="carousel-indicators">
-    <li data-bs-target="#carouselId" data-bs-slide-to="0" class="active" aria-current="true"></li>
-    <li data-bs-target="#carouselId" data-bs-slide-to="1"></li>
-    <li data-bs-target="#carouselId" data-bs-slide-to="2"></li>
-  </ol>
+<div class="elegant-carousel-container">
+  <div id="carouselId" class="elegant-carousel" data-bs-ride="carousel">
+    
 
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="https://images.pexels.com/photos/106400/pexels-photo-106400.jpeg" class="d-block w-100" alt="Slide 1" />
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="https://images.pexels.com/photos/106400/pexels-photo-106400.jpeg" class="d-block w-100" alt="Slide 1" />
+        <div class="carousel-caption elegant-caption">
+          <h3>Encuentra tu comida ideal</h3>
+          <p>Descubre los alimentos que se adaptan a tu estilo de vida</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="https://images.pexels.com/photos/3473085/pexels-photo-3473085.jpeg" class="d-block w-100" alt="Slide 2" />
+        <div class="carousel-caption elegant-caption">
+          <h3>Bebidas increíbles</h3>
+          <p>Un deleite para tu paladar</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg" class="d-block w-100" alt="Slide 3" />
+        <div class="carousel-caption elegant-caption">
+          <h3>Tu próxima reserva</h3>
+          <p>Ofrecemos el mejor servicio</p>
+        </div>
+      </div>
     </div>
-    <div class="carousel-item">
-      <img src="https://images.pexels.com/photos/3473085/pexels-photo-3473085.jpeg" class="d-block w-100" alt="Slide 2" />
-    </div>
-    <div class="carousel-item">
-      <img src="https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg" class="d-block w-100" alt="Slide 3" />
-    </div>
+
+    <button class="carousel-control-prev elegant-control" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next elegant-control" type="button" data-bs-target="#carouselId" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
   </div>
-
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon"></span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
-    <span class="carousel-control-next-icon"></span>
-  </button>
 </div>
 
 <!-- Filtros -->
-<form class="filter-bar mb-4 p-3 shadow-sm rounded" [formGroup]="filterForm" (ngSubmit)="filter(0)">
-  <div class="row g-2 align-items-end">
-    <div class="col-md-4">
-      <label for="name" class="form-label">Nombre</label>
-      <input type="text" id="name" class="form-control" formControlName="name" placeholder="Buscar por nombre" />
+<div class="filter-container">
+  <form class="elegant-filter-bar" [formGroup]="filterForm" (ngSubmit)="filter(0)">
+    <h4 class="filter-title">Encuentra lo que buscas</h4>
+    <div class="filter-row">
+      <div class="filter-field">
+        <div class="floating-field">
+          <input type="text" id="name" class="form-control" formControlName="name" placeholder=" " />
+          <label for="name">Nombre</label>
+        </div>
+      </div>
+      <div class="filter-field">
+        <div class="floating-field">
+          <input type="text" id="city" class="form-control" formControlName="city" placeholder=" " />
+          <label for="city">Ciudad</label>
+        </div>
+      </div>
+      <div class="filter-field">
+        <div class="floating-field">
+          <select id="eventType" class="form-control" formControlName="eventType">
+            <option value="OTHER">OTHER</option>
+            @for (item of tipos; track $index) {
+              <option [value]="item">{{ item }}</option>
+            }
+          </select>
+          <label for="eventType">Tipo</label>
+        </div>
+      </div>
+      <div class="filter-button">
+        <button class="btn-filter" type="submit">
+          <i class="fas fa-search"></i> Filtrar
+        </button>
+      </div>
     </div>
-    <div class="col-md-4">
-      <label for="city" class="form-label">Ciudad</label>
-      <input type="text" id="city" class="form-control" formControlName="city" placeholder="Buscar por ciudad" />
-    </div>
-    <div class="col-md-3">
-      <label for="eventType" class="form-label">Tipo</label>
-      <select id="eventType" class="form-select" formControlName="eventType">
-        <option value="OTHER">OTHER</option>
-        @for (item of tipos; track $index) {
-          <option [value]="item">{{ item }}</option>
-        }
-      </select>
-    </div>
-    <div class="col-md-1 d-grid">
-      <button class="btn btn-success" type="submit">Filtrar</button>
-    </div>
-  </div>
-</form>
+  </form>
+</div>
 
 <!-- Productos -->
 <!-- <app-card-grid [productos]="productos"></app-card-grid> -->
 
 <!-- Paginación -->
-<nav aria-label="Page navigation" class="d-flex justify-content-center mt-4">
-  <ul class="pagination">
-    <li class="page-item" [class.disabled]="currentPage === 0">
-      <a class="page-link" (click)="previousPage()">Anterior</a>
+<nav class="elegant-pagination">
+  <ul class="pagination-list">
+    <li class="pagination-item" [class.disabled]="currentPage === 0">
+      <a class="pagination-link" (click)="previousPage()">Anterior</a>
     </li>
     @for (item of pages; track $index) {
-      <li class="page-item">
-        <a class="page-link" (click)="filterUsed ? filter($index) : obtenerProductos($index)">{{$index + 1}}</a>
+      <li class="pagination-item" [class.active]="currentPage === $index">
+        <a class="pagination-link" (click)="filterUsed ? filter($index) : obtenerProductos($index)">{{$index + 1}}</a>
       </li>
     }
-    <li class="page-item" [class.disabled]="!productosDisponibles">
-      <a class="page-link" (click)="nextPage()">Siguiente</a>
+    <li class="pagination-item" [class.disabled]="!productosDisponibles">
+      <a class="pagination-link" (click)="nextPage()">Siguiente</a>
     </li>
   </ul>
 </nav>

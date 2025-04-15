@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TokenService } from '../../services/token.service';
 import { Router } from '@angular/router';
@@ -47,6 +47,18 @@ export class HeaderComponent {
       this.router.navigate([ruta]);
     }
 
+  }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll(): void {
+    const header = document.querySelector('.main-header');
+    if (header) {
+      if (window.scrollY > 20) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    }
   }
 
 

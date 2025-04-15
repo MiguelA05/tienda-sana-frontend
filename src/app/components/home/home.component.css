@@ -1,32 +1,425 @@
-.carousel img {
+/* Estilos para la página de inicio */
+
+/* Carousel elegante */
+.elegant-carousel-container {
+  position: relative;
+  margin-bottom: 3rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.elegant-carousel {
+  position: relative;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.elegant-carousel:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+.elegant-carousel .carousel-inner {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.elegant-carousel .carousel-item {
+  position: relative;
+  height: 300px;
+}
+
+.elegant-carousel .carousel-item img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  height: 450px;
-  border-radius: 1rem;
+  filter: brightness(0.85);
+  transition: filter 0.3s ease;
 }
 
-.filter-bar {
-  background-color: #f8f9fa;
-  border-left: 4px solid var(--bs-success);
+.elegant-carousel:hover .carousel-item img {
+  filter: brightness(0.9);
 }
 
-.filter-bar input,
-.filter-bar select {
-  border-radius: 0.5rem;
+/* Indicadores del carousel */
+.elegant-indicators {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
 }
 
-.btn-success {
+.elegant-indicators li {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.elegant-indicators li.active {
   background-color: #198754;
-  border-color: #198754;
-  font-weight: bold;
+  transform: scale(1.2);
+  box-shadow: 0 0 10px rgba(25, 135, 84, 0.5);
 }
 
-.page-link {
+/* Controles del carousel */
+.elegant-control {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.elegant-carousel:hover .elegant-control {
+  opacity: 1;
+}
+
+.elegant-control:hover {
+  background-color: rgba(25, 135, 84, 0.7);
+}
+
+.carousel-control-prev {
+  left: 20px;
+}
+
+.carousel-control-next {
+  right: 20px;
+}
+
+/* Subtítulos del carousel */
+.elegant-caption {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, rgba(25, 135, 84, 0.85) 0%, rgba(32, 201, 151, 0.85) 100%);
+  padding: 15px 20px;
+  border-radius: 8px;
+  max-width: 80%;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transform: translateX(-50%) translateY(20px);
+  transition: all 0.5s ease;
+}
+
+.carousel-item.active .elegant-caption {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.elegant-caption h3 {
+  color: #ffffff;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 1.5rem;
+}
+
+.elegant-caption p {
+  color: #ffffff;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Barra de filtros */
+.filter-container {
+  margin-bottom: 3rem;
+}
+
+.elegant-filter-bar {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  transition: all 0.3s ease;
+  position: relative;
+  margin-top: -50px;
+  z-index: 20;
+}
+
+.elegant-filter-bar:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+.filter-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #198754;
+  font-weight: 600;
+  font-size: 1.4rem;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.filter-field {
+  flex: 1;
+  min-width: 200px;
+}
+
+.filter-button {
+  display: flex;
+  align-items: flex-end;
+}
+
+/* Campos flotantes */
+.floating-field {
+  position: relative;
+}
+
+.floating-field input,
+.floating-field select {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1.5px solid #e0e0e0;
+  background-color: #f9f9f9;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.floating-field input:focus,
+.floating-field select:focus {
+  border-color: #198754;
+  box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.2);
+  background-color: #ffffff;
+}
+
+.floating-field label {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  background-color: transparent;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  color: #6c757d;
+  padding: 0 5px;
+}
+
+.floating-field input:focus ~ label,
+.floating-field input:not(:placeholder-shown) ~ label,
+.floating-field select:focus ~ label,
+.floating-field select:not([value=""]) ~ label {
+  top: 0;
+  left: 10px;
+  transform: translateY(-50%);
+  font-size: 0.8rem;
+  color: #198754;
+  background-color: #ffffff;
+}
+
+/* Botón de filtro */
+.btn-filter {
+  background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+  white-space: nowrap;
+}
+
+.btn-filter:hover {
+  background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(25, 135, 84, 0.3);
+}
+
+.btn-filter:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(25, 135, 84, 0.2);
+}
+
+/* Paginación elegante */
+.elegant-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.pagination-list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.pagination-item {
+  margin: 0;
+}
+
+.pagination-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 15px;
+  background-color: #ffffff;
+  color: #495057;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border-right: 1px solid #e9ecef;
+}
+
+.pagination-item:last-child .pagination-link {
+  border-right: none;
+}
+
+.pagination-link:hover {
+  background-color: #f8f9fa;
   color: #198754;
 }
 
-.page-item.active .page-link,
-.page-link:hover {
-  background-color: #198754;
+.pagination-item.active .pagination-link {
+  background: linear-gradient(135deg, #198754 0%, #20c997 100%);
   color: white;
-  border-color: #198754;
+  font-weight: 600;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.pagination-item.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .elegant-carousel .carousel-item {
+      height: 200px;
+  }
+  
+  .elegant-caption {
+      bottom: 30px;
+      max-width: 90%;
+  }
+}
+
+@media (max-width: 768px) {
+  .filter-row {
+      flex-direction: column;
+      gap: 15px;
+  }
+  
+  .filter-field {
+      width: 100%;
+  }
+  
+  .filter-button {
+      width: 100%;
+  }
+  
+  .btn-filter {
+      width: 100%;
+  }
+  
+  .elegant-carousel .carousel-item {
+      height: 50px;
+  }
+  
+  .elegant-caption {
+      bottom: 30px;
+      padding: 10px 15px;
+  }
+  
+  .elegant-caption h3 {
+      font-size: 1.2rem;
+  }
+  
+  .elegant-caption p {
+      font-size: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .elegant-carousel .carousel-item {
+      height: 250px;
+  }
+  
+  .pagination-link {
+      min-width: 35px;
+      height: 35px;
+      padding: 0 10px;
+      font-size: 0.9rem;
+  }
+}
+
+/* Modo oscuro */
+@media (prefers-color-scheme: dark) {
+  .elegant-carousel-container {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .elegant-filter-bar {
+      background-color: #2b3035;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  }
+  
+  .filter-title {
+      color: #20c997;
+  }
+  
+  .floating-field input,
+  .floating-field select {
+      background-color: #343a40;
+      border-color: #495057;
+      color: #f8f9fa;
+  }
+  
+  .floating-field input:focus,
+  .floating-field select:focus {
+      background-color: #343a40;
+  }
+  
+  .floating-field input:focus ~ label,
+  .floating-field input:not(:placeholder-shown) ~ label,
+  .floating-field select:focus ~ label,
+  .floating-field select:not([value=""]) ~ label {
+      background-color: #2b3035;
+  }
+  
+  .pagination-list {
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .pagination-link {
+      background-color: #2b3035;
+      color: #adb5bd;
+      border-right: 1px solid #343a40;
+  }
+  
+  .pagination-link:hover {
+      background-color: #343a40;
+      color: #20c997;
+  }
 }

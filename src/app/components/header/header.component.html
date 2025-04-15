@@ -1,37 +1,65 @@
-<div class="container">
-  <header class="d-flex flex-wrap align-items-center justify-content-between py-3 shadow-sm rounded-3 px-4 bg-light-green">
-    
+<!-- HTML del header mejorado -->
+<div class="header-container">
+  <header class="main-header">
     <!-- Logo y título -->
-    <div class="d-flex align-items-center">
-      <a class="d-inline-flex align-items-center nav-link-custom text-success-emphasis fs-5 text-decoration-none" (click)="llevarIncioSesion()">
-        <i class="fa-solid fa-seedling fs-3 me-2"></i>
-        <span class="fw-semibold">{{ title }}</span>
+    <div class="brand">
+      <a class="brand-link" (click)="llevarIncioSesion()">
+        <i class="fa-solid fa-seedling brand-icon"></i>
+        <span class="brand-text">{{ title }}</span>
       </a>
     </div>
 
     <!-- Navegación -->
-    <ul class="nav mb-2 mb-md-0">
-      <li><a class="nav-link px-3 text-success-emphasis fw-medium" (click)="llevarIncioSesion()">Inicio</a></li>
-    </ul>
+    <nav class="main-nav">
+      <ul class="nav-list">
+        
+        <li class="nav-item">
+          <a class="nav-link" href="#servicios">Productos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#contacto">Mesas</a>
+        </li>
+      </ul>
+    </nav>
 
     <!-- Usuario / Login-Registro -->
-    <div class="d-flex align-items-center">
+    <div class="auth-container">
       @if(!isLogged) {
-        <button type="button" routerLink="/login" class="btn btn-outline-success me-2">Login</button>
-        <button type="button" routerLink="/register" class="btn btn-success">Registro</button>
+        <button type="button" routerLink="/login" class="btn-outline">
+          <i class="fa-solid fa-sign-in-alt me-2"></i>Login
+        </button>
+        <button type="button" routerLink="/register" class="btn-primary">
+          <i class="fa-solid fa-user-plus me-2"></i>Registro
+        </button>
       } @else {
-        <div class="dropdown">
-          <button class="btn btn-outline-success dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa-solid fa-user-circle fs-5 me-2"></i>
-            <span>{{ nombreUsuario }}</span>
+        <div class="user-dropdown">
+          <button class="user-button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="user-avatar">
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <span class="user-name">{{ nombreUsuario }}</span>
+            <i class="fa-solid fa-chevron-down dropdown-icon"></i>
           </button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" routerLink="/user-info">Ver perfil</a></li>
-            <li><a class="dropdown-item" (click)="logout()">Cerrar sesión</a></li>
+          <ul class="dropdown-menu">
+            <li class="dropdown-item">
+              <a routerLink="/user-info">
+                <i class="fa-solid fa-user-circle me-2"></i>Ver perfil
+              </a>
+            </li>
+            <li class="dropdown-item">
+              <a routerLink="/configuracion">
+                <i class="fa-solid fa-cog me-2"></i>Configuración
+              </a>
+            </li>
+            <li class="dropdown-divider"></li>
+            <li class="dropdown-item">
+              <a (click)="logout()">
+                <i class="fa-solid fa-sign-out-alt me-2"></i>Cerrar sesión
+              </a>
+            </li>
           </ul>
         </div>
       }
     </div>
-    
   </header>
 </div>

@@ -1,24 +1,343 @@
+/* Contenedor principal */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 20px;
+    transition: background 0.3s ease;
+    text-align: center;
+}
+
+/* Tarjeta del login */
 .login-card {
-    background-color: #fff;
-    border-left: 4px solid #198754;
-    border-radius: 1rem;
-  }
-  
-  input.form-control {
-    border-radius: 0.5rem;
-  }
-  
-  .btn-success {
-    background-color: #198754;
+    max-width: 400px;
+    width: 100%;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    transform: translateY(0);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Encabezado */
+.login-card .card-header {
+    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+    color: #ffffff;
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 20px 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+    letter-spacing: 0.5px;
+    
+}
+
+/* Logo o ícono (si existe) */
+.login-card .logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login-card .logo img {
+    max-height: 60px;
+    transition: transform 0.3s ease;
+}
+
+.login-card .logo img:hover {
+    transform: scale(1.05);
+}
+
+/* Campos del formulario */
+.login-card .form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.login-card .form-control {
+    border-radius: 8px;
+    border: 1.5px solid #e0e0e0;
+    padding: 12px 15px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #f9f9f9;
+}
+
+.login-card .form-control:focus {
     border-color: #198754;
-    transition: background-color 0.3s ease;
-  }
-  
-  .btn-success:hover {
-    background-color: #157347;
-  }
-  
-  a.text-success:hover {
-    text-decoration: underline;
-  }
-  
+    box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.2);
+    background-color: #ffffff;
+}
+
+/* Etiquetas flotantes */
+.login-card .form-label {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    background-color: transparent;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    color: #6c757d;
+    padding: 0 5px;
+}
+
+.login-card .form-control:focus ~ .form-label,
+.login-card .form-control:not(:placeholder-shown) ~ .form-label {
+    top: 0;
+    left: 10px;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+    color: #198754;
+    background-color: #ffffff;
+}
+
+/* Iconos en los campos */
+.login-card .input-icon {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    color: #6c757d;
+    transition: color 0.3s ease;
+}
+
+.login-card .form-control:focus ~ .input-icon {
+    color: #198754;
+}
+
+/* Botón de enviar */
+.login-card .btn-success {
+    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+    border: none;
+    font-weight: 600;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+}
+
+.login-card .btn-success:hover {
+    background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(25, 135, 84, 0.3);
+}
+
+.login-card .btn-success:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(25, 135, 84, 0.2);
+}
+
+/* Link de recuperación */
+.login-card .links-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.login-card a {
+    color: #198754;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    padding-bottom: 2px;
+}
+
+.login-card a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #198754;
+    transition: width 0.3s ease;
+}
+
+.login-card a:hover {
+    color: #157347;
+}
+
+.login-card a:hover::after {
+    width: 100%;
+}
+
+/* Divisor con texto */
+.login-card .divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+    color: #6c757d;
+}
+
+.login-card .divider::before,
+.login-card .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.login-card .divider span {
+    padding: 0 10px;
+    font-size: 0.9rem;
+}
+
+/* Botones sociales (si los hay) */
+.login-card .social-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.login-card .social-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+    color: #6c757d;
+}
+
+.login-card .social-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Mensajes de error */
+.login-card .error-message {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    transition: opacity 0.3s ease;
+}
+
+/* Checkbox de recordarme */
+.login-card .form-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.login-card .form-check-input {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.login-card .form-check-label {
+    cursor: pointer;
+    user-select: none;
+    color: #495057;
+}
+
+/* Animación de carga para el botón */
+@keyframes spinner {
+    to {transform: rotate(360deg);}
+}
+
+.login-card .btn-loading {
+    position: relative;
+    color: transparent !important;
+}
+
+.login-card .btn-loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-top: -8px;
+    margin-left: -8px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    border-top-color: transparent;
+    animation: spinner 0.6s linear infinite;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .login-card {
+        padding: 20px 15px;
+    }
+    
+    .login-card .card-header {
+        font-size: 1.4rem;
+        padding: 15px 10px;
+    }
+    
+    .login-card .btn-success {
+        padding: 10px 15px;
+        font-size: 1rem;
+    }
+}
+
+/* Dark mode (opcional) */
+@media (prefers-color-scheme: dark) {
+    .container {
+        background: linear-gradient(135deg, #212529 0%, #343a40 100%);
+    }
+    
+    .login-card {
+        background-color: #2b3035;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+    
+    .login-card .card-header {
+        background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+    }
+    
+    .login-card .form-control {
+        background-color: #343a40;
+        border-color: #495057;
+        color: #f8f9fa;
+    }
+    
+    .login-card .form-control:focus {
+        background-color: #343a40;
+    }
+    
+    .login-card .form-control:focus ~ .form-label,
+    .login-card .form-control:not(:placeholder-shown) ~ .form-label {
+        background-color: #2b3035;
+    }
+    
+    .login-card .form-label,
+    .login-card .input-icon {
+        color: #adb5bd;
+    }
+    
+    .login-card .form-check-label {
+        color: #adb5bd;
+    }
+    
+    .login-card .divider::before,
+    .login-card .divider::after {
+        border-bottom: 1px solid #495057;
+    }
+    
+    .login-card .social-button {
+        background-color: #343a40;
+        border-color: #495057;
+        color: #adb5bd;
+    }
+}
