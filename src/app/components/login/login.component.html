@@ -1,4 +1,10 @@
 <div class="container">
+    <!-- Elementos decorativos -->
+    <div class="decorative-circles">
+        <div class="circle circle-one"></div>
+        <div class="circle circle-two"></div>
+        <div class="line"></div>
+    </div>
     <div class="login-card">
         <!-- Encabezado -->
         <div class="card-header">
@@ -6,9 +12,9 @@
         </div>
         
         <!-- Logo (opcional) -->
-        <!-- <div class="logo">
-            <img src="assets/images/logo.png" alt="Logo">
-        </div> -->
+        <div class="logo">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS6V-pygE7ZUn7vu2z8eU_F1xenbk9fdZCpQ&s" alt="Logo">
+        </div> 
         
         <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
             <!-- Campo Email -->

@@ -39,7 +39,6 @@
     margin-bottom: 25px;
     box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
     letter-spacing: 0.5px;
-    
 }
 
 /* Logo o ícono (si existe) */
@@ -340,4 +339,46 @@
         border-color: #495057;
         color: #adb5bd;
     }
+
+    /* Elementos decorativos */
+.decorative-circles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.6;
+}
+
+.circle-one {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, rgba(25, 135, 84, 0.2) 0%, rgba(32, 201, 151, 0.2) 100%);
+    top: -100px;
+    right: -100px;
+    animation: float 8s ease-in-out infinite;
+}
+
+.circle-two {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, rgba(25, 135, 84, 0.15) 0%, rgba(32, 201, 151, 0.15) 100%);
+    bottom: -50px;
+    left: -50px;
+    animation: float 6s ease-in-out infinite alternate;
+}
+
+.line {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(25, 135, 84, 0.2), transparent);
+    top: 50%;
+    animation: slide 15s linear infinite;
+}
 }

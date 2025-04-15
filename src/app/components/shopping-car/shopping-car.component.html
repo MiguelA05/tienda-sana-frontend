@@ -1,1 +1,103 @@
-<p>shopping-car works!</p>
+<!-- HTML Corregido del Carrito de Compras -->
+<div class="container shopping-cart-container mt-4">
+    <h2 class="text-center mb-4">Carrito de Compras</h2>
+    <div class="row">
+      <!-- Tabla de productos -->
+      <div class="col-md-8">
+        <div class="card shadow-sm">
+          <div class="card-header">
+            <h5 class="mb-0">Productos en el Carrito</h5>
+          </div>
+          <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Producto</th>
+                  <th>Categoría</th>
+                  <th>Precio</th>
+                  <th>Cantidad</th>
+                  <th>Total</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of itemsCarrito; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ item.nombreProducto }}</td>
+                  <td>{{ item.categoriaProducto }}</td>
+                  <td>{{ item.precio | currency }}</td>
+                  <td>
+                    <div class="quantity-control">
+                      <input
+                        type="number"
+                        class="form-control"
+                        [value]="item.cantidad"
+                        min="1"
+                        (change)="actualizarCantidad(item, $event)"
+                      />
+                    </div>
+                  </td>
+                  <td>{{ item.precio * item.cantidad | currency:'COP' }}</td>
+                  <td>
+                    <button
+                      class="btn btn-danger"
+                      type="button"
+                      (click)="confirmarEliminacion(i)"
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Resumen de pago -->
+      <div class="col-md-4">
+        <div class="card shadow-sm">
+          <div class="card-header">
+            <h5 class="mb-0">Resumen de Pago</h5>
+          </div>
+          <div class="card-body">
+            <div class="form-group mb-3">
+              <label for="subtotal" class="form-label">Subtotal</label>
+              <input
+                type="text"
+                class="form-control"
+                id="subtotal"
+                [value]="subtotal | currency"
+                readonly
+              />
+            </div>
+            
+            <div class="form-group mb-3">
+              <label for="totalToPay" class="form-label">Total a Pagar</label>
+              <input
+                type="text"
+                class="form-control"
+                id="totalToPay"
+                [value]="total | currency"
+                readonly
+              />
+            </div>
+            <button
+              class="btn btn-success w-100"
+              type="button"
+              (click)="crearVenta()"
+              [disabled]="isLoading"
+            >
+              Realizar Pago
+            </button>
+            <div *ngIf="isLoading" class="loading-spinner mt-3">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Cargando...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

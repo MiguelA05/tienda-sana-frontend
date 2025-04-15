@@ -18,6 +18,7 @@ import { Router } from '@angular/router';
 export class CambiarPasswordComponent {
   changePasswordForm!: FormGroup;
   email: string;
+  isLoading: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private dataService: DataService, private authService: AuthService, private router: Router) {
     this.email = this.dataService.getData()
