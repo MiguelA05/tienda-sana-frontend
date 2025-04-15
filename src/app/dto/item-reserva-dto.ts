@@ -1,6 +1,6 @@
-export interface ItemVentaDTO {
+export interface ItemReservaDTO {
     idUsuario: string,
-    fechaVenta: Date,
+    fechaReserva: Date,
     paymentType: string,
     status: string,
     paymentDate: Date,
