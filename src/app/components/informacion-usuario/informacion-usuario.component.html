@@ -47,12 +47,16 @@
                 
                 <div class="col-12 d-flex justify-content-center">
                     <ng-container *ngIf="isEditing; else viewMode">
-                        <button type="button" class="btn btn-save" (click)="saveChanges()" [disabled]="userInforForm.invalid">Guardar Cambios</button>
-                        <button type="button" class="btn btn-back ms-2" (click)="disableEditing()">Volver</button>
+                        <div class="d-flex justify-content-center gap-2">
+                            <button type="button" class="btn btn-save" (click)="saveChanges()" [disabled]="userInforForm.invalid">Guardar Cambios</button>
+                            <button type="button" class="btn btn-back ms-2" (click)="disableEditing()">Volver</button>
+                        </div>
                     </ng-container>
                     <ng-template #viewMode>
-                        <button type="button" class="btn btn-update" (click)="enableEditing()">Actualizar Cuenta</button>
-                        <button type="button" class="btn btn-delete ms-2" (click)="deleteAccount()">Eliminar Cuenta</button>
+                        <div class="d-flex justify-content-center gap-2">
+                            <button type="button" class="btn btn-update" (click)="enableEditing()">Actualizar Cuenta</button>
+                            <button type="button" class="btn btn-delete ms-2" (click)="deleteAccount()">Eliminar Cuenta</button>
+                        </div>
                     </ng-template>
                 </div>
             </form>

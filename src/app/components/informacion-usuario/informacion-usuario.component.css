@@ -20,7 +20,7 @@
     background-color: #ffffff;
     transform: translateY(0);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    overflow: hidden;
+    overflow: visible;
     margin: 0 auto;
 }
 
@@ -37,6 +37,7 @@
     overflow: hidden;
     border-radius: 12px 12px 0 0 !important;
     box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+    z-index: 1; /* Increased z-index to bring header to front */
 }
 
 .card-banner {
@@ -44,6 +45,7 @@
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
+    z-index: 0; /* Set z-index to 0 to place it behind the header */
 }
 
 .custom-card:hover .card-banner {
@@ -53,7 +55,7 @@
 /* Icono de usuario superpuesto */
 .icon-overlay {
     position: absolute;
-    bottom: -30px;
+    bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
     width: 60px;
@@ -68,7 +70,13 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     border: 3px solid #ffffff;
     transition: all 0.3s ease;
-    z-index: 10; /* Increased z-index to bring icon to front */
+    z-index: 100; /* Increased z-index to bring icon to front */
+}
+
+.d-flex {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Espacio entre los botones */
 }
 
 .container-fluid {
@@ -76,6 +84,7 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+}
 
 .custom-card:hover .icon-overlay {
     transform: translateX(-50%) scale(1.05);
@@ -85,6 +94,11 @@
 /* Cuerpo de la tarjeta */
 .card-body {
     padding-top: 40px !important;
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+    padding-bottom: 40px !important;
+    position: relative;
+
 }
 
 /* Título del formulario */
@@ -109,12 +123,14 @@
     height: 3px;
     background: linear-gradient(135deg, #198754 0%, #20c997 100%);
     border-radius: 3px;
+    
 }
 
 /* Campos del formulario */
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     position: relative;
+    padding-bottom: 10px;
 }
 
 .form-group label {
