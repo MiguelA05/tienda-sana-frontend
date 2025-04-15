@@ -1,0 +1,305 @@
+/* Contenedor principal */
+.container-fluid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 20px;
+    transition: background 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Tarjeta de perfil */
+.custom-card {
+    max-width: 500px;
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    transform: translateY(0);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.custom-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Encabezado y banner */
+.card-header {
+    position: relative;
+    padding: 0 !important;
+    height: 180px;
+    overflow: hidden;
+    border-radius: 12px 12px 0 0 !important;
+    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+}
+
+.card-banner {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.custom-card:hover .card-banner {
+    transform: scale(1.05);
+}
+
+/* Icono de usuario superpuesto */
+.icon-overlay {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border: 3px solid #ffffff;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.custom-card:hover .icon-overlay {
+    transform: translateX(-50%) scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+}
+
+/* Cuerpo de la tarjeta */
+.card-body {
+    padding-top: 40px !important;
+}
+
+/* Título del formulario */
+.card-body h5 {
+    color: #198754;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+    text-align: center;
+    letter-spacing: 0.5px;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.card-body h5::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+    border-radius: 3px;
+}
+
+/* Campos del formulario */
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    color: #198754;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+    transition: color 0.3s ease;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1.5px solid #e0e0e0;
+    padding: 12px 15px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #f9f9f9;
+}
+
+.form-control:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.2);
+    background-color: #ffffff;
+}
+
+/* Estilos para los botones */
+.btn {
+    font-weight: 600;
+    padding: 12px 25px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Botones específicos */
+.btn-update {
+    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+    color: #ffffff;
+}
+
+.btn-update:hover {
+    background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+}
+
+.btn-save {
+    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+    color: #ffffff;
+}
+
+.btn-save:hover {
+    background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+}
+
+.btn-back {
+    background: linear-gradient(135deg, #6c757d 0%, #adb5bd 100%);
+    color: #ffffff;
+}
+
+.btn-back:hover {
+    background: linear-gradient(135deg, #5a6268 0%, #98a2ac 100%);
+}
+
+.btn-delete {
+    background: linear-gradient(135deg, #dc3545 0%, #f66d7b 100%);
+    color: #ffffff;
+}
+
+.btn-delete:hover {
+    background: linear-gradient(135deg, #c82333 0%, #e35d6a 100%);
+}
+
+/* Alerta de error */
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-top: 5px;
+    font-size: 0.9rem;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Elementos decorativos */
+.container-fluid::before {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(25, 135, 84, 0.2) 0%, rgba(32, 201, 151, 0.2) 100%);
+    top: -100px;
+    right: -100px;
+    animation: float 8s ease-in-out infinite;
+    z-index: 0;
+}
+
+.container-fluid::after {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(25, 135, 84, 0.15) 0%, rgba(32, 201, 151, 0.15) 100%);
+    bottom: -50px;
+    left: -50px;
+    animation: float 6s ease-in-out infinite alternate;
+    z-index: 0;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(10px, -10px); }
+    100% { transform: translate(0, 0); }
+}
+
+/* Media queries para responsive */
+@media (max-width: 576px) {
+    .custom-card {
+        margin: 10px;
+    }
+    
+    .card-body h5 {
+        font-size: 1.4rem;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .icon-overlay {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        bottom: -25px;
+    }
+}
+
+/* Modo oscuro */
+@media (prefers-color-scheme: dark) {
+    .container-fluid {
+        background: linear-gradient(135deg, #212529 0%, #343a40 100%);
+    }
+    
+    .custom-card {
+        background-color: #2b3035;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+    
+    .form-control {
+        background-color: #343a40;
+        border-color: #495057;
+        color: #f8f9fa;
+    }
+    
+    .form-control:focus {
+        background-color: #343a40;
+    }
+    
+    .form-group label {
+        color: #20c997;
+    }
+    
+    .card-body h5 {
+        color: #20c997;
+    }
+    
+    .alert-danger {
+        background-color: rgba(220, 53, 69, 0.2);
+        border-color: rgba(220, 53, 69, 0.3);
+        color: #f8d7da;
+    }
+}

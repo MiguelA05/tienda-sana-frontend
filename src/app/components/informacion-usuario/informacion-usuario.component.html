@@ -1,1 +1,84 @@
-<p>informacion-usuario works!</p>
+<div class="container-fluid">
+    <div class="card custom-card">
+        <div class="card-header p-0 position-relative">
+            <img src="https://storage.needpix.com/rsynced_images/banner-web-business-users-blue.jpg"
+                alt="Banner" class="img-fluid card-banner">
+            <i class="fa-solid fa-user icon-overlay"></i>
+        </div>
+        <div class="card-body p-4">
+            <h5 class="mb-0 text-center">
+                {{ isEditing ? 'Edición de Información de Perfil' : 'Información de Perfil' }}
+            </h5>
+            <form class="row g-3 justify-content-center" [formGroup]="userInforForm">
+                <div class="col-12 d-flex justify-content-center">
+                    <div class="form-group" style="max-width: 400px; width: 100%;">
+                        <label for="email">Email: </label>
+                        <input type="email" id="email" class="form-control" formControlName="email" />
+                    </div>
+                </div>
+                <div class="col-12 d-flex justify-content-center">
+                    <div class="form-group" style="max-width: 400px; width: 100%;">
+                        <label for="dni">DNI: </label>
+                        <input type="text" id="dni" class="form-control" formControlName="dni" />
+                    </div>
+                </div>
+                <div class="col-12 d-flex justify-content-center">
+                    <div class="form-group" style="max-width: 400px; width: 100%;">
+                        <label for="name">Nombre: </label>
+                        <input type="text" id="name" class="form-control" formControlName="name" />
+                    </div>
+                </div>
+                <div class="col-12 d-flex justify-content-center">
+                    <div class="form-group" style="max-width: 400px; width: 100%;">
+                        <label for="phone">Teléfono: </label>
+                        <input type="number" id="phone" class="form-control" formControlName="phoneNumber" />
+                        <div *ngIf="userInforForm.get('phoneNumber')?.errors?.['numberLength'] && userInforForm.get('phoneNumber')?.touched" class="error-message">
+                            El teléfono debe tener entre 10 y 15 dígitos.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 d-flex justify-content-center">
+                    <div class="form-group" style="max-width: 400px; width: 100%;">
+                        <label for="address">Dirección: </label>
+                        <input type="text" id="address" class="form-control" formControlName="address" />
+                    </div>
+                </div>
+                <ng-container *ngIf="isEditing">
+                    <div class="col-12 d-flex justify-content-center">
+                        <div class="form-group" style="max-width: 400px; width: 100%;">
+                            <label for="password">Contraseña: </label>
+                            <input type="password" id="password" class="form-control" formControlName="password" />
+                            <div *ngIf="userInforForm.get('password')?.errors?.['minlength'] && userInforForm.get('password')?.touched" class="error-message">
+                                La contraseña debe tener al menos 7 caracteres.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 d-flex justify-content-center">
+                        <div class="form-group" style="max-width: 400px; width: 100%;">
+                            <label for="confirmPassword">Confirmar contraseña: </label>
+                            <input type="password" id="confirmPassword" class="form-control" formControlName="confirmaPassword" />
+                        </div>
+                    </div>
+                    
+                    <div *ngIf="userInforForm.hasError('passwordsMismatch') && userInforForm.get('confirmaPassword')?.touched" class="col-12 d-flex justify-content-center">
+                        <div class="form-group" style="max-width: 400px; width: 100%;">
+                            <div class="alert alert-danger" role="alert">Las contraseñas no coinciden</div>
+                        </div>
+                    </div>
+                </ng-container>
+                
+                <div class="col-12 d-flex justify-content-center">
+                    <ng-container *ngIf="isEditing; else viewMode">
+                        <button type="button" class="btn btn-save" (click)="saveChanges()" [disabled]="userInforForm.invalid">Guardar Cambios</button>
+                        <button type="button" class="btn btn-back ms-2" (click)="disableEditing()">Volver</button>
+                    </ng-container>
+                    <ng-template #viewMode>
+                        <button type="button" class="btn btn-update" (click)="enableEditing()">Actualizar Cuenta</button>
+                        <button type="button" class="btn btn-delete ms-2" (click)="deleteAccount()">Eliminar Cuenta</button>
+                    </ng-template>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
