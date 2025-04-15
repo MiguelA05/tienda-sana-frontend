@@ -43,30 +43,7 @@
                         <input type="text" id="address" class="form-control" formControlName="address" />
                     </div>
                 </div>
-                <ng-container *ngIf="isEditing">
-                    <div class="col-12 d-flex justify-content-center">
-                        <div class="form-group" style="max-width: 400px; width: 100%;">
-                            <label for="password">Contraseña: </label>
-                            <input type="password" id="password" class="form-control" formControlName="password" />
-                            <div *ngIf="userInforForm.get('password')?.errors?.['minlength'] && userInforForm.get('password')?.touched" class="error-message">
-                                La contraseña debe tener al menos 7 caracteres.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 d-flex justify-content-center">
-                        <div class="form-group" style="max-width: 400px; width: 100%;">
-                            <label for="confirmPassword">Confirmar contraseña: </label>
-                            <input type="password" id="confirmPassword" class="form-control" formControlName="confirmaPassword" />
-                        </div>
-                    </div>
-                    
-                    <div *ngIf="userInforForm.hasError('passwordsMismatch') && userInforForm.get('confirmaPassword')?.touched" class="col-12 d-flex justify-content-center">
-                        <div class="form-group" style="max-width: 400px; width: 100%;">
-                            <div class="alert alert-danger" role="alert">Las contraseñas no coinciden</div>
-                        </div>
-                    </div>
-                </ng-container>
+               
                 
                 <div class="col-12 d-flex justify-content-center">
                     <ng-container *ngIf="isEditing; else viewMode">

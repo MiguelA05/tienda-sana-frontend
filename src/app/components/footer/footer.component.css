@@ -83,25 +83,4 @@
   }
 }
 
-/* Dark mode */
-@media (prefers-color-scheme: dark) {
-  .footer-container {
-      background: linear-gradient(135deg, #212529 0%, #343a40 100%);
-  }
-  
-  .elegant-footer {
-      border-top: 1px solid rgba(25, 135, 84, 0.3);
-  }
-  
-  .copyright-text {
-      color: #adb5bd;
-  }
-  
-  .social-icon {
-      background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
-  }
-  
-  .social-icon:hover {
-      background: linear-gradient(135deg, #146c43 0%, #159a76 100%);
-  }
-}
+

@@ -48,7 +48,7 @@
 }
 
 .login-card .logo img {
-    max-height: 60px;
+    max-height: 200px;
     transition: transform 0.3s ease;
 }
 
@@ -290,56 +290,6 @@
     }
 }
 
-/* Dark mode (opcional) */
-@media (prefers-color-scheme: dark) {
-    .container {
-        background: linear-gradient(135deg, #212529 0%, #343a40 100%);
-    }
-    
-    .login-card {
-        background-color: #2b3035;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-    }
-    
-    .login-card .card-header {
-        background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
-    }
-    
-    .login-card .form-control {
-        background-color: #343a40;
-        border-color: #495057;
-        color: #f8f9fa;
-    }
-    
-    .login-card .form-control:focus {
-        background-color: #343a40;
-    }
-    
-    .login-card .form-control:focus ~ .form-label,
-    .login-card .form-control:not(:placeholder-shown) ~ .form-label {
-        background-color: #2b3035;
-    }
-    
-    .login-card .form-label,
-    .login-card .input-icon {
-        color: #adb5bd;
-    }
-    
-    .login-card .form-check-label {
-        color: #adb5bd;
-    }
-    
-    .login-card .divider::before,
-    .login-card .divider::after {
-        border-bottom: 1px solid #495057;
-    }
-    
-    .login-card .social-button {
-        background-color: #343a40;
-        border-color: #495057;
-        color: #adb5bd;
-    }
-
     /* Elementos decorativos */
 .decorative-circles {
     position: absolute;
@@ -380,5 +330,4 @@
     background: linear-gradient(90deg, transparent, rgba(25, 135, 84, 0.2), transparent);
     top: 50%;
     animation: slide 15s linear infinite;
-}
 }

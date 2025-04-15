@@ -118,37 +118,4 @@
     }
   }
   
-  /* Dark mode (opcional) */
-  @media (prefers-color-scheme: dark) {
-    .custom-card {
-      background-color: #2b3035;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-    }
   
-    .custom-card-header {
-      background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
-    }
-  
-    .custom-card-header mat-card-title,
-    .custom-card-header mat-card-subtitle {
-      color: #e9ecef;
-    }
-  
-    mat-card-content {
-      color: #adb5bd;
-    }
-  
-    .btn-custom {
-      background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
-    }
-  
-    .btn-custom-outline {
-      color: #20c997;
-      border-color: #20c997;
-    }
-  
-    .btn-custom-outline:hover {
-      background: rgba(32, 201, 151, 0.1);
-      color: #198754;
-    }
-  }
