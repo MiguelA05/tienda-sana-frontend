@@ -1,1 +1,51 @@
-<p>login works!</p>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-lg rounded p-4 login-card w-100" style="max-width: 500px;">
+      <div class="card-header bg-success text-white rounded-top text-center">
+        <h5 class="mb-0">
+          <i class="fa-solid fa-right-to-bracket me-2"></i>Iniciar Sesión
+        </h5>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
+          <!-- Campo Email -->
+          <div class="mb-3">
+            <label for="email" class="form-label">Correo electrónico:</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              formControlName="email"
+              placeholder="usuario@ejemplo.com"
+            />
+          </div>
+  
+          <!-- Campo Contraseña -->
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña:</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              formControlName="password"
+              placeholder="Ingrese su contraseña"
+            />
+          </div>
+  
+          <!-- Link de recuperación -->
+          <div class="d-flex justify-content-end mb-3">
+            <a routerLink="/correo-recuperacion" class="text-decoration-none text-success fw-semibold">
+              ¿Olvidó su contraseña?
+            </a>
+          </div>
+  
+          <!-- Botón de enviar -->
+          <div class="d-grid">
+            <button type="submit" class="btn btn-success fw-semibold" [disabled]="loginForm.invalid">
+              <i class="fa-solid fa-arrow-right-to-bracket me-2"></i>Ingresar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
