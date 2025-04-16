@@ -1,0 +1,219 @@
+/* Contenedor principal */
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 20px;
+    text-align: center;
+    position: relative;
+}
+
+/* Elementos decorativos */
+.decorative-circles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.6;
+}
+
+.circle-one {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, rgba(25, 135, 84, 0.2) 0%, rgba(32, 201, 151, 0.2) 100%);
+    top: -100px;
+    right: -100px;
+    animation: float 8s ease-in-out infinite;
+}
+
+.circle-two {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, rgba(25, 135, 84, 0.15) 0%, rgba(32, 201, 151, 0.15) 100%);
+    bottom: -50px;
+    left: -50px;
+    animation: float 6s ease-in-out infinite alternate;
+}
+
+.line {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(25, 135, 84, 0.2), transparent);
+    top: 50%;
+    animation: slide 15s linear infinite;
+}
+
+/* Tarjeta de verificación */
+.verification-card {
+    max-width: 400px;
+    width: 100%;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    transform: translateY(0);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1;
+}
+
+.verification-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Encabezado */
+.verification-card .card-header {
+    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+    color: #ffffff;
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 20px 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+    letter-spacing: 0.5px;
+    margin-bottom: 50px;
+}
+
+/* Campos del formulario */
+.verification-form .form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.verification-form .form-control {
+    border-radius: 8px;
+    border: 1.5px solid #e0e0e0;
+    padding: 12px 15px;
+    padding-left: 40px; /* Espacio para el ícono */
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #f9f9f9;
+}
+
+.verification-form .form-control:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.2);
+    background-color: #ffffff;
+}
+
+/* Etiquetas flotantes */
+.verification-form .form-label {
+    position: absolute;
+    top: 25px;
+    left: 40px;
+    transform: translateY(-50%);
+    background-color: transparent;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    color: #6c757d;
+    padding: 0 5px;
+}
+
+.verification-form .form-control:focus ~ .form-label,
+.verification-form .form-control:not(:placeholder-shown) ~ .form-label {
+    top: 0;
+    left: 10px;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+    color: #198754;
+    background-color: #ffffff;
+}
+
+/* Íconos en los campos */
+.verification-form .input-icon {
+    position: absolute;
+    top: 25px;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #6c757d;
+    transition: color 0.3s ease;
+}
+
+.verification-form .form-control:focus ~ .input-icon {
+    color: #198754;
+}
+
+/* Botones */
+.btn-custom {
+    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+    border: none;
+    font-weight: 600;
+    padding: 12px 20px;
+    margin-top: 20px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+    color: #ffffff;
+    width: 100%;
+}
+
+.btn-custom:hover {
+    background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(25, 135, 84, 0.3);
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+    font-weight: 600;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #ffffff;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Spinner de carga */
+.spinner-border {
+    color: #198754;
+}
+
+/* Mensajes de error */
+.error-message {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    transition: opacity 0.3s ease;
+    text-align: left;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .verification-card {
+        padding: 20px 15px;
+    }
+
+    .verification-card .card-header {
+        font-size: 1.4rem;
+        padding: 15px 10px;
+    }
+
+    .btn-custom {
+        padding: 10px 15px;
+        font-size: 1rem;
+    }
+}
