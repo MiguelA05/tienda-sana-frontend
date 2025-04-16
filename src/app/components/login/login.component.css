@@ -66,6 +66,7 @@
     border-radius: 8px;
     border: 1.5px solid #e0e0e0;
     padding: 12px 15px;
+    padding-left: 40px; /* Espacio para el icono */
     font-size: 1rem;
     transition: all 0.3s ease;
     background-color: #f9f9f9;
@@ -80,8 +81,8 @@
 /* Etiquetas flotantes */
 .login-card .form-label {
     position: absolute;
-    top: 50%;
-    left: 15px;
+    top: 25px;
+    left: 40px;
     transform: translateY(-50%);
     background-color: transparent;
     transition: all 0.3s ease;
@@ -103,8 +104,8 @@
 /* Iconos en los campos */
 .login-card .input-icon {
     position: absolute;
-    top: 50%;
-    right: 15px;
+    top: 25px;
+    left: 15px;
     transform: translateY(-50%);
     color: #6c757d;
     transition: color 0.3s ease;
@@ -126,6 +127,7 @@
     transition: all 0.3s ease;
     letter-spacing: 0.5px;
     box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+    color: #ffffff;
 }
 
 .login-card .btn-success:hover {

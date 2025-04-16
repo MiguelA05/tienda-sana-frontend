@@ -5,6 +5,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { CambiarPasswordComponent } from './components/cambiar-password/cambiar-password.component';
 import { ShoppingCarComponent } from './components/shopping-car/shopping-car.component';
 import { InformacionUsuarioComponent } from './components/informacion-usuario/informacion-usuario.component';
+import { correoRecuperacionComponent } from './components/correo-recuperacion/correo-recuperacion.component';
 
 
 export const routes: Routes = [
@@ -14,6 +15,6 @@ export const routes: Routes = [
    { path: 'register', component: RegisterComponent },
    { path: 'cambiar-password', component: CambiarPasswordComponent },
    { path: 'carrito', component: ShoppingCarComponent },
-   
+   { path: 'correo-recuperacion', component: correoRecuperacionComponent },
    { path: "**", pathMatch: "full", redirectTo: "" }
 ];
