@@ -1,1 +1,68 @@
-<p>detalle-producto works!</p>
+<!-- HTML Template -->
+<div class="main-container">
+    <div class="detalle-producto-card">
+      <div class="product-content">
+        <!-- Columna de imagen -->
+        <div class="product-image-container">
+          <img [src]="producto?.imagenUrl" alt="{{ producto?.nombre }}" class="product-image" />
+          <div class="image-badges">
+            <span class="discount-badge" *ngIf="producto?.descuento">-{{ producto?.descuento }}%</span>
+            <span class="status-badge" [ngClass]="{'status-available': producto?.EstadoPrducto === 'Disponible', 'status-unavailable': producto?.EstadoPrducto !== 'Disponible'}">
+              {{ producto?.EstadoPrducto }}
+            </span>
+          </div>
+        </div>
+  
+        <!-- Columna de información -->
+        <div class="product-details">
+          <div class="product-header">
+            <h2 class="product-title">{{ producto?.nombre }}</h2>
+            <span class="product-category">{{ producto?.CategoriaProducto }}</span>
+            
+            <!-- Calificación -->
+            <div class="product-rating">
+              <span *ngFor="let star of estrellas" [class.filled]="star <= producto?.calificacionPromedio" class="star">★</span>
+              <span class="rating-value">({{ producto?.calificacionPromedio | number: '1.1-1' }})</span>
+              <span class="review-count" *ngIf="producto?.cantidadResenias">({{ producto?.cantidadResenias }} resenias)</span>
+            </div>
+          </div>
+          
+          <!-- Precio y disponibilidad -->
+          <div class="product-pricing">
+            <div class="price-container">
+              <p class="product-price">${{ producto?.precio | number: '1.2-2' }}</p>
+              <p class="original-price" *ngIf="producto?.descuento">${{ calcularPrecioOriginal() | number: '1.2-2' }}</p>
+            </div>
+            <p class="product-quantity" [ngClass]="{'low-stock': producto?.cantidad < 5}">
+              <span class="quantity-icon" [ngClass]="{'in-stock': producto?.cantidad > 0, 'out-of-stock': producto?.cantidad === 0}">●</span>
+              {{ producto?.cantidad > 0 ? (producto?.cantidad < 5 ? '¡Últimas ' + producto?.cantidad + ' unidades!' : 'En stock: ' + producto?.cantidad) : 'Agotado' }}
+            </p>
+          </div>
+          
+          <!-- Descripción -->
+          <div class="product-description-container">
+            <h3 class="section-title">Descripción</h3>
+            <p class="product-description">{{ producto?.descripcion }}</p>
+          </div>
+          
+          <!-- Acciones -->
+          <div class="product-actions">
+            <div class="quantity-selector">
+              <button class="quantity-btn" (click)="decrementarCantidad()" [disabled]="cantidadSeleccionada <= 1">-</button>
+              <input type="number" [(ngModel)]="cantidadSeleccionada" min="1" [max]="producto?.cantidad" class="quantity-input">
+              <button class="quantity-btn" (click)="incrementarCantidad()" [disabled]="cantidadSeleccionada >= producto?.cantidad">+</button>
+            </div>
+            
+            <div class="action-buttons">
+              <button class="btn-custom" (click)="agregarAlCarrito()" [disabled]="producto?.cantidad === 0">
+                <i class="cart-icon">🛒</i> Agregar al carrito
+              </button>
+              <button class="btn-wishlist" (click)="agregarAFavoritos()">
+                <i class="heart-icon">❤</i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

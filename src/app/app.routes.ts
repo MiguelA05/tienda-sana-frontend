@@ -7,6 +7,7 @@ import { ShoppingCarComponent } from './components/shopping-car/shopping-car.com
 import { InformacionUsuarioComponent } from './components/informacion-usuario/informacion-usuario.component';
 import { correoRecuperacionComponent } from './components/correo-recuperacion/correo-recuperacion.component';
 import { VerificarCuentaComponent } from './components/verificar-cuenta/verificar-cuenta.component';
+import { DetalleProductoComponent } from './components/detalle-producto/detalle-producto.component';
 
 
 export const routes: Routes = [
@@ -18,6 +19,7 @@ export const routes: Routes = [
    { path: 'carrito', component: ShoppingCarComponent },
    { path: 'correo-recuperacion', component: correoRecuperacionComponent },
    { path: 'verificar-cuenta', component: VerificarCuentaComponent },
+   { path: 'detalle-producto/:id', component: DetalleProductoComponent },
    { path: "**", pathMatch: "full", redirectTo: "" }
    
 ];

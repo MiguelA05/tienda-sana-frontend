@@ -6,5 +6,7 @@ export interface ProductoDTO {
     imagenUrl: string,
     CategoriaProducto: string,
     calificacionPromedio: number,
+    cantidadResenias: number,
+    descuento: number,
     EstadoPrducto: String
 }
