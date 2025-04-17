@@ -1,7 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { RouterModule, ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 
 export interface ProductoDTO {
   nombre: string;
@@ -12,12 +9,13 @@ export interface ProductoDTO {
   CategoriaProducto: string;
   calificacionPromedio: number;
   EstadoPrducto: string;
+  descuento?: number;
+  cantidadResenias?: number;
 }
 
 @Component({
   selector: 'app-detalle-producto',
   standalone: true,
-    imports: [ReactiveFormsModule, CommonModule, RouterModule, FormsModule],
   templateUrl: './detalle-producto.component.html',
   styleUrls: ['./detalle-producto.component.css']
 })
@@ -25,19 +23,21 @@ export class DetalleProductoComponent implements OnInit {
   producto: ProductoDTO | null = null;
   estrellas: number[] = [1, 2, 3, 4, 5];
   cantidadSeleccionada: number = 1;
-  mostrarDescripcionCompleta: boolean = false;
 
-  constructor(
-    private route: ActivatedRoute,
-    
-  ) {}
+  // Propiedades calculadas
+  productoCantidad: number = 0;
+  productoPrecio: string = '';
+  productoPrecioOriginal: string = '';
+  productoDescuento: number | null = null;
+  productoCalificacion: number = 0;
+  productoResenias: number | null = null;
+  estadoProducto: string = '';
+  estadoProductoClass: string = '';
+  cantidadTexto: string = '';
+  cantidadClass: string = '';
+  cantidadIconClass: string = '';
 
   ngOnInit(): void {
-    // Obtenemos el ID del producto de la URL (comentado para pruebas)
-  // const id = this.route.snapshot.paramMap.get('id');
-  // if (id) {
-  //   this.cargarProducto(+id);
-  // }
     // Producto quemado para pruebas
     this.producto = {
       nombre: 'Producto de Ejemplo',
@@ -47,42 +47,60 @@ export class DetalleProductoComponent implements OnInit {
       imagenUrl: 'https://via.placeholder.com/300',
       CategoriaProducto: 'Electrónica',
       calificacionPromedio: 4.2,
-      EstadoPrducto: 'Disponible'
+      EstadoPrducto: 'Disponible',
+      descuento: 20,
+      cantidadResenias: 15
     };
+
+    this.actualizarPropiedades();
   }
 
-  cargarProducto(id: number): void {
-    // Aquí deberías hacer una llamada al servicio para obtener el producto por su ID
-    // Por ejemplo:
-    // this.productoService.getProductoById(id).subscribe(producto => {
-    //   this.producto = producto;
-    // });
-    
-    // Simulación de un producto para el ejemplo
-    
-  }
-
-  agregarAlCarrito(): void {
+  actualizarPropiedades(): void {
     if (this.producto) {
-      // Aquí deberías llamar al servicio para agregar el producto al carrito
-      // this.carritoService.agregarAlCarrito(this.producto, this.cantidadSeleccionada);
-      // Mostrar mensaje de éxito o actualizar UI
+      this.productoCantidad = this.producto.cantidad;
+      this.productoPrecio = this.producto.precio.toFixed(2);
+      this.productoPrecioOriginal = this.producto.descuento
+        ? (this.producto.precio / (1 - this.producto.descuento / 100)).toFixed(2)
+        : '';
+      this.productoDescuento = this.producto.descuento || null;
+      this.productoCalificacion = this.producto.calificacionPromedio;
+      this.productoResenias = this.producto.cantidadResenias || null;
+      this.estadoProducto = this.producto.EstadoPrducto;
+      this.estadoProductoClass =
+        this.producto.EstadoPrducto === 'Disponible' ? 'status-available' : 'status-unavailable';
+
+      if (this.productoCantidad > 0) {
+        this.cantidadTexto =
+          this.productoCantidad < 5
+            ? `¡Últimas ${this.productoCantidad} unidades!`
+            : `En stock: ${this.productoCantidad}`;
+        this.cantidadClass = this.productoCantidad < 5 ? 'low-stock' : '';
+        this.cantidadIconClass = 'in-stock';
+      } else {
+        this.cantidadTexto = 'Agotado';
+        this.cantidadClass = 'out-of-stock';
+        this.cantidadIconClass = 'out-of-stock';
+      }
     }
   }
 
-  agregarAFavoritos(): void {
-    
+  incrementarCantidad(): void {
+    if (this.cantidadSeleccionada < this.productoCantidad) {
+      this.cantidadSeleccionada++;
+    }
   }
 
-  calcularPrecioOriginal(): number {
-    return 0; // Aquí deberías calcular el precio original si es necesario
-  }
-  
-  incrementarCantidad(): void {
-    
-  }
-  
   decrementarCantidad(): void {
-    
+    if (this.cantidadSeleccionada > 1) {
+      this.cantidadSeleccionada--;
+    }
+  }
+
+  agregarAlCarrito(): void {
+    console.log(`Agregado al carrito: ${this.cantidadSeleccionada} unidades de ${this.producto?.nombre}`);
+  }
+
+  agregarAFavoritos(): void {
+    console.log(`Producto agregado a favoritos: ${this.producto?.nombre}`);
   }
 }

@@ -1,9 +1,7 @@
 export interface ItemProductoDTO {
-    idProducto: string,
+    id: string,
     nombre: string,
-    descripcion: string,
     categoria: string,
     precioUnitario: number,
-    cantidad: number,
     imagen: string,
 }
