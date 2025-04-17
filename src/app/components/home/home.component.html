@@ -1,17 +1,19 @@
 <div class="elegant-carousel-container">
   <div id="carouselId" class="elegant-carousel">
     <div class="carousel-inner">
-      <div
-        *ngFor="let item of carouselItems; let i = index"
-        class="carousel-item"
-        [class.active]="i === activeSlideIndex"
-      >
-        <img [src]="item.imageUrl" class="d-block w-100" [alt]="'Slide ' + (i + 1)" />
-        <div class="carousel-caption elegant-caption">
-          <h3>{{ carouselItems[activeSlideIndex].title }}</h3>
-          <p>{{ carouselItems[activeSlideIndex].subtitle }}</p>
+      <!-- Uso correcto de @for -->
+      @for (item of carouselItems; track item.imageUrl) {
+        <div
+          class="carousel-item"
+          [class.active]="carouselItems.indexOf(item) === activeSlideIndex"
+        >
+          <img [src]="item.imageUrl" class="d-block w-100" [alt]="'Slide ' + (carouselItems.indexOf(item) + 1)" />
+          <div class="carousel-caption elegant-caption">
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.subtitle }}</p>
+          </div>
         </div>
-      </div>
+      }
     </div>
 
     <button
@@ -54,7 +56,10 @@
         <div class="floating-field">
           <select id="eventType" class="form-control" formControlName="eventType">
             <option value="OTHER">OTHER</option>
-            <option *ngFor="let item of tipos; let i = index" [value]="item">{{ item }}</option>
+            <!-- Uso correcto de @for -->
+            @for (item of tipos; track item) {
+              <option [value]="item">{{ item }}</option>
+            }
           </select>
           <label for="eventType">Categoria</label>
         </div>
@@ -77,9 +82,14 @@
     <li class="pagination-item" [class.disabled]="currentPage === 0">
       <a class="pagination-link" (click)="previousPage()">Anterior</a>
     </li>
-    <li *ngFor="let item of pages; let i = index" class="pagination-item" [class.active]="currentPage === i">
-      <a class="pagination-link" (click)="filterUsed ? filter(i) : obtenerProductos(i)">{{i + 1}}</a>
-    </li>
+    <!-- Uso correcto de @for -->
+    @for (item of pages; track item) {
+      <li class="pagination-item" [class.active]="currentPage === pages.indexOf(item)">
+        <a class="pagination-link" (click)="filterUsed ? filter(pages.indexOf(item)) : obtenerProductos(pages.indexOf(item))">
+          {{ pages.indexOf(item) + 1 }}
+        </a>
+      </li>
+    }
     <li class="pagination-item" [class.disabled]="!productosDisponibles">
       <a class="pagination-link" (click)="nextPage()">Siguiente</a>
     </li>

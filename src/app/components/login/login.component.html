@@ -31,9 +31,11 @@
                 <i class="fa-solid fa-envelope input-icon"></i>
                 
                 <!-- Mensaje de error (opcional) -->
-                <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
-                    Por favor, ingrese un correo electrónico válido
-                </div>
+                @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+                    <div class="error-message">
+                        Por favor, ingrese un correo electrónico válido
+                    </div>
+                }
             </div>
 
             <!-- Campo Contraseña -->
@@ -50,9 +52,11 @@
                 <i class="fa-solid fa-lock input-icon"></i>
                 
                 <!-- Mensaje de error (opcional) -->
-                <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
-                    La contraseña es requerida
-                </div>
+                @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+                    <div class="error-message">
+                        La contraseña es requerida
+                    </div>
+                }
             </div>
 
             <!-- Recordarme (opcional) -->
@@ -79,8 +83,6 @@
                     ¿Olvidó su contraseña?
                 </a>
             </div>
-            
-            
         </form>
     </div>
 </div>

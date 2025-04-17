@@ -1,7 +1,9 @@
 <div class="container card-grid-container">
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-      <div class="col" *ngFor="let item of products; let i = index">
-        <div class="card shadow-sm custom-card" (click)="irADetalleProducto(item.idProducto)">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+    <!-- Uso correcto de @for -->
+    @for (item of products; track item.id) {
+      <div class="col">
+        <div class="card shadow-sm custom-card" (click)="irADetalleProducto(item.id)">
           <img
             class="card-img-top custom-card-image"
             [src]="item.imagen"
@@ -17,5 +19,6 @@
           </div>
         </div>
       </div>
-    </div>
+    }
   </div>
+</div>

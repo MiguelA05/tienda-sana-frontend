@@ -13,12 +13,16 @@ import { CommonModule } from '@angular/common';
   templateUrl: './correo-recuperacion.component.html',
   styleUrls: ['./correo-recuperacion.component.css']
 })
-export class correoRecuperacionComponent {
-
+export class CorreoRecuperacionComponent {
   recoveryForm!: FormGroup;
-  isLoading: boolean=false;
+  isLoading: boolean = false;
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private dataService: DataService, private router: Router) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: AuthService,
+    private dataService: DataService,
+    private router: Router
+  ) {
     this.createForm();
   }
 
@@ -36,38 +40,31 @@ export class correoRecuperacionComponent {
         this.isLoading = false;
         Swal.fire({
           title: 'Correo enviado',
-          text: 'Codigo de recuperacion enviado con exito',
+          text: 'Código de recuperación enviado con éxito',
           icon: 'success',
           confirmButtonText: 'Aceptar'
-        })
+        });
         this.dataService.setData(this.recoveryForm.get('email')?.value);
         this.router.navigate(['/cambiar-password']);
       },
-      error: error => {
-        if(this.recoveryForm.get('email')?.value === '') {
-          this.isLoading = false;
+      error: (error) => {
+        this.isLoading = false;
+        if (this.recoveryForm.get('email')?.value === '') {
           Swal.fire({
             title: 'Error',
-            text: 'No se ha ingresado un correo electronico',
+            text: 'No se ha ingresado un correo electrónico',
             icon: 'error',
             confirmButtonText: 'Aceptar'
-          })
-        }else{
+          });
+        } else {
           Swal.fire({
             title: 'Error',
             text: error.error.reply,
             icon: 'error',
             confirmButtonText: 'Aceptar'
-          })
+          });
         }
-        this.isLoading = false;
-
       }
-    })
+    });
   }
-
 }
-
-
-
-

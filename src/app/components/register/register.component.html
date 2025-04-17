@@ -1,5 +1,3 @@
-
-
 <body>
   <!-- Elementos decorativos -->
   <div class="decorative-circles">
@@ -7,164 +5,100 @@
     <div class="circle circle-two"></div>
     <div class="line"></div>
   </div>
-  
+
   <div class="container">
     <div class="registration-card">
       <!-- Encabezado -->
       <div class="card-header">
         <i class="fa-solid fa-user-plus me-2"></i>Registro de Usuario
       </div>
-      
-      <form class="registration-form" novalidate>
+
+      <form [formGroup]="registroForm" (ngSubmit)="registrar()" class="registration-form" novalidate>
         <div class="row">
           <!-- Cédula -->
           <div class="col-md-6">
             <div class="form-group">
-              <input type="number" class="form-control" id="cedula" placeholder=" " required />
+              <input type="number" class="form-control" id="cedula" formControlName="cedula" placeholder=" " />
               <label for="cedula" class="form-label">Cédula</label>
               <i class="fa-solid fa-id-card input-icon"></i>
-              <div class="error-message">Por favor ingrese su cédula</div>
+              @if (isCedulaInvalid) {
+                <div class="error-message">Por favor ingrese su cédula</div>
+              }
             </div>
           </div>
 
           <!-- Nombre -->
           <div class="col-md-6">
             <div class="form-group">
-              <input type="text" class="form-control" id="nombre" placeholder=" " required />
+              <input type="text" class="form-control" id="nombre" formControlName="nombre" placeholder=" " />
               <label for="nombre" class="form-label">Nombre</label>
               <i class="fa-solid fa-user input-icon"></i>
-              <div class="error-message">Por favor ingrese su nombre</div>
+              @if (isNombreInvalid) {
+                <div class="error-message">Por favor ingrese su nombre</div>
+              }
             </div>
           </div>
 
           <!-- Dirección -->
           <div class="col-md-6">
             <div class="form-group">
-              <input type="text" class="form-control" id="direccion" placeholder=" " required />
+              <input type="text" class="form-control" id="direccion" formControlName="direccion" placeholder=" " />
               <label for="direccion" class="form-label">Dirección</label>
               <i class="fa-solid fa-location-dot input-icon"></i>
-              <div class="error-message">Por favor ingrese su dirección</div>
+              @if (isDireccionInvalid) {
+                <div class="error-message">Por favor ingrese su dirección</div>
+              }
             </div>
           </div>
 
           <!-- Teléfono -->
           <div class="col-md-6">
             <div class="form-group">
-              <input type="tel" class="form-control" id="telefono" placeholder=" " required />
+              <input type="tel" class="form-control" id="telefono" formControlName="telefono" placeholder=" " />
               <label for="telefono" class="form-label">Teléfono</label>
               <i class="fa-solid fa-phone input-icon"></i>
-              <div class="error-message">Por favor ingrese su teléfono</div>
+              @if (isTelefonoInvalid) {
+                <div class="error-message">Por favor ingrese su teléfono</div>
+              }
             </div>
           </div>
 
           <!-- Email -->
           <div class="col-md-6">
             <div class="form-group">
-              <input type="email" class="form-control" id="email" placeholder=" " required />
+              <input type="email" class="form-control" id="email" formControlName="email" placeholder=" " />
               <label for="email" class="form-label">Email</label>
               <i class="fa-solid fa-envelope input-icon"></i>
-              <div class="error-message">Por favor ingrese un email válido</div>
+              @if (isEmailInvalid) {
+                <div class="error-message">Por favor ingrese un email válido</div>
+              }
             </div>
           </div>
-          
-          
         </div>
 
         <!-- Términos y condiciones -->
         <div class="form-check">
-          <input type="checkbox" class="form-check-input" id="terms" required>
+          <input type="checkbox" class="form-check-input" id="terms" formControlName="terms" />
           <label class="form-check-label" for="terms">
             Acepto los <a href="#" class="terms-link">términos y condiciones</a>
           </label>
-          <div class="error-message">Debe aceptar los términos para continuar</div>
+          @if (isTermsInvalid) {
+            <div class="error-message">Debe aceptar los términos para continuar</div>
+          }
         </div>
 
         <!-- Botón de registro -->
         <div class="button-container">
-          <button type="submit" class="btn-primary" id="submitBtn">
+          <button type="submit" class="btn-primary" [disabled]="registroForm.invalid || isLoading">
             <i class="fa-solid fa-user-plus me-2"></i>Registrarse
           </button>
         </div>
-        
+
         <!-- Link para iniciar sesión -->
         <div class="links-container">
-          ¿Ya tienes cuenta? <a href="login.html">Iniciar sesión</a>
+          ¿Ya tienes cuenta? <a routerLink="/login">Iniciar sesión</a>
         </div>
       </form>
     </div>
   </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    (() => {
-      'use strict';
-      const form = document.querySelector('.registration-form');
-      const submitBtn = document.getElementById('submitBtn');
-
-      form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        
-        let isValid = true;
-        const inputs = form.querySelectorAll('input[required]');
-        
-        // Validar todos los campos
-        inputs.forEach(input => {
-          if (!input.value.trim()) {
-            showError(input);
-            isValid = false;
-          } else {
-            hideError(input);
-            
-            // Validación específica para email
-            if (input.type === 'email') {
-              const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-              if (!emailPattern.test(input.value)) {
-                showError(input);
-                isValid = false;
-              }
-            }
-          }
-        });
-        
-        if (isValid) {
-          // Mostrar animación de carga
-          submitBtn.classList.add('btn-loading');
-          
-          // Simular envío (quitar en producción)
-          setTimeout(() => {
-            alert('Registro exitoso!');
-            submitBtn.classList.remove('btn-loading');
-            form.reset();
-          }, 1500);
-        }
-      });
-      
-      // Mostrar error
-      function showError(input) {
-        input.classList.add('is-invalid');
-        const errorDiv = input.closest('.form-group').querySelector('.error-message');
-        if (errorDiv) {
-          errorDiv.style.opacity = '1';
-        }
-      }
-      
-      // Ocultar error
-      function hideError(input) {
-        input.classList.remove('is-invalid');
-        const errorDiv = input.closest('.form-group').querySelector('.error-message');
-        if (errorDiv) {
-          errorDiv.style.opacity = '0';
-        }
-      }
-      
-      // Validar campos en tiempo real
-      inputs.forEach(input => {
-        input.addEventListener('input', () => {
-          if (input.value.trim()) {
-            hideError(input);
-          }
-        });
-      });
-    })();
-  </script>
 </body>

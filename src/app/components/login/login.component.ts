@@ -1,20 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControlOptions, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FormBuilder } from '@angular/forms';
-import { FormControl } from '@angular/forms';
-import { Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.services';
-import { LoginDTO } from '../../dto/login-dto';
-import { TokenService } from '../../services/token.service';
 import { CommonModule } from '@angular/common'; 
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterModule, FormsModule, CommonModule],
+  standalone: true,
+  imports: [ReactiveFormsModule, RouterModule, CommonModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {  
   isLoading: boolean = false;
@@ -25,13 +19,19 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required, Validators.minLength(7), Validators.maxLength(20)],
+      password: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(20)]],
+      remember: [false]
     });
   }
 
-  
-
-  public login() {
-    
+  public login(): void {
+    if (this.loginForm.valid) {
+      this.isLoading = true;
+      // Simulación de inicio de sesión
+      setTimeout(() => {
+        this.isLoading = false;
+        console.log('Inicio de sesión exitoso:', this.loginForm.value);
+      }, 2000);
+    }
   }
 }

@@ -1,35 +1,27 @@
 import { Component } from '@angular/core';
 import { CardGridComponent } from "../card-grid/card-grid.component";
 import { PublicoService } from '../../services/publico.service';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {RouterModule} from '@angular/router';
-import {LoginDTO} from '../../dto/login-dto';
-import {FiltroProductoDTO} from '../../dto/filtro-producto-dto';
-import {ProductoDTO} from '../../dto/producto-dto';
-import Swal from 'sweetalert2';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CardGridComponent, FormsModule,ReactiveFormsModule, RouterModule, CommonModule],
+  imports: [CardGridComponent, FormsModule, ReactiveFormsModule, RouterModule, CommonModule],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
-
   currentPage: number = 0;
   filterForm!: FormGroup;
-  productos: [] = [];
-  seleccionados: ProductoDTO[];
+  productos: any[] = [];
+  seleccionados: any[] = [];
   productosDisponibles: boolean = true;
   pages: number[] = [];
   filterUsed: boolean = false;
-  tipos: string[]=[];
+  tipos: string[] = [];
 
-  typeSelected: boolean = false;
-
-  // New property for carousel items
   carouselItems = [
     {
       imageUrl: "https://www.muyinteresante.com/wp-content/uploads/sites/5/2023/08/16/64dce698e98ce.jpeg",
@@ -55,8 +47,6 @@ export class HomeComponent {
     this.obtenerProductos(this.currentPage);
     this.obtenerCategorias();
     this.createForm();
-
-    this.seleccionados = [];
   }
 
   nextSlide() {
@@ -68,11 +58,11 @@ export class HomeComponent {
   }
 
   public obtenerProductos(page: number) {
-    
+    // Lógica para obtener productos
   }
 
   public obtenerCategorias() {
-    
+    // Lógica para obtener categorías
   }
 
   createForm() {
@@ -84,13 +74,13 @@ export class HomeComponent {
   }
 
   public filter(page: number) {
-    
+    // Lógica para filtrar productos
   }
 
   public nextPage() {
     this.currentPage++;
     if (this.filterUsed) {
-      this.filter(this.currentPage)
+      this.filter(this.currentPage);
     } else {
       this.obtenerProductos(this.currentPage);
     }
@@ -100,14 +90,14 @@ export class HomeComponent {
   public previousPage() {
     this.currentPage--;
     if (this.filterUsed) {
-      this.filter(this.currentPage)
+      this.filter(this.currentPage);
     } else {
       this.obtenerProductos(this.currentPage);
     }
   }
 
   public actualizarProductosDisponibles() {
-    this.productosDisponibles = this.currentPage < this.pages.length-1;
+    this.productosDisponibles = this.currentPage < this.pages.length - 1;
   }
 
   public resetForm() {
