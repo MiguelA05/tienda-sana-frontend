@@ -8,6 +8,7 @@
     padding: 20px;
     transition: background 0.3s ease;
     text-align: center;
+    position: relative;
 }
 
 /* Tarjeta del login */
@@ -20,6 +21,8 @@
     background-color: #ffffff;
     transform: translateY(0);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    will-change: transform, box-shadow;
 }
 
 .login-card:hover {

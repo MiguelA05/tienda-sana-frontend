@@ -7,12 +7,15 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .elegant-carousel {
   position: relative;
   border-radius: 12px;
   transition: all 0.3s ease;
+  position: relative;
+  will-change: transform, box-shadow;
 }
 
 .elegant-carousel:hover {
@@ -28,6 +31,10 @@
 .elegant-carousel .carousel-item {
   position: relative;
   height: 300px;
+  object-fit: cover;
+  width: 100%;
+  object-position: center;
+  
 }
 
 .elegant-carousel .carousel-item img {
@@ -142,6 +149,7 @@
 /* Barra de filtros */
 .filter-container {
   margin-bottom: 3rem;
+  position: relative;
 }
 
 .elegant-filter-bar {
@@ -153,6 +161,8 @@
   position: relative;
   margin-top: -50px;
   z-index: 20;
+  position: relative;
+  will-change: transform, box-shadow;
 }
 
 .elegant-filter-bar:hover {

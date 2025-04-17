@@ -63,6 +63,8 @@
     transform: translateY(0);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     z-index: 1;
+    position: relative;
+    will-change: transform, box-shadow;
 }
 
 .verification-card:hover {

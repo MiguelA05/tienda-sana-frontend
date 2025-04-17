@@ -5,6 +5,7 @@
   position: sticky;
   top: 0;
   z-index: 1000;
+  position: relative;
 }
 
 /* Main Header */
@@ -18,6 +19,8 @@
   background: #ffffff;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
+  position: relative;
+  will-change: transform, box-shadow;
 }
 
 /* Al hacer scroll, añadir esta clase con JavaScript */

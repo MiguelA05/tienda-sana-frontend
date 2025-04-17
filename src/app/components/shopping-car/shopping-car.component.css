@@ -5,6 +5,7 @@
     border-radius: 12px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     transition: background 0.3s ease;
+    position: relative;
 }
 
 /* Título principal */
@@ -13,6 +14,7 @@
     color: #198754;
     letter-spacing: 0.5px;
     margin-bottom: 30px;
+    position: relative;
 }
 
 /* Tarjetas */
@@ -25,6 +27,8 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: hidden;
     margin-bottom: 25px;
+    position: relative;
+    will-change: transform, box-shadow;
 }
 
 .card:hover {

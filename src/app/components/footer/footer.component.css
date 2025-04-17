@@ -4,6 +4,7 @@
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   padding: 10px 20px;
   transition: background 0.3s ease;
+  position: relative;
 }
 
 /* Footer principal */
@@ -17,6 +18,8 @@
   align-items: center;
   border-top: 1px solid rgba(25, 135, 84, 0.2);
   transition: all 0.3s ease;
+  position: relative;
+  will-change: transform, box-shadow;
 }
 
 /* Sección de copyright */
