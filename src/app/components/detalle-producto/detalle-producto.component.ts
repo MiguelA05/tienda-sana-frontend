@@ -86,7 +86,6 @@ export class DetalleProductoComponent implements OnInit {
   private cargarDatosProducto(): void {
     if (this.producto) {
       this.detalleCarrtitoForm.patchValue({
-        id: this.producto.id,
         nombre: this.producto.nombre,
         categoria: this.producto.categoria,
         descripcion: this.producto.descripcion,
@@ -96,8 +95,6 @@ export class DetalleProductoComponent implements OnInit {
       });
     }
   }
-
- 
 
   agregarAlCarrito(): void {
     if (this.producto && this.producto.cantidad > 0) {

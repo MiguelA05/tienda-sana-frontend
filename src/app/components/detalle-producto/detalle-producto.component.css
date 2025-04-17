@@ -3,8 +3,9 @@
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  padding: 30px;
+  
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center
 }
 
 .container:hover {
@@ -52,6 +53,11 @@
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
   margin-bottom: 20px;
   transition: transform 0.3s ease;
+  text-align: center;
+  padding-left: 50px;
+  padding-right: 50px;
+  position: relative;
+  justify-content: center;
 }
 
 .card:hover {
@@ -62,13 +68,28 @@
   color: #198754;
   font-weight: 600;
   margin-bottom: 15px;
+  justify-content: center;
+  text-align: center;
 }
 
 /* Estilo para el precio */
 .price-container {
   display: flex;
   align-items: baseline;
+  justify-content: center; /* Centra los elementos horizontalmente */
   gap: 10px;
+  text-align: center;
+  margin-bottom: 20px; /* Elimina el margen izquierdo y centra el contenedor */
+  position: relative;
+}
+
+/* Centrar las filas internas */
+.row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center; /* Asegura que el texto dentro de las filas esté centrado */
 }
 
 .product-price {
@@ -144,6 +165,7 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
+  margin-bottom: 50px;
 }
 
 .btn-custom:hover {
@@ -170,6 +192,15 @@
 
 .text-danger {
   color: #dc3545 !important;
+}
+
+/* Centrar las columnas */
+.col-md-4, .col-md-6, .col-md-12, .mb-3 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 /* Responsive */

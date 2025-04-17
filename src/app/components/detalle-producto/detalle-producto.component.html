@@ -16,26 +16,7 @@
   </div>
 
   <div class="row mb-3">
-    <div class="col-md-4">
-      <div class="p-3 border bg-light rounded">
-        <strong>Categoría:</strong> {{ producto.categoria }}
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="p-3 border bg-light rounded">
-        <strong>Precio:</strong> {{ producto.precioUnitario | currency }}
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="p-3 border bg-light rounded">
-        <strong>Disponibilidad:</strong> 
-        <span [ngClass]="{'text-success': producto.cantidad > 10, 
-                         'text-warning': producto.cantidad > 0 && producto.cantidad <= 10, 
-                         'text-danger': producto.cantidad <= 0}">
-          {{ getDisponibilidadTexto() }}
-        </span>
-      </div>
-    </div>
+    
   </div>
 
   <hr class="my-4">
@@ -47,8 +28,27 @@
           <h3 class="card-title">Detalles del producto</h3>
           
           <div class="mb-3">
-            <p>ID: {{ producto.id }}</p>
-            <p>{{ producto.descripcion }}</p>
+            <div class="col-md-4">
+              <div class="p-3 border bg-light rounded">
+                <strong>Categoría:</strong> {{ producto.categoria }}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="p-3 border bg-light rounded">
+                <strong>Disponibilidad:</strong> 
+                <span [ngClass]="{'text-success': producto.cantidad > 10, 
+                                 'text-warning': producto.cantidad > 0 && producto.cantidad <= 10, 
+                                 'text-danger': producto.cantidad <= 0}">
+                  {{ getDisponibilidadTexto() }}
+                </span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="p-3 border bg-light rounded">
+                <strong>Cantidad disponible:</strong> {{ producto.cantidad }}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -86,9 +86,9 @@
             </button>
           </div>
           
-          <p class="mt-3" *ngIf="producto.cantidad > 0">
+          <h1 class="mt-3" *ngIf="producto.cantidad > 0">
             Total: {{ (cantidadSeleccionada * producto.precioUnitario) | currency }}
-          </p>
+          </h1>
         </div>
       </div>
     </div>
