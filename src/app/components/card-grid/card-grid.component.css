@@ -1,21 +1,22 @@
 /* Contenedor principal */
-.card-grid-container {
+  .card-grid-container {
     padding: 20px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    position: relative;
+    
   }
   
   /* Tarjetas individuales */
   .custom-card {
-    border-radius: 12px;
-    overflow: hidden;
+    width: 100%; /* Asegura que las tarjetas ocupen el ancho completo de la columna */
+    max-width: 300px; /* Limita el ancho máximo de las tarjetas */
+    border: 1px solid #ffffff;
+    border-radius: 8px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     background-color: #ffffff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  
     will-change: transform, box-shadow;
+   
+    text-align: center;
   }
   
   .custom-card:hover {
@@ -37,13 +38,16 @@
   
   /* Título y texto */
   .card-title {
-    font-size: 1.2rem;
-    color: #495057;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #857e81;
+    margin-bottom: 8px;
   }
   
   .card-text {
     font-size: 1rem;
-    color: #6c757d;
+    color: #000000;
+    margin-bottom: 12px;
   }
   
   /* Precio */
@@ -56,6 +60,7 @@
   .btn-custom {
     background: linear-gradient(135deg, #198754 0%, #20c997 100%);
     color: #ffffff;
+    border: 1px solid #ffffff;
     font-weight: 600;
     padding: 10px 20px;
     border-radius: 8px;
@@ -80,6 +85,10 @@
   @media (max-width: 576px) {
     .custom-card-image {
       height: 150px;
+    }
+
+    .custom-card {
+      max-width: 100%; /* Asegura que las tarjetas ocupen el ancho completo en pantallas pequeñas */
     }
   
     .card-title {

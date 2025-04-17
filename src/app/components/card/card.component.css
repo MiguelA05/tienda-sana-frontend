@@ -1,13 +1,15 @@
 /* Contenedor principal de la tarjeta */
-.custom-card {
-    max-width: 400px;
-    margin: 20px auto;
+  .custom-card {
+    margin: 0 auto; /* Centra las tarjetas dentro de su columna */
+    max-width: 300px; /* Limita el ancho máximo */
     border-radius: 12px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     background-color: #ffffff;
     position: relative;
     will-change: transform, box-shadow;
+    justify-content: center;
+    text-align: center;
   }
   
   .custom-card:hover {
@@ -50,7 +52,7 @@
   
   /* Contenido de la tarjeta */
   mat-card-content {
-    padding: 15px;
+ 
     font-size: 1rem;
     color: #495057;
     text-align: center;
