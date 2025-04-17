@@ -31,11 +31,11 @@
           <div class="product-pricing">
             <div class="price-container">
               <p class="product-price">${{ producto?.precio | number: '1.2-2' }}</p>
-              <p class="original-price" *ngIf="producto?.descuento">${{ calcularPrecioOriginal() | number: '1.2-2' }}</p>
+              <p class="original-price" *ngIf="(producto?.descuento || 0)">${{ calcularPrecioOriginal() | number: '1.2-2' }}</p>
             </div>
-            <p class="product-quantity" [ngClass]="{'low-stock': producto?.cantidad < 5}">
-              <span class="quantity-icon" [ngClass]="{'in-stock': producto?.cantidad > 0, 'out-of-stock': producto?.cantidad === 0}">●</span>
-              {{ producto?.cantidad > 0 ? (producto?.cantidad < 5 ? '¡Últimas ' + producto?.cantidad + ' unidades!' : 'En stock: ' + producto?.cantidad) : 'Agotado' }}
+            <p class="product-quantity" [ngClass]="{'low-stock': (producto?.cantidad || 0) < 5}">
+              <span class="quantity-icon" [ngClass]="{'in-stock': (producto?.cantidad || 0) > 0, 'out-of-stock': producto?.cantidad === 0}">●</span>
+              {{ (producto?.cantidad || 0) > 0 ? ((producto?.cantidad || 0) < 5 ? '¡Últimas ' + producto?.cantidad + ' unidades!' : 'En stock: ' + producto?.cantidad) : 'Agotado' }}
             </p>
           </div>
           
@@ -49,8 +49,8 @@
           <div class="product-actions">
             <div class="quantity-selector">
               <button class="quantity-btn" (click)="decrementarCantidad()" [disabled]="cantidadSeleccionada <= 1">-</button>
-              <input type="number" [(ngModel)]="cantidadSeleccionada" min="1" [max]="producto?.cantidad" class="quantity-input">
-              <button class="quantity-btn" (click)="incrementarCantidad()" [disabled]="cantidadSeleccionada >= producto?.cantidad">+</button>
+              <input type="number" [(ngModel)]="cantidadSeleccionada" min="1" [max]="(producto?.cantidad || 0)" class="quantity-input">
+              <button class="quantity-btn" (click)="incrementarCantidad()" [disabled]="cantidadSeleccionada >= (producto?.cantidad || 0)">+</button>
             </div>
             
             <div class="action-buttons">

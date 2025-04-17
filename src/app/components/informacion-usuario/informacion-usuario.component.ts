@@ -37,8 +37,8 @@ export class InformacionUsuarioComponent implements OnInit {
     this.userInforForm = this.formBuilder.group({
       email: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
       dni: [{ value: '', disabled: true }, [Validators.required]],
-      name: [{ value: '', disabled: true }, [Validators.required]],
-      phoneNumber: [{ value: '', disabled: true }, [Validators.required, this.numberLengthValidator(10, 15)]],
+      name: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(50)]],
+      phoneNumber: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(10), Validators.maxLength(15)]],
       address: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(255)]],
       password: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(7)]],
       confirmaPassword: ['', [Validators.required]]

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 
@@ -17,7 +17,7 @@ export interface ProductoDTO {
 @Component({
   selector: 'app-detalle-producto',
   standalone: true,
-    imports: [ReactiveFormsModule, CommonModule, RouterModule],
+    imports: [ReactiveFormsModule, CommonModule, RouterModule, FormsModule],
   templateUrl: './detalle-producto.component.html',
   styleUrls: ['./detalle-producto.component.css']
 })

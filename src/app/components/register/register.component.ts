@@ -50,12 +50,12 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.registroForm = this.fb.group({
-      cedula: ['', [Validators.required]],
-      nombre: ['', [Validators.required]],
-      direccion: ['', [Validators.required]],
-      telefono: ['', [Validators.required, Validators.pattern(/^\d{7,15}$/)]],
+      cedula: ['', [Validators.required, Validators.maxLength(10)]],
+      nombre: ['', [Validators.required, Validators.maxLength(50)]],
+      direccion: ['', [Validators.required, Validators.maxLength(255)]],
+      telefono: ['', [Validators.required, Validators.maxLength(15), Validators.minLength(10)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(20)]],
       terms: [false, [Validators.requiredTrue]]
     });
   }
