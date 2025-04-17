@@ -54,20 +54,11 @@ export class TokenService {
     return values;
   }
 
-  public getIDCuenta(): string {
-    const token = this.getToken();
-    if (token) {
-      const values = this.decodePayload(token);
-      return values.id;
-    }
-    return "";
-  }
-
   public getRol(): string {
     const token = this.getToken();
     if (token) {
       const values = this.decodePayload(token);
-      return values.role;
+      return values.rol;
     }
     return "";
   }
@@ -84,7 +75,16 @@ export class TokenService {
     const token = this.getToken();
     if (token) {
       const values = this.decodePayload(token);
-      return values.name;
+      return values.nombre;
+    }
+    return "";
+  }
+
+  public getEstado(): string {
+    const token = this.getToken();
+    if (token) {
+      const values = this.decodePayload(token);
+      return values.estado;
     }
     return "";
   }
