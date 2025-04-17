@@ -1,4 +1,4 @@
 export interface MensajeDTO {
     error: boolean,
-    reply: string
+    reply: any
 }

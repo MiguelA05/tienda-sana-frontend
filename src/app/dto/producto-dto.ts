@@ -1,12 +1,10 @@
 export interface ProductoDTO {
+    id: string,
     nombre: string,
+    categoria: string,
     descripcion: string,
-    precio: number,
+    precioUnitario: number,
     cantidad: number,
-    imagenUrl: string,
-    CategoriaProducto: string,
-    calificacionPromedio: number,
-    cantidadResenias: number,
-    descuento: number,
-    EstadoPrducto: String
+    imagen: string,
+    
 }

@@ -47,6 +47,8 @@ export class HomeComponent implements OnInit {
     this.productos = [];
     this.obtenerProductos(this.currentPage);
     this.obtenerCategorias();
+    this.createForm();
+    this.seleccionados = [];
     
   }
 
@@ -81,7 +83,18 @@ export class HomeComponent implements OnInit {
   }
 
   public obtenerProductos(page: number) {
-    // Lógica para obtener productos
+    this.publicoService.listarProductos(page).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.pages = Array.from({ length: data.reply.totalPaginas }, (_, i) => i + 1);
+        this.productos = data.reply.productos;
+        this.currentPage = page;
+        this.actualizarProductosDisponibles();
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
   }
 
   public obtenerCategorias() {

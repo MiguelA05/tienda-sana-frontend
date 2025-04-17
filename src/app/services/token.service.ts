@@ -54,6 +54,15 @@ export class TokenService {
     return values;
   }
 
+  public getIDCuenta(): string {
+    const token = this.getToken();
+    if (token) {
+      const values = this.decodePayload(token);
+      return values.email;
+    }
+    return "";
+  }
+
   public getRol(): string {
     const token = this.getToken();
     if (token) {
