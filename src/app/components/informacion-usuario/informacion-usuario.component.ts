@@ -30,6 +30,7 @@ export class InformacionUsuarioComponent implements OnInit {
   
   ngOnInit(): void {
     this.createForm();
+    this.obtenerInformacionUsuario();
     
   }
 
@@ -38,26 +39,13 @@ export class InformacionUsuarioComponent implements OnInit {
       email: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
       dni: [{ value: '', disabled: true }, [Validators.required]],
       name: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(50)]],
-      phoneNumber: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(10), Validators.maxLength(15)]],
+      phoneNumber: [{ value: '', disabled: true }, [Validators.required, this.numberLengthValidator(10, 15)]],
       address: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(255)]],
-      password: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(7)]],
-      confirmaPassword: ['', [Validators.required]]
-    },
-    { validators: this.passwordsMatchValidator } as AbstractControlOptions);
+      password: ['', [Validators.maxLength(20), Validators.minLength(7)]],
+    });
   }
 
-  passwordsMatchValidator(formGroup: FormGroup): ValidationErrors | null {
-    const password = formGroup.get('password')?.value;
-    const confirmaPassword = formGroup.get('confirmaPassword')?.value;
-    
-    // Solo validamos cuando ambos campos tienen valor
-    if (!password || !confirmaPassword) {
-      return null;
-    }
-    
-    // Si las contraseñas no coinciden, devuelve un error, de lo contrario, null
-    return password === confirmaPassword ? null : { passwordsMismatch: true };
-  }
+ 
   
   numberLengthValidator(minLength: number, maxLength: number): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -96,7 +84,7 @@ export class InformacionUsuarioComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed && this.account) {
-        this.cuentaService.eliminarCuenta(this.account.idUsuario).subscribe({
+        this.cuentaService.eliminarCuenta(this.account.email).subscribe({
           next: () => {
             Swal.fire({
               title: 'Cuenta eliminada',
@@ -131,7 +119,7 @@ export class InformacionUsuarioComponent implements OnInit {
     this.userInforForm.get('address')?.disable();
     
     // Limpiar y deshabilitar los campos de contraseña
-    this.userInforForm.get('password')?.setValue('');
+    this.userInforForm.get('password')?.reset();
     this.userInforForm.get('confirmaPassword')?.setValue('');
     this.userInforForm.get('password')?.disable();
     this.userInforForm.get('confirmaPassword')?.disable();
@@ -141,48 +129,26 @@ export class InformacionUsuarioComponent implements OnInit {
   }
   
   saveChanges() {
-    if (this.userInforForm.invalid) {
-      // Marcar todos los campos como touched para mostrar errores
-      Object.keys(this.userInforForm.controls).forEach(key => {
-        const control = this.userInforForm.get(key);
-        control?.markAsTouched();
-      });
-      return;
-    }
-    
+    console.log('pase el if de invalido');
     if (!this.account) {
+      Swal.fire({
+        title: 'Error',
+        text: 'No se ha encontrado la cuenta',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
       return;
     }
     
     const formValues = this.userInforForm.getRawValue();
     
     const cuentaActualizar: ActualizarCuentaDTO = {
-      id: this.account.idUsuario,
+      email: this.account.email,
       nombre: formValues.name,
       telefono: formValues.phoneNumber,
       direccion: formValues.address,
       contrasenia: formValues.password
     };
-
-    if (!cuentaActualizar.contrasenia || cuentaActualizar.contrasenia === '') {
-      Swal.fire({
-        title: 'Error',
-        text: 'La contraseña no puede estar vacía',
-        icon: 'error',
-        confirmButtonText: 'Aceptar'
-      });
-      return;
-    }
-
-    // Mostrar indicador de carga
-    Swal.fire({
-      title: 'Guardando cambios',
-      text: 'Por favor espere...',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    });
 
     this.cuentaService.actualizarCuenta(cuentaActualizar).subscribe({
       next: () => {
@@ -219,27 +185,13 @@ export class InformacionUsuarioComponent implements OnInit {
   }
 
   public obtenerInformacionUsuario() {
-    const id = this.tokenService.getIDCuenta();
-    
-    if (!id) {
-      this.router.navigate(['/login']);
-      return;
-    }
-    
-    // Mostrar indicador de carga
-    Swal.fire({
-      title: 'Cargando datos',
-      text: 'Por favor espere...',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    });
-
-    this.cuentaService.obtenerInformacion(id).subscribe({
+    const email = this.tokenService.getIDCuenta();
+    const rol = this.tokenService.getRol();
+    console.log(rol);
+    this.cuentaService.obtenerInformacion(email).subscribe({
       next: (data) => {
-        Swal.close();
-        //this.account = data.cuenta;
+        this. account = data.reply;
+        console.log(this.account);
         this.loadAccountData();
       },
       error: (error) => {
