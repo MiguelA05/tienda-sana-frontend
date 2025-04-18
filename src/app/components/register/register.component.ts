@@ -3,6 +3,10 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { CrearCuentaDTO } from '../../dto/crear-cuenta-dto';
+import { AuthService } from '../../services/auth.services';
+import { DataService } from '../../services/data.services';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-register',
@@ -17,7 +21,7 @@ export class RegisterComponent {
   isPasswordVisible = false;
   isConfirmPasswordVisible = false;
 
-  constructor(private fb: FormBuilder, private router: Router) {}
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService, private dataService: DataService) {}
 
   ngOnInit(): void {
     this.registroForm = this.fb.group({
@@ -34,8 +38,37 @@ export class RegisterComponent {
   }
 
 
- 
-
+  /** 
+   * Método para registrar un nuevo usuario en la plataforma
+  */
+  registrar(): void {
+    if (this.registroForm.valid) {
+     const crearCuentaDTO = this.registroForm.value as CrearCuentaDTO;
+     console.log(crearCuentaDTO);
+     this.authService.crearCuenta(crearCuentaDTO).subscribe({
+        next: (data) => {
+          Swal.fire({
+            title: 'Cuenta creada',
+            text: 'La cuenta se ha creado correctamente, revise en su correo electrónico para activar su cuenta.'+ 
+            'En la carpeta de spam o correo no deseado.',
+            icon: 'success',
+            confirmButtonText: 'Aceptar'
+          })
+          this.dataService.setData(this.registroForm.get('email')?.value);
+          this.router.navigate(['/verificar-cuenta']);
+        },
+        error: (error) => {
+          Swal.fire({
+            title: 'Error',
+            text: error.error.respuesta,
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          })
+        }
+      }); 
+    }
+  }
+  
   // Métodos para verificar si un campo es inválido
   get isCedulaInvalid(): boolean {
     return this.isFieldInvalid('dni');
@@ -74,22 +107,6 @@ export class RegisterComponent {
     return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
-  registrar(): void {
-    if (this.registroForm.invalid) {
-      this.markFormGroupTouched(this.registroForm);
-      return;
-    }
-
-    this.isLoading = true;
-
-    // Simulación de envío (reemplazar con llamada real al servicio)
-    setTimeout(() => {
-      console.log('Formulario enviado:', this.registroForm.value);
-      this.isLoading = false;
-      this.registroForm.reset();
-      this.router.navigate(['/login']);
-    }, 1500);
-  }
 
   /**
    * 

@@ -34,11 +34,9 @@ export class VerificarCuentaComponent {
   }
 
   public activarCuenta(){
-    this.isLoading=true;
     const activarCuenta = this.verificarCuentaForm.value as ActivarCuentaDTO;
     this.authService.validarCodigoRegistro(activarCuenta).subscribe({
-      next: (data) => {
-        this.isLoading=false;
+      next: (data) => {   
         Swal.fire({
           title: 'Cuenta activada',
           text: 'La cuenta se ha activada correctamente',
@@ -46,7 +44,6 @@ export class VerificarCuentaComponent {
           confirmButtonText: 'Aceptar'
         })
         this.router.navigate(['/login']);
-        this.isLoading=false;
       },
       error: error => {
         Swal.fire({
@@ -61,7 +58,6 @@ export class VerificarCuentaComponent {
   }
 
   public reenviarCodigo() {
-    this.isLoading=true;
     const emailToSend= this.verificarCuentaForm.get('email')?.value;
     this.authService.reenviarCodigoVerificacion(emailToSend).subscribe({
       next: (data) => {
@@ -74,7 +70,7 @@ export class VerificarCuentaComponent {
         this.isLoading=false;
       },
       error: (error) => {
-        if(this.email === '') {
+        if(this.verificarCuentaForm.get('email')?.value === '') {
           Swal.fire({
             title: 'Error',
             text: 'No se ha ingresado un correo electrónico',
