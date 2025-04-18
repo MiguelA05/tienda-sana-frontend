@@ -15,7 +15,8 @@
 
     <!-- Cuerpo de la tarjeta -->
     <div class="card-body p-4">
-      <form class="verification-form" [formGroup]="verificarCuentaForm" (ngSubmit)="activarCuenta()">
+      <form class="verification-form" [formGroup]="verificarCuentaForm"
+        (ngSubmit)="activarCuenta()">
         <!-- Campo de Email -->
         <div class="form-group floating-field mb-4">
           <input
@@ -24,13 +25,14 @@
             formControlName="email"
             placeholder=" "
             class="form-control"
-            required
-          />
+            required />
           <label for="email" class="form-label">Correo Electrónico</label>
           <i class="fa-solid fa-envelope input-icon"></i>
           <!-- Mensaje de error opcional -->
-          @if (verificarCuentaForm.get('email')?.invalid && verificarCuentaForm.get('email')?.touched) {
-            <div class="error-message">Por favor ingrese un correo electrónico válido.</div>
+          @if (verificarCuentaForm.get('email')?.invalid &&
+          verificarCuentaForm.get('email')?.touched) {
+          <div class="error-message">Por favor ingrese un correo electrónico
+            válido.</div>
           }
         </div>
 
@@ -42,13 +44,14 @@
             formControlName="codigoVerificacionRegistro"
             placeholder=" "
             class="form-control"
-            required
-          />
-          <label for="codigoVerificacionRegistro" class="form-label">Código de Validación</label>
+            required />
+          <label for="codigoVerificacionRegistro" class="form-label">Código de
+            Validación</label>
           <i class="fa-solid fa-key input-icon"></i>
           <!-- Mensaje de error opcional -->
-          @if (verificarCuentaForm.get('codigoVerificacionRegistro')?.invalid && verificarCuentaForm.get('codigoVerificacionRegistro')?.touched) {
-            <div class="error-message">El código de validación es requerido.</div>
+          @if (verificarCuentaForm.get('codigoVerificacionRegistro')?.invalid &&
+          verificarCuentaForm.get('codigoVerificacionRegistro')?.touched) {
+          <div class="error-message">El código de validación es requerido.</div>
           }
         </div>
 
@@ -58,8 +61,7 @@
             type="submit"
             class="btn-custom"
             [disabled]="verificarCuentaForm.invalid || isLoading"
-            [ngClass]="{'btn-loading': isLoading}"
-          >
+            [ngClass]="{'btn-loading': isLoading}">
             <i class="fa-solid fa-check me-2"></i>Verificar Cuenta
           </button>
 
@@ -68,19 +70,18 @@
             type="button"
             class="btn-secondary mt-3"
             [disabled]="isLoading"
-            (click)="reenviarCodigo()"
-          >
+            (click)="reenviarCodigo()">
             Reenviar Código de Validación
           </button>
         </div>
 
         <!-- Spinner de Carga -->
         @if (isLoading) {
-          <div class="d-flex justify-content-center mt-3">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Cargando...</span>
-            </div>
+        <div class="d-flex justify-content-center mt-3">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Cargando...</span>
           </div>
+        </div>
         }
       </form>
     </div>
