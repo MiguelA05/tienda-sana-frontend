@@ -1,9 +1,8 @@
 export interface ItemCarritoDTO {
     idProducto: string,
-    idUsuario: string,
-    categoriaProducto: string,
     nombreProducto: string,
-    cantidad: number
+    categoria: string,
     precio: number
+    cantidad: number
     total: number
 }
