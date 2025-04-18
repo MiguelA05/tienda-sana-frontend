@@ -8,17 +8,20 @@ import { InformacionUsuarioComponent } from './components/informacion-usuario/in
 import { CorreoRecuperacionComponent } from './components/correo-recuperacion/correo-recuperacion.component';
 import { VerificarCuentaComponent } from './components/verificar-cuenta/verificar-cuenta.component';
 import { DetalleProductoComponent } from './components/detalle-producto/detalle-producto.component';
+import { LoginGuard } from './guardias/permiso.service';
+import { RolesGuard } from './guardias/roles.service';
 
 
 export const routes: Routes = [
    { path: '', component: HomeComponent },
-   { path: 'info-usuario', component: InformacionUsuarioComponent },
-   { path: 'login', component: LoginComponent },
-   { path: 'register', component: RegisterComponent },
-   { path: 'cambiar-password', component: CambiarPasswordComponent },
-   { path: 'carrito', component: ShoppingCarComponent },
-   { path: 'correo-recuperacion', component: CorreoRecuperacionComponent },
-   { path: 'verificar-cuenta', component: VerificarCuentaComponent },
+   { path: 'info-usuario', component: InformacionUsuarioComponent, canActivate: [RolesGuard],
+       data: { expectedRole: ['CLIENTE'] } },
+   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
+   { path: 'register', component: RegisterComponent, canActivate: [LoginGuard] },
+   { path: 'cambiar-password', component: CambiarPasswordComponent, canActivate: [LoginGuard] },
+   { path: 'carrito', component: ShoppingCarComponent, canActivate: [RolesGuard], data: { expectedRole: ['CLIENTE'] } },
+   { path: 'correo-recuperacion', component: CorreoRecuperacionComponent, canActivate: [LoginGuard] },
+   { path: 'verificar-cuenta', component: VerificarCuentaComponent, canActivate: [LoginGuard] },
    { path: 'detalle-producto/:id', component: DetalleProductoComponent },
    { path: "**", pathMatch: "full", redirectTo: "" }
    
