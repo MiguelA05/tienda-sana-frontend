@@ -18,16 +18,40 @@ body {
     
 }
 
+/* Alerta de contraseñas no coincidentes */
+.password-mismatch-alert {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  border-left: 3px solid #dc3545;
+}
+
+.alert-icon {
+  margin-right: 10px;
+  font-size: 1rem;
+}
+
+.password-input-container {
+    position: relative;
+    width: 100%;
+  }
+
 .btn-visibility {
-    position: absolute; /* Posiciona el botón dentro del contenedor relativo */
-    top: 50%; /* Centra verticalmente */
-    right: 10px; /* Alinea a la derecha con un margen de 10px */
-    transform: translateY(-50%); /* Ajusta el centrado vertical */
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
     background: none;
     border: none;
     cursor: pointer;
     font-size: 1.2rem;
     color: #6c757d;
+    z-index: 10;
   }
   
   .btn-visibility:hover {
@@ -127,7 +151,6 @@ body {
     position: absolute;
     top: 50%;
     left: 40px;
-    top: 25px;
     transform: translateY(-50%);
     background-color: transparent;
     transition: all 0.3s ease;

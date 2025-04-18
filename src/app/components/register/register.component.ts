@@ -29,7 +29,8 @@ export class RegisterComponent {
       password: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(20)]],
       confirmaPassword: ['', [Validators.required]],
       terms: [false, [Validators.requiredTrue]]
-    });
+    }, { validators: this.passwordsMatchValidator } // Aplica el validador aquí
+  );
   }
 
   // Métodos para verificar si un campo es inválido
@@ -106,6 +107,15 @@ export class RegisterComponent {
 
   toggleConfirmPasswordVisibility(): void {
     this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible;
+  }
+
+
+  passwordsMatchValidator(formGroup: FormGroup) {
+    const password = formGroup.get('password')?.value;
+    const confirmaPassword = formGroup.get('confirmaPassword')?.value;
+    // Si las contraseñas no coinciden, devuelve un error, de lo contrario, null
+    return password == confirmaPassword ? null : { passwordsMismatch: true };
+
   }
 
 }

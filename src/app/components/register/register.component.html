@@ -10,19 +10,21 @@
     <div class="registration-card">
       <!-- Encabezado -->
       <div class="card-header">
-        <i class="fa-solid fa-user-plus me-2"></i>  Registro de Usuario
+        <i class="fa-solid fa-user-plus me-2"></i> Registro de Usuario
       </div>
 
-      <form [formGroup]="registroForm" (ngSubmit)="registrar()" class="registration-form" novalidate>
+      <form [formGroup]="registroForm" (ngSubmit)="registrar()"
+        class="registration-form" novalidate>
         <div class="row">
           <!-- Cédula -->
           <div class="col-md-6">
             <div class="form-group">
-              <input type="number" class="form-control" id="cedula" formControlName="cedula" placeholder=" " />
+              <input type="number" class="form-control" id="cedula"
+                formControlName="cedula" placeholder=" " />
               <label for="cedula" class="form-label">Cédula</label>
               <i class="fa-solid fa-id-card input-icon"></i>
               @if (isCedulaInvalid) {
-                <div class="error-message">Por favor ingrese su cédula</div>
+              <div class="error-message">Por favor ingrese su cédula</div>
               }
             </div>
           </div>
@@ -30,11 +32,12 @@
           <!-- Nombre -->
           <div class="col-md-6">
             <div class="form-group">
-              <input type="text" class="form-control" id="nombre" formControlName="nombre" placeholder=" " />
+              <input type="text" class="form-control" id="nombre"
+                formControlName="nombre" placeholder=" " />
               <label for="nombre" class="form-label">Nombre</label>
               <i class="fa-solid fa-user input-icon"></i>
               @if (isNombreInvalid) {
-                <div class="error-message">Por favor ingrese su nombre</div>
+              <div class="error-message">Por favor ingrese su nombre</div>
               }
             </div>
           </div>
@@ -42,11 +45,12 @@
           <!-- Dirección -->
           <div class="col-md-6">
             <div class="form-group">
-              <input type="text" class="form-control" id="direccion" formControlName="direccion" placeholder=" " />
+              <input type="text" class="form-control" id="direccion"
+                formControlName="direccion" placeholder=" " />
               <label for="direccion" class="form-label">Dirección</label>
               <i class="fa-solid fa-location-dot input-icon"></i>
               @if (isDireccionInvalid) {
-                <div class="error-message">Por favor ingrese su dirección</div>
+              <div class="error-message">Por favor ingrese su dirección</div>
               }
             </div>
           </div>
@@ -54,11 +58,12 @@
           <!-- Teléfono -->
           <div class="col-md-6">
             <div class="form-group">
-              <input type="tel" class="form-control" id="telefono" formControlName="telefono" placeholder=" " />
+              <input type="tel" class="form-control" id="telefono"
+                formControlName="telefono" placeholder=" " />
               <label for="telefono" class="form-label">Teléfono</label>
               <i class="fa-solid fa-phone input-icon"></i>
               @if (isTelefonoInvalid) {
-                <div class="error-message">Por favor ingrese su teléfono</div>
+              <div class="error-message">Por favor ingrese su teléfono</div>
               }
             </div>
           </div>
@@ -66,89 +71,103 @@
           <!-- Email -->
           <div class="col-md-6">
             <div class="form-group">
-              <input type="email" class="form-control" id="email" formControlName="email" placeholder=" " />
+              <input type="email" class="form-control" id="email"
+                formControlName="email" placeholder=" " />
               <label for="email" class="form-label">Email</label>
               <i class="fa-solid fa-envelope input-icon"></i>
               @if (isEmailInvalid) {
-                <div class="error-message">Por favor ingrese un email válido</div>
+              <div class="error-message">Por favor ingrese un email válido</div>
+              }
+            </div>
+          </div>
+
+          <!-- Contraseña -->
+          <div class="col-md-6">
+            <div class="form-group position-relative">
+              <div class="password-input-container">
+                <input
+                  [type]="isPasswordVisible ? 'text' : 'password'"
+                  class="form-control"
+                  id="password"
+                  formControlName="password"
+                  placeholder=" "
+                  required />
+                <label for="password" class="form-label">Contraseña</label>
+                <i class="fa-solid fa-lock input-icon"></i>
+                <button
+                  type="button"
+                  class="btn-visibility"
+                  (click)="togglePasswordVisibility()"
+                  aria-label="Mostrar u ocultar contraseña">
+                  <i
+                    [class]="isPasswordVisible ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+                </button>
+              </div>
+              @if (isPasswordInvalid) {
+              <div class="error-message">Por favor ingrese una contraseña
+                válida</div>
+              }
+            </div>
+          </div>
+
+          <!-- Confirmar Contraseña -->
+          <div class="col-md-6">
+            <div class="form-group position-relative">
+              <div class="password-input-container">
+                <input
+                  [type]="isConfirmPasswordVisible ? 'text' : 'password'"
+                  class="form-control"
+                  id="confirmaPassword"
+                  formControlName="confirmaPassword"
+                  placeholder=" "
+                  required />
+                <label for="confirmaPassword"
+                  class="form-label">Contraseña</label>
+                <i class="fa-solid fa-lock input-icon"></i>
+                <button
+                  type="button"
+                  class="btn-visibility"
+                  (click)="toggleConfirmPasswordVisibility()"
+                  aria-label="Mostrar u ocultar contraseña">
+                  <i
+                    [class]="isConfirmPasswordVisible ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+                </button>
+              </div>
+              @if (isConfirmaPasswordInvalid) {
+              <div class="error-message">Por favor confirme su
+                contraseña</div>
               }
             </div>
           </div>
 
 
-           <!-- Contraseña -->
-      <div class="col-md-6">
-        <div class="form-group position-relative">
-          <div class="password-input-container">
-            <input
-              [type]="isPasswordVisible ? 'text' : 'password'"
-              class="form-control"
-              id="password"
-              formControlName="password"
-              placeholder=" "
-              required
-            />
-            <label for="password" class="form-label">Contraseña</label>
-            <i class="fa-solid fa-lock input-icon"></i>
-            <button
-              type="button"
-              class="btn-visibility"
-              (click)="togglePasswordVisibility()"
-              aria-label="Mostrar u ocultar contraseña"
-            >
-              <i [class]="isPasswordVisible ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
-            </button>
+          <!-- Alerta de error para contraseñas que no coinciden -->
+        @if (registroForm.hasError('passwordsMismatch') && registroForm.get('confirmaPassword')?.touched) {
+          <div class="password-mismatch-alert">
+            <i class="fa-solid fa-triangle-exclamation alert-icon"></i>
+            Las contraseñas no coinciden
           </div>
-          @if (isPasswordInvalid) {
-            <div class="error-message">Por favor ingrese una contraseña válida</div>
-          }
-        </div>
-      </div>
-
-      <!-- Confirmar Contraseña -->
-      <div class="col-md-6">
-        <div class="form-group position-relative">
-          <input
-            [type]="isPasswordVisible ? 'text' : 'confirmaPassword'"
-            class="form-control"
-            id="confirmaPassword"
-            formControlName="confirmaPassword"
-            placeholder=" "
-            required
-          />
-          <label for="confirmaPassword" class="form-label">Contraseña</label>
-          <i class="fa-solid fa-lock input-icon"></i>
-          <button
-            type="button"
-            class="btn-visibility"
-            (click)="togglePasswordVisibility()"
-            aria-label="Mostrar u ocultar contraseña"
-          >
-            <i [class]="isConfirmaPasswordInvalid ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
-          </button>
-          @if (isConfirmaPasswordInvalid) {
-            <div class="error-message">Por favor confirme su contraseña</div>
-          }
-        </div>
-      </div>  
-
+        }
 
         </div>
 
         <!-- Términos y condiciones -->
         <div class="form-check">
-          <input type="checkbox" class="form-check-input" id="terms" formControlName="terms" />
+          <input type="checkbox" class="form-check-input" id="terms"
+            formControlName="terms" />
           <label class="form-check-label" for="terms">
             Acepto los <a href="#" class="terms-link">términos y condiciones</a>
           </label>
           @if (isTermsInvalid) {
-            <div class="error-message">Debe aceptar los términos para continuar</div>
+          <div class="error-message">Debe aceptar los términos para
+            continuar</div>
           }
         </div>
 
         <!-- Botón de registro -->
         <div class="button-container">
-          <button type="submit" class="btn-primary" [disabled]="registroForm.invalid || isLoading">
+          <button type="submit" class="btn-primary"
+            [disabled]="registroForm.invalid || isLoading">
             <i class="fa-solid fa-user-plus me-2"></i>Registrarse
           </button>
         </div>
