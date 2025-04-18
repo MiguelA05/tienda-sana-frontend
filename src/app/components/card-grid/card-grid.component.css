@@ -19,14 +19,14 @@
 /* Tarjetas individuales */
 .custom-card {
   width: 100%;
-  max-width: 400px;
+  max-width: 350px;
   border-radius: 12px;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   background-color: #ffffff;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
   will-change: transform, box-shadow;
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
 }
@@ -47,7 +47,7 @@
 
 /* Imagen de la tarjeta */
 .custom-card-image {
-  height: 300px;
+  height: 250px;
   width: 100%;
   object-fit: cover;
   transition: transform 0.4s ease, filter 0.3s ease;
@@ -62,7 +62,7 @@
 
 /* Cuerpo de la tarjeta */
 .card-body {
-  padding: 25px;
+  padding: 20px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -70,7 +70,7 @@
 
 /* Título y texto */
 .card-title {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #495057;
   margin-bottom: 10px;
@@ -83,14 +83,14 @@
 }
 
 .card-text {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: #6c757d;
   margin-bottom: 15px;
 }
 
 /* Precio */
 .card-text.text-success {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   color: #198754 !important;
   margin-top: auto;
@@ -109,7 +109,7 @@
   background: linear-gradient(135deg, #198754 0%, #20c997 100%);
   color: #ffffff;
   font-weight: 600;
-  padding: 12px 28px;
+  padding: 10px 20px;
   border-radius: 8px;
   border: none;
   transition: all 0.3s ease;
@@ -145,6 +145,7 @@
 @media (max-width: 576px) {
   .card-grid-container {
     padding: 15px;
+    max-width: 100%;
   }
   
   .cards-grid {
@@ -156,28 +157,28 @@
   }
   
   .custom-card-image {
-    height: 180px;
+    height: 150px;
   }
   
   .card-body {
-    padding: 15px;
+    padding: 10px;
   }
   
   .card-title {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
   
   .card-text {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     margin-bottom: 10px;
   }
   
   .card-text.text-success {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
   
   .btn-custom {
-    padding: 8px 15px;
-    font-size: 0.9rem;
+    padding: 6px 12px;
+    font-size: 0.8rem;
   }
 }
