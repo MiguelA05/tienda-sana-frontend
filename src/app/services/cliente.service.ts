@@ -20,6 +20,10 @@ export class ClienteService {
     return this.http.get<MensajeDTO>(`${this.clienteURL}/order/history/${clientId}`);
   }
 
+  public getCartItemCount(clientId: string): Observable<number> {
+    return this.http.get<number>(`${this.clienteURL}/carrito/item-count/${clientId}`);
+  }
+
   public obtenerProducto(id: string): Observable<MensajeDTO> {
     return this.http.get<MensajeDTO>(`${this.clienteURL}/producto/get/${id}`);
   }
