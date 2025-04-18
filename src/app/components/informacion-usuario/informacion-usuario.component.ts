@@ -20,6 +20,7 @@ export class InformacionUsuarioComponent implements OnInit {
   account?: InformacionCuentaDTO;
   userInforForm!: FormGroup;
   isEditing: boolean = false;
+  isPasswordVisible: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder, 
@@ -32,6 +33,10 @@ export class InformacionUsuarioComponent implements OnInit {
     this.createForm();
     this.obtenerInformacionUsuario();
     
+  }
+
+  public togglePasswordVisibility(): void {
+    this.isPasswordVisible = !this.isPasswordVisible;
   }
 
   private createForm() {
