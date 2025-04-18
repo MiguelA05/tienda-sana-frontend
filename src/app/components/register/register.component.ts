@@ -21,21 +21,24 @@ export class RegisterComponent {
 
   ngOnInit(): void {
     this.registroForm = this.fb.group({
-      cedula: ['', [Validators.required, Validators.maxLength(10)]],
+      dni: ['', [Validators.required, Validators.maxLength(10)]],
       nombre: ['', [Validators.required, Validators.maxLength(50)]],
       direccion: ['', [Validators.required, Validators.maxLength(255)]],
       telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(15)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(20)]],
-      confirmaPassword: ['', [Validators.required]],
+      contrasenia: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(20)]],
+      confirmacionContrasena: ['', [Validators.required]],
       terms: [false, [Validators.requiredTrue]]
     }, { validators: this.passwordsMatchValidator } // Aplica el validador aquí
   );
   }
 
+
+ 
+
   // Métodos para verificar si un campo es inválido
   get isCedulaInvalid(): boolean {
-    return this.isFieldInvalid('cedula');
+    return this.isFieldInvalid('dni');
   }
 
   get isNombreInvalid(): boolean {
@@ -59,11 +62,11 @@ export class RegisterComponent {
   }
 
   get isPasswordInvalid(): boolean {
-    return this.isFieldInvalid('password');
+    return this.isFieldInvalid('contrasenia');
   }
 
   get isConfirmaPasswordInvalid(): boolean {
-    return this.isFieldInvalid('confirmaPassword');
+    return this.isFieldInvalid('confirmacionContrasena');
   }
 
   private isFieldInvalid(field: string): boolean {
@@ -111,8 +114,8 @@ export class RegisterComponent {
 
 
   passwordsMatchValidator(formGroup: FormGroup) {
-    const password = formGroup.get('password')?.value;
-    const confirmaPassword = formGroup.get('confirmaPassword')?.value;
+    const password = formGroup.get('contrasenia')?.value;
+    const confirmaPassword = formGroup.get('confirmacionContrasena')?.value;
     // Si las contraseñas no coinciden, devuelve un error, de lo contrario, null
     return password == confirmaPassword ? null : { passwordsMismatch: true };
 

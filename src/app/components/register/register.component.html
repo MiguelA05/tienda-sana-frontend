@@ -19,9 +19,9 @@
           <!-- Cédula -->
           <div class="col-md-6">
             <div class="form-group">
-              <input type="number" class="form-control" id="cedula"
-                formControlName="cedula" placeholder=" " />
-              <label for="cedula" class="form-label">Cédula</label>
+              <input type="number" class="form-control" id="dni"
+                formControlName="dni" placeholder=" " />
+              <label for="dni" class="form-label">Cédula</label>
               <i class="fa-solid fa-id-card input-icon"></i>
               @if (isCedulaInvalid) {
               <div class="error-message">Por favor ingrese su cédula</div>
@@ -88,11 +88,11 @@
                 <input
                   [type]="isPasswordVisible ? 'text' : 'password'"
                   class="form-control"
-                  id="password"
-                  formControlName="password"
+                  id="contrasenia"
+                  formControlName="contrasenia"
                   placeholder=" "
                   required />
-                <label for="password" class="form-label">Contraseña</label>
+                <label for="contrasenia" class="form-label">Contraseña</label>
                 <i class="fa-solid fa-lock input-icon"></i>
                 <button
                   type="button"
@@ -117,11 +117,11 @@
                 <input
                   [type]="isConfirmPasswordVisible ? 'text' : 'password'"
                   class="form-control"
-                  id="confirmaPassword"
-                  formControlName="confirmaPassword"
+                  id="confirmacionContrasena"
+                  formControlName="confirmacionContrasena"
                   placeholder=" "
                   required />
-                <label for="confirmaPassword"
+                <label for="confirmacionContrasena"
                   class="form-label">Contraseña</label>
                 <i class="fa-solid fa-lock input-icon"></i>
                 <button
