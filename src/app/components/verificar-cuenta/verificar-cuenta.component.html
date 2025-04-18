@@ -38,16 +38,16 @@
         <div class="form-group floating-field mb-4">
           <input
             type="text"
-            id="code"
-            formControlName="registrationValidationCode"
+            id="codigoVerificacionRegistro"
+            formControlName="codigoVerificacionRegistro"
             placeholder=" "
             class="form-control"
             required
           />
-          <label for="code" class="form-label">Código de Validación</label>
+          <label for="codigoVerificacionRegistro" class="form-label">Código de Validación</label>
           <i class="fa-solid fa-key input-icon"></i>
           <!-- Mensaje de error opcional -->
-          @if (verificarCuentaForm.get('registrationValidationCode')?.invalid && verificarCuentaForm.get('registrationValidationCode')?.touched) {
+          @if (verificarCuentaForm.get('codigoVerificacionRegistro')?.invalid && verificarCuentaForm.get('codigoVerificacionRegistro')?.touched) {
             <div class="error-message">El código de validación es requerido.</div>
           }
         </div>
