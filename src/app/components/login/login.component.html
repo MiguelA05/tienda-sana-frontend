@@ -45,12 +45,12 @@
                   <input
                     [type]="isPasswordVisible ? 'text' : 'password'"
                     class="form-control"
-                    id="password"
-                    formControlName="password"
+                    id="contrasenia"
+                    formControlName="contrasenia"
                     placeholder=" "
                     required
                   />
-                  <label for="password" class="form-label">Contraseña</label>
+                  <label for="contrasenia" class="form-label">Contraseña</label>
                   <i class="fa-solid fa-lock input-icon"></i>
                   <button
                     type="button"
@@ -61,7 +61,7 @@
                     <i [class]="isPasswordVisible ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
                   </button>
                 </div>
-                @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+                @if (loginForm.get('contrasenia')?.invalid && loginForm.get('contrasenia')?.touched) {
                   <div class="error-message">Por favor ingrese una contraseña válida</div>
                 }
               </div>

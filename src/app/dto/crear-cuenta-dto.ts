@@ -4,6 +4,6 @@ export interface CrearCuentaDTO {
     telefono: string,
     direccion: string,
     email: string,
-    contrasena: string,
+    contrasenia: string,
     confirmacionContrasena: string,
 }
