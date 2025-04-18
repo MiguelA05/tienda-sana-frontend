@@ -1,5 +1,5 @@
 export interface ActualizarCuentaDTO {
-    id: string,
+    email: string,
     nombre: string,
     telefono: string,
     direccion: string,
