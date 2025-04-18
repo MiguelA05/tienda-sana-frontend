@@ -25,19 +25,19 @@ export class ClienteService {
   }
 
   public agregarItemCarrito(carItemDTO: ItemCarritoDTO): Observable<MensajeDTO> {
-    return this.http.put<MensajeDTO>(`${this.clienteURL}/shoppingcar/add-item`, carItemDTO);
+    return this.http.put<MensajeDTO>(`${this.clienteURL}/carrito/add-item`, carItemDTO);
   }
 
   public obtenerItemsCarrito(id: string): Observable<MensajeDTO> {
-    return this.http.get<MensajeDTO>(`${this.clienteURL}/shoppingcar/get-items/${id}`);
+    return this.http.get<MensajeDTO>(`${this.clienteURL}/carrito/get-items/${id}`);
   }
 
   public eliminarItemCarrito(deleteCarDetailDTO: BorrarDetalleCarritoDTO): Observable<MensajeDTO> {
-    return this.http.delete<MensajeDTO>(`${this.clienteURL}/shoppingcar/delete-item`, { body: deleteCarDetailDTO });
+    return this.http.delete<MensajeDTO>(`${this.clienteURL}/carrito/delete-item`, { body: deleteCarDetailDTO });
   }
 
   public actualizarItemCarrito(updateCarItemDTO: ActualizarItemCarritoDTO): Observable<MensajeDTO> {
-    return this.http.put<MensajeDTO>(`${this.clienteURL}/shoppingcar/edit-item`, updateCarItemDTO);
+    return this.http.put<MensajeDTO>(`${this.clienteURL}/carrito/edit-item`, updateCarItemDTO);
   }
 
   public crearVenta(createOrderDTO: CrearVentaDTO): Observable<MensajeDTO> {

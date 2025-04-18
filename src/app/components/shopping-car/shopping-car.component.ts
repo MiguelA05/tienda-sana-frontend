@@ -44,13 +44,13 @@ export class ShoppingCarComponent {
 
 
   crearVenta(): void {
-    
+
   }
 
-  
+
 
   realizarPago(): void {
-    
+
   }
 
   public verificarEstadoPago(estado: string): void {
@@ -92,7 +92,18 @@ export class ShoppingCarComponent {
 
 
   obtenerItemsCarrito(): void {
-    
+    console.log("Obteniendo items del carrito...");
+    const clienteId = this.tokenService.getIDCuenta();
+    this.clienteService.obtenerItemsCarrito(clienteId).subscribe({
+      next: (response) => {
+        this.itemsCarrito = response.reply;
+        console.log("Items del carrito:", this.itemsCarrito);
+        this.calcularTotales();
+      },
+      error: (error) => {
+        console.error("Error al obtener los items del carrito:", error);
+      }
+    });
   }
 
   calcularTotales(): void {
