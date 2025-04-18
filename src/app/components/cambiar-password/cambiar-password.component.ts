@@ -57,9 +57,9 @@ export class CambiarPasswordComponent {
     this.changePasswordForm = this.formBuilder.group(
       {
         email: [this.email, [Validators.required, Validators.email]],
-        verificationCode: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
-        newPassword: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(7)]],
-        passwordConfirmation: ['', [Validators.required]]
+        codigoVerificacion: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
+        nuevaContrasenia: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(7)]],
+        confirmacionContrasenia: ['', [Validators.required]]
       },
       { validators: this.passwordsMatchValidator } as AbstractControlOptions
     );
@@ -67,8 +67,8 @@ export class CambiarPasswordComponent {
 
   // Validador para confirmar que las contraseñas coincidan
   passwordsMatchValidator(formGroup: FormGroup) {
-    const password = formGroup.get('newPassword')?.value;
-    const passwordConfirmation = formGroup.get('passwordConfirmation')?.value;
+    const password = formGroup.get('nuevaContrasenia')?.value;
+    const passwordConfirmation = formGroup.get('confirmacionContrasenia')?.value;
     return password === passwordConfirmation ? null : { passwordsMismatch: true };
   }
 
