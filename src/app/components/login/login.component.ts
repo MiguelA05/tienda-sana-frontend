@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 export class LoginComponent implements OnInit {  
   isLoading: boolean = false;
   loginForm!: FormGroup;
+  isPasswordVisible = false;
 
   constructor(private fb: FormBuilder) {}
 
@@ -33,5 +34,9 @@ export class LoginComponent implements OnInit {
         console.log('Inicio de sesión exitoso:', this.loginForm.value);
       }, 2000);
     }
+  }
+
+  public togglePasswordVisibility(): void {
+    this.isPasswordVisible = !this.isPasswordVisible;
   }
 }

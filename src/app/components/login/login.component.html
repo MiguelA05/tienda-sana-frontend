@@ -38,26 +38,34 @@
                 }
             </div>
 
-            <!-- Campo Contraseña -->
-            <div class="form-group">
-                <input
-                    type="password"
+            
+            <!-- Contraseña -->
+            <div class="form-group position-relative">
+                <div class="password-input-container">
+                  <input
+                    [type]="isPasswordVisible ? 'text' : 'password'"
                     class="form-control"
                     id="password"
                     formControlName="password"
                     placeholder=" "
                     required
-                />
-                <label for="password" class="form-label">Contraseña</label>
-                <i class="fa-solid fa-lock input-icon"></i>
-                
-                <!-- Mensaje de error (opcional) -->
+                  />
+                  <label for="password" class="form-label">Contraseña</label>
+                  <i class="fa-solid fa-lock input-icon"></i>
+                  <button
+                    type="button"
+                    class="btn-visibility"
+                    (click)="togglePasswordVisibility()"
+                    aria-label="Mostrar u ocultar contraseña"
+                  >
+                    <i [class]="isPasswordVisible ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+                  </button>
+                </div>
                 @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-                    <div class="error-message">
-                        La contraseña es requerida
-                    </div>
+                  <div class="error-message">Por favor ingrese una contraseña válida</div>
                 }
-            </div>
+              </div>
+
 
             <!-- Recordarme (opcional) -->
             <div class="form-check">

@@ -74,6 +74,65 @@
               }
             </div>
           </div>
+
+
+           <!-- Contraseña -->
+      <div class="col-md-6">
+        <div class="form-group position-relative">
+          <div class="password-input-container">
+            <input
+              [type]="isPasswordVisible ? 'text' : 'password'"
+              class="form-control"
+              id="password"
+              formControlName="password"
+              placeholder=" "
+              required
+            />
+            <label for="password" class="form-label">Contraseña</label>
+            <i class="fa-solid fa-lock input-icon"></i>
+            <button
+              type="button"
+              class="btn-visibility"
+              (click)="togglePasswordVisibility()"
+              aria-label="Mostrar u ocultar contraseña"
+            >
+              <i [class]="isPasswordVisible ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+            </button>
+          </div>
+          @if (isPasswordInvalid) {
+            <div class="error-message">Por favor ingrese una contraseña válida</div>
+          }
+        </div>
+      </div>
+
+      <!-- Confirmar Contraseña -->
+      <div class="col-md-6">
+        <div class="form-group position-relative">
+          <input
+            [type]="isPasswordVisible ? 'text' : 'confirmaPassword'"
+            class="form-control"
+            id="confirmaPassword"
+            formControlName="confirmaPassword"
+            placeholder=" "
+            required
+          />
+          <label for="confirmaPassword" class="form-label">Contraseña</label>
+          <i class="fa-solid fa-lock input-icon"></i>
+          <button
+            type="button"
+            class="btn-visibility"
+            (click)="togglePasswordVisibility()"
+            aria-label="Mostrar u ocultar contraseña"
+          >
+            <i [class]="isConfirmaPasswordInvalid ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+          </button>
+          @if (isConfirmaPasswordInvalid) {
+            <div class="error-message">Por favor confirme su contraseña</div>
+          }
+        </div>
+      </div>  
+
+
         </div>
 
         <!-- Términos y condiciones -->

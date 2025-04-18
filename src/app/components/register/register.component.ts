@@ -14,6 +14,8 @@ import { CommonModule } from '@angular/common';
 export class RegisterComponent {
   registroForm!: FormGroup;
   isLoading: boolean = false;
+  isPasswordVisible = false;
+  isConfirmPasswordVisible = false;
 
   constructor(private fb: FormBuilder, private router: Router) {}
 
@@ -25,6 +27,7 @@ export class RegisterComponent {
       telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(15)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(20)]],
+      confirmaPassword: ['', [Validators.required]],
       terms: [false, [Validators.requiredTrue]]
     });
   }
@@ -54,6 +57,14 @@ export class RegisterComponent {
     return this.isFieldInvalid('terms');
   }
 
+  get isPasswordInvalid(): boolean {
+    return this.isFieldInvalid('password');
+  }
+
+  get isConfirmaPasswordInvalid(): boolean {
+    return this.isFieldInvalid('confirmaPassword');
+  }
+
   private isFieldInvalid(field: string): boolean {
     const control = this.registroForm.get(field);
     return !!(control && control.invalid && (control.dirty || control.touched));
@@ -76,6 +87,10 @@ export class RegisterComponent {
     }, 1500);
   }
 
+  /**
+   * 
+   * @param formGroup 
+   */
   private markFormGroupTouched(formGroup: FormGroup): void {
     Object.values(formGroup.controls).forEach((control) => {
       control.markAsTouched();
@@ -84,4 +99,13 @@ export class RegisterComponent {
       }
     });
   }
+
+  togglePasswordVisibility(): void {
+    this.isPasswordVisible = !this.isPasswordVisible;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible;
+  }
+
 }
