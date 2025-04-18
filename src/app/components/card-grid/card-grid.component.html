@@ -1,18 +1,17 @@
 <div class="container card-grid-container">
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-    <!-- Uso correcto de @for -->
+  <div class="cards-grid">
     @for (item of products; track item.id) {
-      <div class="col">
-        <div class="card shadow-sm custom-card" (click)="irADetalleProducto(item.id)">
+      <div class="custom-card">
+        <div class="card h-100" (click)="irADetalleProducto(item.id)">
           <img
-            class="card-img-top custom-card-image"
+            class="custom-card-image"
             [src]="item.imagen"
             alt="Imagen del producto"
           />
           <div class="card-body">
-            <h5 class="card-title fw-bold">{{ item.nombre }}</h5>
+            <h5 class="card-title">{{ item.nombre }}</h5>
             <p class="card-text text-muted">{{ item.categoria }}</p>
-            <p class="card-text text-success fw-bold">{{ item.precioUnitario | currency }}</p>
+            <p class="card-text text-success">{{ item.precioUnitario | currency }}</p>
           </div>
           <div class="card-footer text-center">
             <button class="btn btn-custom">Ver Detalles</button>

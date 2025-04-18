@@ -1,107 +1,183 @@
 /* Contenedor principal */
+.card-grid-container {
+  padding: 25px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+}
+
+/* Grid de tarjetas */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  
+  row-gap: 20px; /* Espaciado vertical */
+  justify-items: center;
+}
+
+/* Tarjetas individuales */
+.custom-card {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: #ffffff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  will-change: transform, box-shadow;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Contenido de la tarjeta */
+.card {
+  border: none;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Imagen de la tarjeta */
+.custom-card-image {
+  height: 300px;
+  width: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease, filter 0.3s ease;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.custom-card:hover .custom-card-image {
+  transform: scale(1.08);
+  filter: brightness(0.92);
+}
+
+/* Cuerpo de la tarjeta */
+.card-body {
+  padding: 25px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Título y texto */
+.card-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #495057;
+  margin-bottom: 10px;
+  transition: color 0.3s ease;
+  text-align: center;
+}
+
+.custom-card:hover .card-title {
+  color: #198754;
+}
+
+.card-text {
+  font-size: 1.5rem;
+  color: #6c757d;
+  margin-bottom: 15px;
+}
+
+/* Precio */
+.card-text.text-success {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #198754 !important;
+  margin-top: auto;
+  margin-bottom: 10px;
+}
+
+/* Footer de la tarjeta */
+.card-footer {
+  background-color: #f8f9fa;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 15px;
+}
+
+/* Botón personalizado */
+.btn-custom {
+  background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+  color: #ffffff;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 8px;
+  border: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+  font-size: 1.5rem;
+  width: 100%;
+}
+
+.btn-custom:hover {
+  background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(25, 135, 84, 0.3);
+}
+
+.btn-custom:active {
+  transform: translateY(-1px);
+}
+
+/* Media queries */
+@media (min-width: 576px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 992px) {
+  .cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Responsive */
+@media (max-width: 576px) {
   .card-grid-container {
-    padding: 20px;
-    
+    padding: 15px;
   }
   
-  /* Tarjetas individuales */
+  .cards-grid {
+    gap: 15px;
+  }
+  
   .custom-card {
-    width: 100%; /* Asegura que las tarjetas ocupen el ancho completo de la columna */
-    max-width: 300px; /* Limita el ancho máximo de las tarjetas */
-    border: 1px solid #ffffff;
-    border-radius: 8px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  
-    will-change: transform, box-shadow;
-   
-    text-align: center;
+    max-width: 100%;
   }
   
-  .custom-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-  }
-  
-  /* Imagen de la tarjeta */
   .custom-card-image {
-    height: 200px;
-    object-fit: cover;
-    transition: transform 0.3s ease, filter 0.3s ease;
+    height: 180px;
   }
   
-  .custom-card-image:hover {
-    transform: scale(1.05);
-    filter: brightness(0.9);
+  .card-body {
+    padding: 15px;
   }
   
-  /* Título y texto */
   .card-title {
-    font-size: 1.25rem;
-    font-weight: bold;
-    color: #857e81;
-    margin-bottom: 8px;
+    font-size: 1.1rem;
   }
   
   .card-text {
-    font-size: 1rem;
-    color: #000000;
-    margin-bottom: 12px;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
   }
   
-  /* Precio */
   .card-text.text-success {
     font-size: 1.1rem;
-    font-weight: bold;
   }
   
-  /* Botón personalizado */
   .btn-custom {
-    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
-    color: #ffffff;
-    border: 1px solid #ffffff;
-    font-weight: 600;
-    padding: 10px 20px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+    padding: 8px 15px;
+    font-size: 0.9rem;
   }
-  
-  .btn-custom:hover {
-    background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(25, 135, 84, 0.3);
-  }
-  
-  /* Footer de la tarjeta */
-  .card-footer {
-    background-color: #f8f9fa;
-    border-top: 1px solid #e9ecef;
-    padding: 10px;
-  }
-  
-  /* Responsive */
-  @media (max-width: 576px) {
-    .custom-card-image {
-      height: 150px;
-    }
-
-    .custom-card {
-      max-width: 100%; /* Asegura que las tarjetas ocupen el ancho completo en pantallas pequeñas */
-    }
-  
-    .card-title {
-      font-size: 1rem;
-    }
-  
-    .card-text {
-      font-size: 0.9rem;
-    }
-  
-    .btn-custom {
-      padding: 8px 15px;
-      font-size: 0.9rem;
-    }
-  }
-  
+}
