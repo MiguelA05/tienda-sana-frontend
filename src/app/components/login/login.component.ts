@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { LoginDTO } from '../../dto/login-dto';
 import { AuthService } from '../../services/auth.services';
 import { TokenService } from '../../services/token.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -31,6 +32,19 @@ export class LoginComponent implements OnInit {
   public login(): void {
     if (this.loginForm.valid) {
       const loginDTO= this.loginForm.value as LoginDTO;
+      this.authService.iniciarSesion(loginDTO).subscribe({
+        next: (data) => {
+          this.tokenService.login(data.reply.token);
+        },
+        error: (error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.error.reply,
+          });
+        }
+
+      })
 
     }
   }
