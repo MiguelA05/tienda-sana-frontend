@@ -111,8 +111,8 @@ export class ShoppingCarComponent {
     this.total = this.subtotal - (this.descuento);
   }
 
-  actualizarCantidad(item: ItemCarritoDTO, event: any): void {
-    const nuevaCantidad = event.target.value;
+  actualizarCantidad(item: ItemCarritoDTO): void {
+    const nuevaCantidad = item.cantidad;
 
     if (nuevaCantidad < 1) {
       Swal.fire('Error', 'La cantidad debe ser al menos 1', 'error');

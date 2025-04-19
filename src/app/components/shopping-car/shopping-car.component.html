@@ -35,7 +35,7 @@
                         class="form-control"
                         [value]="item.cantidad"
                         min="1"
-                        (change)="actualizarCantidad(item, $event)"
+                        [(ngModel)]="item.cantidad"
                       />
                     </div>
                   </td>
@@ -44,9 +44,17 @@
                     <button
                       class="btn btn-danger"
                       type="button"
+
                       (click)="confirmarEliminacion(itemsCarrito.indexOf(item))"
                     >
                       Eliminar
+                    </button>
+                    <button
+                      class="btn btn-success"
+                      type="button"
+                      (click)="actualizarCantidad(item)"
+                    >
+                      Actualizar
                     </button>
                   </td>
                 </tr>

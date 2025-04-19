@@ -193,6 +193,24 @@ table {
     transform: translateY(0);
     box-shadow: 0 2px 5px rgba(220, 53, 69, 0.2);
 }
+.btn-success {
+  border: none;
+  color: #ffffff;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 10px rgba(220, 53, 69, 0.2);
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(220, 53, 69, 0.3);
+}
+
+.btn-success:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(220, 53, 69, 0.2);
+}
+
 
 /* Spinner de carga */
 .loading-spinner {
@@ -221,18 +239,18 @@ table {
     .shopping-cart-container {
         padding: 15px;
     }
-    
+
     .card-header {
         font-size: 1.1rem;
         padding: 12px 10px;
     }
-    
+
     .table th,
     .table td {
         padding: 10px 5px;
         font-size: 0.85rem;
     }
-    
+
     .btn-success {
         padding: 10px 15px;
         font-size: 1rem;
