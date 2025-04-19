@@ -24,11 +24,11 @@ export class DetalleProductoComponent implements OnInit {
   itemCarrito?: ItemCarritoDTO;
   detalleCarrtitoForm!: FormGroup;
   cantidadSeleccionada: number = 1;
-  descuento: number = 0; 
+  descuento: number = 0;
   precioOriginal: number = 0;
   isLoading: boolean=false;
 
-  
+
 
   constructor(
     private route: ActivatedRoute,
@@ -38,7 +38,7 @@ export class DetalleProductoComponent implements OnInit {
     private router: Router,
     private tokenService: TokenService
   ) {
-   
+
   }
 
   ngOnInit(): void {
@@ -52,7 +52,7 @@ export class DetalleProductoComponent implements OnInit {
 
   getDisponibilidadTexto(): string {
     if (!this.producto) return 'No disponible';
-    
+
     if (this.producto.cantidad <= 0) {
       return 'Agotado';
     } else if (this.producto.cantidad <= 10) {
@@ -117,13 +117,13 @@ export class DetalleProductoComponent implements OnInit {
         }
         this.isLoading = false;
       });
-      
+
       return;
     }
     const cantidad = this.cantidadSeleccionada;
     if (cantidad <= 0) {
       Swal.fire("Error!", "Debe seleccionar al menos una entrada", "error").then(() => {
-        this.isLoading = false; 
+        this.isLoading = false;
       });
       return;
     }
@@ -141,28 +141,6 @@ export class DetalleProductoComponent implements OnInit {
       next: (response: MensajeDTO) => {
         const items: ItemCarritoDTO[] = response.reply;
         const existingItem = items.find(item => item.idProducto === carItem.idProducto);
-        if (existingItem) {
-          const updatedItem: ActualizarItemCarritoDTO = {
-            idUsuario: carItem.idUsuario,
-            idProducto: carItem.idProducto,
-            cantidad: carItem.cantidad
-          };
-  
-
-          this.clienteService.actualizarItemCarrito(updatedItem).subscribe({
-            next: () => {
-              console.log("6");
-              Swal.fire("Éxito!", "La cantidad ha sido actualizada en el carrito", "success").then(() => {
-                this.isLoading = false; 
-              })
-            },
-            error: (error) => {
-              Swal.fire("Error!", "Hubo un error al actualizar el carrito", "error").then(() => {
-                this.isLoading = false; // Desactivamos después de que se cierre el diálogo
-              });
-            }
-          });
-        } else {
           this.clienteService.agregarItemCarrito(carItem).subscribe({
             next: () => {
               console.log("7");
@@ -176,7 +154,6 @@ export class DetalleProductoComponent implements OnInit {
               });
             }
           });
-        }
       },
       error: (error) => {
         console.error("Error al obtener los items del carrito", error);
@@ -197,6 +174,6 @@ export class DetalleProductoComponent implements OnInit {
   }
 
 
-  
 
-  
+
+
