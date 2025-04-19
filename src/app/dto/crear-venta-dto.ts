@@ -1,4 +1,4 @@
 export interface CrearVentaDTO {
-    idUsuario: string
+    emailUsuario: string
     idPromocion: string
 }

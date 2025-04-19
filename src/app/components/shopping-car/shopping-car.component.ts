@@ -26,7 +26,7 @@ export class ShoppingCarComponent {
   descuento: number = 0;
   total: number = 0;
   cuponInvalido: boolean = false;
-  orderId: string | null = null;
+  ventaId: string | null = null;
 
   isLoading: boolean=false;
 
@@ -44,13 +44,44 @@ export class ShoppingCarComponent {
 
 
   crearVenta(): void {
+    const emailUsuario = this.tokenService.getEmail();
+    console.log("Email del usuario:", emailUsuario);
+    const crearVentaDTO: CrearVentaDTO = { emailUsuario: emailUsuario, idPromocion: '' };
+    this.isLoading = true;
 
+    this.clienteService.crearVenta(crearVentaDTO).subscribe({
+      next: (response: MensajeDTO) => {
+
+        this.ventaId = response.reply;
+        this.isLoading = false;
+        this.realizarPago();;
+
+      },
+      error: (error) => {
+        console.log("El error es: " ,error.error.reply);
+        console.error('Error al crear la venta:', error);
+
+        this.isLoading = false;
+
+      }
+    });
   }
 
 
 
   realizarPago(): void {
-
+    if (this.ventaId) {
+      this.clienteService.realizarPago(this.ventaId).subscribe({
+        next: (response: MensajeDTO) => {
+          const paymentUrl = response.reply.paymentUrl;
+          window.location.href = paymentUrl;
+        },
+        error: (error) => {
+          console.error('Error al realizar el pago:', error);
+          Swal.fire('Error', 'No se pudo procesar el pago. Intenta nuevamente.', 'error');
+        }
+      });
+    }
   }
 
   public verificarEstadoPago(estado: string): void {
