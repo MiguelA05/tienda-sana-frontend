@@ -10,7 +10,7 @@ import { CrearVentaDTO } from '../dto/crear-venta-dto';
 })
 export class CuentaService {
 
-  private accountURL = "http://localhost:8080/api/account";
+  private accountURL = "https://tienda-sana-backend.onrender.com/api/account";
   constructor(private http: HttpClient) { }
 
 
