@@ -7,6 +7,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ClienteService } from '../../services/cliente.service';
 import { PublicoService } from '../../services/publico.service'; // Adjust the path if necessary
 import { TokenService } from '../../services/token.service'; // Adjust the path if necessary
+import { MensajeDTO } from '../../dto/mensaje-dto'; // Adjust the path if necessary
+import { ActualizarItemCarritoDTO } from '../../dto/actualizar-item-carrito-dto'; // Adjust the path if necessary
 import Swal from 'sweetalert2';
 
 
@@ -97,11 +99,78 @@ export class DetalleProductoComponent implements OnInit {
   }
 
   agregarAlCarrito(): void {
-    if (this.producto && this.producto.cantidad > 0) {
-      console.log(`Agregando ${this.cantidadSeleccionada} unidades de ${this.producto.nombre} al carrito`);
-      // Aquí implementarías la lógica para agregar al carrito
-      // Por ejemplo: this.carritoService.agregarProducto(this.producto.id, this.cantidadSeleccionada);
+    console.log("1");
+    if (!this.tokenService.getToken()) {
+      Swal.fire({
+        title: "No estás logueado",
+        text: "Para agregar al carrito, debes iniciar sesión.",
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonText: "Iniciar sesión",
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.router.navigate(['/login']);
+        }
+      });
+      return;
     }
+    console.log("2");
+    const cantidad = this.cantidadSeleccionada;
+    if (cantidad <= 0) {
+      Swal.fire("Error!", "Debe seleccionar al menos una entrada", "error");
+      return;
+    }
+    console.log("3");
+    const carItem: ItemCarritoDTO = {
+      idUsuario: this.obtenerIdUsuario(),
+      idProducto: this.producto?.id ?? '',
+      nombreProducto: this.producto?.nombre ?? '',
+      categoria: this.producto?.categoria ?? '',
+      precio: +(this.producto?.precioUnitario ?? '0'),
+      cantidad: cantidad,
+      total: +(this.producto?.precioUnitario ?? '0')*cantidad
+    };
+    console.log("4");
+    this.clienteService.obtenerItemsCarrito(this.obtenerIdUsuario()).subscribe({
+      next: (response: MensajeDTO) => {
+        const items: ItemCarritoDTO[] = response.reply;
+        const existingItem = items.find(item => item.idProducto === carItem.idProducto);
+        if (existingItem) {
+          const updatedItem: ActualizarItemCarritoDTO = {
+            idUsuario: carItem.idUsuario,
+            idProducto: carItem.idProducto,
+            cantidad: carItem.cantidad
+          };
+          console.log("5");
+
+          this.clienteService.actualizarItemCarrito(updatedItem).subscribe({
+            next: () => {
+              console.log("6");
+              Swal.fire("Éxito!", "La cantidad ha sido actualizada en el carrito", "success");
+            },
+            error: (error) => {
+              Swal.fire("Error!", "Hubo un error al actualizar el carrito", "error");
+            }
+          });
+        } else {
+          this.clienteService.agregarItemCarrito(carItem).subscribe({
+            next: () => {
+              console.log("7");
+              Swal.fire("Éxito!", "Se ha agregado el item al carrito", "success");
+            },
+            error: (error) => {
+              Swal.fire("Error!", error.error.respuesta, "error");
+            }
+          });
+        }
+      },
+      error: (error) => {
+        console.error("Error al obtener los items del carrito", error);
+        Swal.fire("Error!", "Hubo un problema al verificar el carrito", "error");
+      }
+    });
+
   }
 
 

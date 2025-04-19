@@ -12,7 +12,7 @@ import { CrearVentaDTO } from '../dto/crear-venta-dto';
 })
 export class ClienteService {
 
-  private clienteURL = "http://localhost:8080/api/client";
+  private clienteURL = "http://localhost:8080/api/cliente";
   constructor(private http: HttpClient) { }
 
 

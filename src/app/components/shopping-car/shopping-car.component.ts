@@ -120,7 +120,7 @@ export class ShoppingCarComponent {
     }
 
     const updateCarItemDTO: ActualizarItemCarritoDTO = {
-      monto: nuevaCantidad,
+      cantidad: nuevaCantidad,
       idProducto: item.idProducto,
       idUsuario: this.tokenService.getIDCuenta()
     };
