@@ -9,7 +9,7 @@ import { FiltroProductoDTO } from '../dto/filtro-producto-dto';
 })
 export class PublicoService {
 
-  private publicoURL = "http://localhost:8080/api/public";
+  private publicoURL = "https://tienda-sana-backend.onrender.com/api/public";
   constructor(private http: HttpClient) { }
  
  
