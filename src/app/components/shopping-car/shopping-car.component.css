@@ -90,7 +90,7 @@ table {
 
 /* Control de cantidad */
 .quantity-control {
-    max-width: 100px;
+    max-width: 150px;
     margin: 0 auto;
 }
 
@@ -144,6 +144,14 @@ table {
     display: block;
 }
 
+/* Centrar los botones en el campo de acciones */
+.action-buttons {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    gap: 10px; /* Espaciado entre los botones */
+  }
+
 /* Botones */
 .btn {
     font-weight: 600;
@@ -152,6 +160,7 @@ table {
     cursor: pointer;
     transition: all 0.3s ease;
     letter-spacing: 0.5px;
+    align-items: center;
 }
 
 .btn-success {
@@ -161,6 +170,7 @@ table {
     padding: 12px 20px;
     font-size: 1.1rem;
     box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+   
 }
 
 .btn-success:hover {
@@ -181,6 +191,7 @@ table {
     padding: 8px 12px;
     font-size: 0.9rem;
     box-shadow: 0 4px 10px rgba(220, 53, 69, 0.2);
+    
 }
 
 .btn-danger:hover {

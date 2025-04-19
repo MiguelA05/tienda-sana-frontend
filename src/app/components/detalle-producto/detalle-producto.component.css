@@ -3,9 +3,31 @@
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  
+
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: center
+}
+
+/* Contenedor para el spinner de carga */
+.loading-spinner-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding-right: 35px;
+}
+
+/* Spinner de carga */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+}
+
+.spinner-border {
+  color: #198754;
+  width: 2rem;
+  height: 2rem;
 }
 
 .container:hover {
@@ -13,11 +35,27 @@
   box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
 }
 
+/* Estilo para el contenedor de la imagen */
+.img-container {
+  width: 100%;
+  height: 300px; /* Altura fija para todas las imágenes */
+  overflow: hidden;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
 /* Estilo para la imagen */
 .img-fluid {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Mantiene la proporción y se ajusta dentro del contenedor */
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.5s ease;
+  background-color: #f8f9fa; /* Color de fondo suave para las áreas vacías */
 }
 
 .img-fluid:hover {
@@ -76,10 +114,12 @@
 .price-container {
   display: flex;
   align-items: baseline;
-  justify-content: center; /* Centra los elementos horizontalmente */
+  justify-content: center;
+  /* Centra los elementos horizontalmente */
   gap: 10px;
   text-align: center;
-  margin-bottom: 20px; /* Elimina el margen izquierdo y centra el contenedor */
+  margin-bottom: 20px;
+  /* Elimina el margen izquierdo y centra el contenedor */
   position: relative;
 }
 
@@ -89,7 +129,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center; /* Asegura que el texto dentro de las filas esté centrado */
+  text-align: center;
+  /* Asegura que el texto dentro de las filas esté centrado */
 }
 
 .product-price {
@@ -144,8 +185,11 @@
 
 /* Botones de acción */
 .action-buttons {
+  width: 100%;
   display: flex;
-  gap: 15px;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px; /* Reducido para dar espacio al spinner */
 }
 
 .btn-custom {
@@ -165,7 +209,6 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
-  margin-bottom: 50px;
 }
 
 .btn-custom:hover {
@@ -195,7 +238,10 @@
 }
 
 /* Centrar las columnas */
-.col-md-4, .col-md-6, .col-md-12, .mb-3 {
+.col-md-4,
+.col-md-6,
+.col-md-12,
+.mb-3 {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -206,6 +252,7 @@
 /* Responsive */
 @media (max-width: 768px) {
   .action-buttons {
+    width: 100%;
     flex-direction: column;
     gap: 10px;
   }
