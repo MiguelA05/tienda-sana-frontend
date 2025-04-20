@@ -12,6 +12,11 @@ import { TokenDTO } from '../dto/token-dto';
 @Injectable({
   providedIn: 'root'
 })
+
+/**
+ * * Servicio para la autenticacion de usuarios
+ * * Contiene los metodos para crear una cuenta, iniciar sesion, refrescar el token, validar el codigo de registro, enviar el codigo de recuperacion de contrasenia y cambiar la contrasenia
+ */
 export class AuthService {
 
   private authURL = "https://tienda-sana-backend.onrender.com/api/auth";
