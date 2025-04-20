@@ -35,7 +35,7 @@
   </div>
 </div>
 
-<!-- Filtros -->
+<!-- filtros
 <div class="filter-container">
   <form class="elegant-filter-bar" [formGroup]="filterForm" (ngSubmit)="filter(0)">
     <h4 class="filter-title">Encuentra lo que buscas</h4>
@@ -56,7 +56,7 @@
         <div class="floating-field">
           <select id="eventType" class="form-control" formControlName="eventType">
             <option value="OTHER">OTHER</option>
-            <!-- Uso correcto de @for -->
+           
             @for (item of tipos; track item) {
               <option [value]="item">{{ item }}</option>
             }
@@ -72,6 +72,7 @@
     </div>
   </form>
 </div>
+-->
 
 <!-- Productos -->
 <app-card-grid [products]="productos"></app-card-grid>
