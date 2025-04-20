@@ -27,9 +27,16 @@ export class ShoppingCarComponent {
   total: number = 0;
   cuponInvalido: boolean = false;
   ventaId: string | null = null;
+  
 
   isLoading: boolean=false;
 
+  /**
+   * Constructor de la clase ShoppingCarComponent
+   * @param clienteService clienteService para manejar la lógica de negocio relacionada con el cliente
+   * @param tokenService tokenService para manejar el token de autenticación
+   * @param route route para obtener parámetros de la URL
+   */
   constructor(private clienteService: ClienteService, private tokenService: TokenService, private route: ActivatedRoute) {
   this.obtenerItemsCarrito();
   this.route.queryParams.subscribe(params => {
@@ -42,7 +49,9 @@ export class ShoppingCarComponent {
 
   }
 
-
+  /**
+   * Método para crear una venta
+   */
   crearVenta(): void {
     const emailUsuario = this.tokenService.getEmail();
     console.log("Email del usuario:", emailUsuario);
@@ -68,7 +77,9 @@ export class ShoppingCarComponent {
   }
 
 
-
+  /**
+   * Método para realizar el pago
+   */
   realizarPago(): void {
     if (this.ventaId) {
       this.clienteService.realizarPago(this.ventaId).subscribe({
@@ -84,6 +95,10 @@ export class ShoppingCarComponent {
     }
   }
 
+  /**
+   * Metodo para verificar el estado del pago
+   * @param estado Estado del pago
+   */
   public verificarEstadoPago(estado: string): void {
     console.log("Verificando estado del pago:", estado);
     switch (estado) {
@@ -121,7 +136,9 @@ export class ShoppingCarComponent {
     }
   }
 
-
+  /**
+   * Metodo para obtener los items del carrito
+   */
   obtenerItemsCarrito(): void {
     console.log("Obteniendo items del carrito...");
     const clienteId = this.tokenService.getIDCuenta();
@@ -137,11 +154,19 @@ export class ShoppingCarComponent {
     });
   }
 
+  /**
+   * Metodo para calcular los totales del carrito
+   */
   calcularTotales(): void {
     this.subtotal = this.itemsCarrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
     this.total = this.subtotal - (this.descuento);
   }
 
+  /**
+   * Metodo para actualizar la cantidad de un item en el carrito
+   * @param item Item del carrito a actualizar
+   * @returns true si la cantidad es válida, false si no lo es
+   */
   actualizarCantidad(item: ItemCarritoDTO): void {
     const nuevaCantidad = item.cantidad;
 
@@ -168,7 +193,10 @@ export class ShoppingCarComponent {
     });
   }
 
-
+/**
+ * Metodo para eliminar un item del carrito
+ * @param index Índice del item a eliminar
+ */
 eliminarItem(index: number): void {
   const item = this.itemsCarrito[index];
   const idUser = this.tokenService.getIDCuenta();
@@ -189,7 +217,10 @@ eliminarItem(index: number): void {
   });
 }
 
-
+/**
+ * Metodo para confirmar la eliminación de un item del carrito
+ * @param index Índice del item a eliminar
+ */
 public confirmarEliminacion(index: number) {
   Swal.fire({
     title: "Estas seguro?",

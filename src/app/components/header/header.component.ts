@@ -17,6 +17,11 @@ export class HeaderComponent {
   isLogged = false;
   email: string = "";
 
+  /**
+   * Constructor de la clase HeaderComponent
+   * @param tokenService tokenService para gestionar el token de autenticación
+   * @param router router para navegar entre rutas
+   */
   constructor(private tokenService: TokenService,private router: Router) {
     this.title = 'Tienda Sana';
     this.isLogged = this.tokenService.isLogged();
@@ -26,10 +31,16 @@ export class HeaderComponent {
     }
   }
 
+  /**
+   * Método para deslogar al usuario
+   */
   public logout() {
     this.tokenService.logout();
   }
 
+  /**
+   * Método para navegar a la página de inicio de sesión
+   */
   public llevarIncioSesion() {
     let ruta;
     let rutaAlterna="/register";
@@ -49,6 +60,9 @@ export class HeaderComponent {
 
   }
 
+  /**
+   * Método para navegar en la aplicación
+   */
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
     const header = document.querySelector('.main-header');

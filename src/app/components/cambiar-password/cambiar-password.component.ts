@@ -20,6 +20,13 @@ export class CambiarPasswordComponent {
   email: string;
   isLoading: boolean = false;
 
+  /**
+   * Constructor de la clase CambiarPasswordComponent
+   * @param formBuilder formBuilder para construir formularios reactivos 
+   * @param dataService dataService para obtener datos compartidos entre componentes
+   * @param authService authService para manejar la autenticación
+   * @param router router para navegar entre rutas
+   */
   constructor(
     private formBuilder: FormBuilder,
     private dataService: DataService,
@@ -30,6 +37,9 @@ export class CambiarPasswordComponent {
     this.createForm();
   }
 
+  /**
+   * Método para enviar el formulario de cambio de contraseña
+   */
   public changePassword() {
     const cambiarContra = this.changePasswordForm.value as CambiarContraseniaDTO;
     this.authService.cambiarContrasenia(cambiarContra).subscribe({
@@ -53,6 +63,9 @@ export class CambiarPasswordComponent {
     });
   }
 
+  /**
+   * Método para verificar si el formulario es válido
+   */
   private createForm() {
     this.changePasswordForm = this.formBuilder.group(
       {
@@ -65,13 +78,20 @@ export class CambiarPasswordComponent {
     );
   }
 
-  // Validador para confirmar que las contraseñas coincidan
+  /**
+   * Metodo para verificar si un campo es inválido
+   * @param formGroup formGroup del formulario
+   * @returns verdadero si el campo es inválido, falso si es válido
+   */
   passwordsMatchValidator(formGroup: FormGroup) {
     const password = formGroup.get('nuevaContrasenia')?.value;
     const passwordConfirmation = formGroup.get('confirmacionContrasenia')?.value;
     return password === passwordConfirmation ? null : { passwordsMismatch: true };
   }
 
+  /**
+   * Método para verificar si un campo es inválido
+   */
   public reenviarCodigo() {
     this.authService.enviarCodigoRecuperacion(this.email).subscribe({
       next: () => {
