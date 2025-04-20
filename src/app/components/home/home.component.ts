@@ -15,17 +15,17 @@ import { CommonModule } from '@angular/common';
 export class HomeComponent implements OnInit {
   carouselItems = [
     {
-      imageUrl: 'https://www.semana.com/resizer/v2/UBZ5DYABJZCQVMS26LBZDA2QTM.jpg?auth=394188381b20bf2c9faf8c2d44e30e5b6240c03549840bb27f596246abfe2d7c&smart=true&quality=75&width=1280&height=720',
+      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/unieventos-images-service.appspot.com/o/verduras_402de1696c-compressed-_1_.webp?alt=media&token=e9361056-28d0-407b-8239-6910d88e9418',
       title: 'Bienvenido a Tienda Sana',
       subtitle: 'Descubre productos saludables para tu estilo de vida'
     },
     {
-      imageUrl: 'https://strapi.fitia.app/uploads/verduras_402de1696c.jpg',
+      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/unieventos-images-service.appspot.com/o/restaurantes-envigado-compressed.webp?alt=media&token=201f2ab0-8c0c-48c9-9884-928deb6463a8',
       title: 'Ofertas Especiales',
       subtitle: 'Aprovecha descuentos exclusivos en nuestros productos'
     },
     {
-      imageUrl: 'https://ccviva.com/sites/default/files/2024-09/restaurantes-envigado.jpeg',
+      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/unieventos-images-service.appspot.com/o/hacer-platillos-mas-saludables-compressed.webp?alt=media&token=edf0180c-f2b4-433a-8fcb-b7421530f8b8',
       title: 'Calidad Garantizada',
       subtitle: 'Productos seleccionados con los más altos estándares'
     }
