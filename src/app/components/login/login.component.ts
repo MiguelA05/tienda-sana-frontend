@@ -19,8 +19,17 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   isPasswordVisible = false;
 
+  /**
+   * Constructor de la clase LoginComponent
+   * @param fb formBuilder para construir formularios reactivos
+   * @param authService authService para manejar la autenticación
+   * @param tokenService tokenService para manejar el token de autenticación
+   */
   constructor(private fb: FormBuilder, private authService: AuthService, private tokenService:TokenService ) {}
 
+  /**
+   * Método para inicializar el componente
+   */
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -29,6 +38,9 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  /**
+   * Método para enviar el formulario de inicio de sesión
+   */
   public login(): void {
     if (this.loginForm.valid) {
       const loginDTO= this.loginForm.value as LoginDTO;
@@ -49,6 +61,9 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  /**
+   * Método para mostrar u ocultar la contraseña
+   */
   public togglePasswordVisibility(): void {
     this.isPasswordVisible = !this.isPasswordVisible;
   }

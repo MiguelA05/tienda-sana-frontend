@@ -19,12 +19,22 @@ export class VerificarCuentaComponent {
   verificarCuentaForm!: FormGroup;
   email: string;
   isLoading: boolean=false;
+
+  /**
+   * Constructor de la clase VerificarCuentaComponent
+   * @param formbuilder FormBuilder para construir formularios reactivos
+   * @param dataService DataService para manejar datos compartidos entre componentes
+   * @param authService AuthService para manejar la autenticación
+   * @param router Router para navegar entre rutas
+   */
   constructor(private formbuilder: FormBuilder, private dataService: DataService, private authService: AuthService, private router: Router) {
     this.email = this.dataService.getData();
     this.createForm();
   }
 
-
+  /**
+   * Método para inicializar el formulario de verificación de cuenta
+   */
   public createForm() {
     console.log(this.email);
     this.verificarCuentaForm = this.formbuilder.group({
@@ -33,6 +43,9 @@ export class VerificarCuentaComponent {
     })
   }
 
+  /**
+   * Método para verificar la cuenta del usuario
+   */
   public activarCuenta(){
     const activarCuenta = this.verificarCuentaForm.value as ActivarCuentaDTO;
     this.authService.validarCodigoRegistro(activarCuenta).subscribe({
@@ -57,6 +70,9 @@ export class VerificarCuentaComponent {
     });
   }
 
+  /**
+   * Método para reenviar el código de verificación al correo electrónico
+   */
   public reenviarCodigo() {
     const emailToSend= this.verificarCuentaForm.get('email')?.value;
     this.authService.reenviarCodigoVerificacion(emailToSend).subscribe({

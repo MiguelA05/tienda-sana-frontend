@@ -42,7 +42,11 @@ export class HomeComponent implements OnInit {
   activeSlideIndex: number = 0;
   slideInterval: any; // Variable para almacenar el temporizador
 
-
+  /**
+   * Constructor de la clase HomeComponent
+   * @param publicoService publicoService para manejar la lógica de negocio relacionada con el cliente
+   * @param formBuilder formBuilder para construir formularios reactivos
+   */
   constructor(private publicoService: PublicoService, private formBuilder: FormBuilder) {
     this.productos = [];
     this.obtenerProductos(this.currentPage);
@@ -52,36 +56,57 @@ export class HomeComponent implements OnInit {
     
   }
 
+  /**
+   * Método para inicializar el componente
+   */
   ngOnInit(): void {
     this.createForm();
     this.startSlideInterval(); // Inicia el cambio automático de subtítulos
   }
 
+  /**
+   * Método para inicializar el formulario reactivo
+   */
   ngOnDestroy(): void {
     this.stopSlideInterval(); // Detiene el temporizador al destruir el componente
   }
 
+  /**
+   * Método para iniciar el intervalo de cambio automático de subtítulos
+   */
   startSlideInterval(): void {
     this.slideInterval = setInterval(() => {
       this.nextSlide();
     }, 5000); // Cambia cada 5 segundos
   }
 
+  /**
+   * Método para detener el intervalo de cambio automático de subtítulos
+   */
   stopSlideInterval(): void {
     if (this.slideInterval) {
       clearInterval(this.slideInterval);
     }
   }
 
-
+  /**
+   * Método para cambiar al siguiente subtítulo del carrusel
+   */
   nextSlide() {
     this.activeSlideIndex = (this.activeSlideIndex + 1) % this.carouselItems.length;
   }
 
+  /**
+   * Método para cambiar al subtítulo anterior del carrusel
+   */
   prevSlide() {
     this.activeSlideIndex = (this.activeSlideIndex - 1 + this.carouselItems.length) % this.carouselItems.length;
   }
 
+  /**
+   * Método para obtener el producto por ID
+   * @param id ID del producto
+   */
   public obtenerProductos(page: number) {
     this.publicoService.listarProductos(page).subscribe({
       next: (data) => {
@@ -97,10 +122,16 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  /**
+   * Método para obtener las categorías de productos
+   */
   public obtenerCategorias() {
     // Lógica para obtener categorías
   }
 
+  /**
+   * Método para crear el formulario reactivo
+   */
   createForm() {
     this.filterForm = this.formBuilder.group({
       name: [''],
@@ -109,10 +140,18 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  /**
+   * Método para aplicar el filtro a los productos
+   * @param page Página actual
+   */
   public filter(page: number) {
     // Lógica para filtrar productos
   }
 
+  /**
+   * Método para agregar un producto a la lista de seleccionados
+   * @param producto Producto a agregar
+   */
   public nextPage() {
     this.currentPage++;
     if (this.filterUsed) {
@@ -123,6 +162,9 @@ export class HomeComponent implements OnInit {
     this.actualizarProductosDisponibles();
   }
 
+  /**
+   * Método para ir a la página anterior
+   */
   public previousPage() {
     this.currentPage--;
     if (this.filterUsed) {
@@ -132,10 +174,16 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  /**
+   * Metodo para actualizar la disponibilidad de productos
+   */
   public actualizarProductosDisponibles() {
     this.productosDisponibles = this.currentPage < this.pages.length - 1;
   }
 
+  /**
+   * Metodo para reiniciar el formulario de filtro
+   */
   public resetForm() {
     this.filterForm.reset();
   }

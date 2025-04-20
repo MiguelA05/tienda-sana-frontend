@@ -29,7 +29,15 @@ export class DetalleProductoComponent implements OnInit {
   isLoading: boolean=false;
 
 
-
+  /**
+   * Constructor de la clase DetalleProductoComponent
+   * @param route route para obtener parámetros de la URL
+   * @param clienteService clienteService para manejar la lógica de negocio relacionada con el cliente
+   * @param publicoService publicoService para manejar la lógica de negocio relacionada
+   * @param formBuilder formBuilder para construir formularios reactivos
+   * @param router router para navegar entre rutas
+   * @param tokenService tokenService para manejar el token de autenticación
+   */
   constructor(
     private route: ActivatedRoute,
     private clienteService: ClienteService,
@@ -41,6 +49,9 @@ export class DetalleProductoComponent implements OnInit {
 
   }
 
+  /**
+   * Método para inicializar el componente
+   */
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     console.log("Evento ID:", id);
@@ -50,6 +61,10 @@ export class DetalleProductoComponent implements OnInit {
     }
   }
 
+  /**
+   * Método para crear el formulario reactivo
+   * @returns disponibilidad del producto
+   */
   getDisponibilidadTexto(): string {
     if (!this.producto) return 'No disponible';
 
@@ -62,18 +77,28 @@ export class DetalleProductoComponent implements OnInit {
     }
   }
 
+  /**
+   * Método para crear el formulario reactivo
+   */
   incrementarCantidad(): void {
     if (this.producto && this.cantidadSeleccionada < this.producto.cantidad) {
       this.cantidadSeleccionada++;
     }
   }
 
+  /**
+   * Método para crear el formulario reactivo
+   */
   decrementarCantidad(): void {
     if (this.cantidadSeleccionada > 1) {
       this.cantidadSeleccionada--;
     }
   }
 
+  /**
+   * Método para crear el formulario reactivo
+   * @param id ID del producto
+   */
   public getProducto(id: string): void {
     this.publicoService.obtenerProducto(id).subscribe({
       next: (data) => {
@@ -87,6 +112,9 @@ export class DetalleProductoComponent implements OnInit {
     })
   }
 
+  /**
+   * Método para crear el formulario reactivo
+   */
   private cargarDatosProducto(): void {
     if (this.producto) {
       this.detalleCarrtitoForm.patchValue({
@@ -100,6 +128,10 @@ export class DetalleProductoComponent implements OnInit {
     }
   }
 
+  /**
+   * Método para crear el formulario reactivo
+   * @returns true si el producto está en el carrito, false si no lo está
+   */
   agregarAlCarrito(): void {
     this.isLoading = true;
 
@@ -165,7 +197,10 @@ export class DetalleProductoComponent implements OnInit {
 
   }
 
-
+  /**
+   * Método para crear el formulario reactivo
+   * @returns ID del usuario
+   */
   private obtenerIdUsuario(): string {
     return this.tokenService.getIDCuenta();
   }

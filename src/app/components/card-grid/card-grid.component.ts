@@ -16,6 +16,10 @@ export class CardGridComponent {
 
   constructor(private router: Router) {}
 
+  /**
+   * Metodo para navegar a la página de detalle del producto
+   * @param id ID del producto
+   */
   irADetalleProducto(id: string): void {
     this.router.navigate(['/detalle-producto', id]);
   }

@@ -22,6 +22,13 @@ export class InformacionUsuarioComponent implements OnInit {
   isEditing: boolean = false;
   isPasswordVisible: boolean = false;
 
+  /**
+   * Constructor de la clase InformacionUsuarioComponent
+   * @param formBuilder formBuilder para construir formularios reactivos
+   * @param tokenService tokenService para manejar el token de autenticación
+   * @param cuentaService cuentaService para manejar la lógica de negocio relacionada con la cuenta
+   * @param router router para navegar entre rutas
+   */
   constructor(
     private formBuilder: FormBuilder, 
     private tokenService: TokenService, 
@@ -29,16 +36,25 @@ export class InformacionUsuarioComponent implements OnInit {
     private router: Router
   ) {}
   
+  /**
+   * Metodo para inicializar el componente
+   */
   ngOnInit(): void {
     this.createForm();
     this.obtenerInformacionUsuario();
     
   }
 
+  /**
+   * Método para mostrar u ocultar la contraseña
+   */
   public togglePasswordVisibility(): void {
     this.isPasswordVisible = !this.isPasswordVisible;
   }
 
+  /**
+   * Método para inicializar el formulario de información del usuario
+   */
   private createForm() {
     this.userInforForm = this.formBuilder.group({
       email: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
@@ -50,8 +66,12 @@ export class InformacionUsuarioComponent implements OnInit {
     });
   }
 
- 
-  
+ /**
+  * Metodo para validar la longitud de un número
+  * @param minLength minima longitud
+  * @param maxLength maxima longitud
+  * @returns true si la longitud es valida, false si no lo es
+  */
   numberLengthValidator(minLength: number, maxLength: number): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
@@ -64,6 +84,9 @@ export class InformacionUsuarioComponent implements OnInit {
     };
   }
 
+  /**
+   * Método para activar el modo de edición
+   */
   enableEditing() {
     this.isEditing = true;
     
@@ -79,6 +102,9 @@ export class InformacionUsuarioComponent implements OnInit {
     this.userInforForm.get('confirmaPassword')?.setValue('');
   }
 
+  /**
+   * Metodo para eliminar la cuenta del usuario
+   */
   public deleteAccount() {
     Swal.fire({
       title: '¿Estás seguro?',
@@ -115,6 +141,9 @@ export class InformacionUsuarioComponent implements OnInit {
     });
   }
 
+  /**
+   * Método para cancelar la edición y restaurar los valores originales
+   */
   public disableEditing() {
     this.isEditing = false;
     
@@ -133,6 +162,10 @@ export class InformacionUsuarioComponent implements OnInit {
     this.loadAccountData();
   }
   
+  /**
+   * Metodo para guardar los cambios realizados en el formulario
+   * @returns true si se guardaron los cambios, false si no se guardaron
+   */
   saveChanges() {
     console.log('pase el if de invalido');
     if (!this.account) {
@@ -177,6 +210,9 @@ export class InformacionUsuarioComponent implements OnInit {
     });
   }
 
+  /**
+   * Método para cargar los datos de la cuenta en el formulario
+   */
   public loadAccountData() {
     if (this.account) {
       this.userInforForm.patchValue({
@@ -189,6 +225,9 @@ export class InformacionUsuarioComponent implements OnInit {
     }
   }
 
+  /**
+   * Método para obtener la información del usuario
+   */
   public obtenerInformacionUsuario() {
     const email = this.tokenService.getIDCuenta();
     const rol = this.tokenService.getRol();

@@ -21,8 +21,18 @@ export class RegisterComponent {
   isPasswordVisible = false;
   isConfirmPasswordVisible = false;
 
+  /**
+   * Constructor de la clase RegisterComponent
+   * @param fb formBuilder para construir formularios reactivos
+   * @param router router para navegar entre rutas
+   * @param authService authService para manejar la autenticación
+   * @param dataService dataService para manejar datos compartidos entre componentes
+   */
   constructor(private fb: FormBuilder, private router: Router, private authService: AuthService, private dataService: DataService) {}
 
+  /**
+   * Método para inicializar el componente
+   */
   ngOnInit(): void {
     this.registroForm = this.fb.group({
       dni: ['', [Validators.required, Validators.maxLength(10)]],
@@ -69,39 +79,75 @@ export class RegisterComponent {
     }
   }
   
-  // Métodos para verificar si un campo es inválido
+  /**
+   * Metodo para verificar si el campo cédula es inválido
+   * @returns true si el campo es inválido, false si no lo es
+   */
   get isCedulaInvalid(): boolean {
     return this.isFieldInvalid('dni');
   }
 
+  /**
+   * Metodo para verificar si el campo nombre es inválido
+   * @returns true si el campo es inválido, false si no lo es
+   */
   get isNombreInvalid(): boolean {
     return this.isFieldInvalid('nombre');
   }
 
+  /**
+   * Metodo para verificar si el campo dirección es inválido
+   * @returns true si el campo es inválido, false si no lo es
+   */
   get isDireccionInvalid(): boolean {
     return this.isFieldInvalid('direccion');
   }
 
+  /**
+   * Metodo para verificar si el campo teléfono es inválido
+   * @returns true si el campo es inválido, false si no lo es
+   */
   get isTelefonoInvalid(): boolean {
     return this.isFieldInvalid('telefono');
   }
 
+  /**
+   * Metodo para verificar si el campo email es inválido
+   * @returns true si el campo es inválido, false si no lo es
+   */ 
   get isEmailInvalid(): boolean {
     return this.isFieldInvalid('email');
   }
 
+  /**
+   * Metodo para verificar si el campo términos y condiciones es inválido
+   * @returns true si el campo es inválido, false si no lo es
+   */
   get isTermsInvalid(): boolean {
     return this.isFieldInvalid('terms');
   }
 
+  /**
+   * Metodo para verificar si el campo contraseña es inválido
+   * @returns true si el campo es inválido, false si no lo es
+   */
   get isPasswordInvalid(): boolean {
     return this.isFieldInvalid('contrasenia');
   }
 
+  /**
+   * Metodo para verificar si el campo confirmación de contraseña es inválido
+   * @returns true si el campo es inválido, false si no lo es
+   */
   get isConfirmaPasswordInvalid(): boolean {
     return this.isFieldInvalid('confirmacionContrasena');
   }
 
+  /**
+   * Metodo para verificar si el campo es inválido
+   * @param field nombre del campo
+   * @returns true si el campo es inválido, false si no lo es
+   */
   private isFieldInvalid(field: string): boolean {
     const control = this.registroForm.get(field);
     return !!(control && control.invalid && (control.dirty || control.touched));
@@ -109,8 +155,8 @@ export class RegisterComponent {
 
 
   /**
-   * 
-   * @param formGroup 
+   * Metodo para marcar todos los campos del formulario como tocados
+   * @param formGroup FormGroup a marcar como tocado
    */
   private markFormGroupTouched(formGroup: FormGroup): void {
     Object.values(formGroup.controls).forEach((control) => {
@@ -121,15 +167,25 @@ export class RegisterComponent {
     });
   }
 
+  /**
+   * Método para mostrar u ocultar la contraseña
+   */
   togglePasswordVisibility(): void {
     this.isPasswordVisible = !this.isPasswordVisible;
   }
 
+  /**
+   * Método para mostrar u ocultar la confirmación de contraseña
+   */
   toggleConfirmPasswordVisibility(): void {
     this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible;
   }
 
-
+  /**
+   * Método para validar si las contraseñas coinciden
+   * @param formGroup FormGroup a validar
+   * @returns true si las contraseñas coinciden, false si no coinciden
+   */
   passwordsMatchValidator(formGroup: FormGroup) {
     const password = formGroup.get('contrasenia')?.value;
     const confirmaPassword = formGroup.get('confirmacionContrasena')?.value;
