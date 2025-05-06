@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, AbstractControlOptions, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { TokenService } from '../../services/token.service';
 import { InformacionCuentaDTO } from '../../dto/informacion-cuenta-dto';
 import { CuentaService } from '../../services/cuenta.service';
@@ -22,39 +22,22 @@ export class InformacionUsuarioComponent implements OnInit {
   isEditing: boolean = false;
   isPasswordVisible: boolean = false;
 
-  /**
-   * Constructor de la clase InformacionUsuarioComponent
-   * @param formBuilder formBuilder para construir formularios reactivos
-   * @param tokenService tokenService para manejar el token de autenticación
-   * @param cuentaService cuentaService para manejar la lógica de negocio relacionada con la cuenta
-   * @param router router para navegar entre rutas
-   */
   constructor(
-    private formBuilder: FormBuilder, 
-    private tokenService: TokenService, 
-    private cuentaService: CuentaService, 
+    private formBuilder: FormBuilder,
+    private tokenService: TokenService,
+    private cuentaService: CuentaService,
     private router: Router
-  ) {}
-  
-  /**
-   * Metodo para inicializar el componente
-   */
+  ) { }
+
   ngOnInit(): void {
     this.createForm();
     this.obtenerInformacionUsuario();
-    
   }
 
-  /**
-   * Método para mostrar u ocultar la contraseña
-   */
   public togglePasswordVisibility(): void {
     this.isPasswordVisible = !this.isPasswordVisible;
   }
 
-  /**
-   * Método para inicializar el formulario de información del usuario
-   */
   private createForm() {
     this.userInforForm = this.formBuilder.group({
       email: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
@@ -66,17 +49,11 @@ export class InformacionUsuarioComponent implements OnInit {
     });
   }
 
- /**
-  * Metodo para validar la longitud de un número
-  * @param minLength minima longitud
-  * @param maxLength maxima longitud
-  * @returns true si la longitud es valida, false si no lo es
-  */
   numberLengthValidator(minLength: number, maxLength: number): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
       if (!value) return null;
-      
+
       if (value.toString().length < minLength || value.toString().length > maxLength) {
         return { numberLength: true };
       }
@@ -84,27 +61,14 @@ export class InformacionUsuarioComponent implements OnInit {
     };
   }
 
-  /**
-   * Método para activar el modo de edición
-   */
   enableEditing() {
     this.isEditing = true;
-    
-    // Habilitar solo los campos editables
     this.userInforForm.get('name')?.enable();
     this.userInforForm.get('phoneNumber')?.enable();
     this.userInforForm.get('address')?.enable();
     this.userInforForm.get('password')?.enable();
-    this.userInforForm.get('confirmaPassword')?.enable();
-    
-    // Limpiar los campos de contraseña
-    this.userInforForm.get('password')?.setValue('');
-    this.userInforForm.get('confirmaPassword')?.setValue('');
   }
 
-  /**
-   * Metodo para eliminar la cuenta del usuario
-   */
   public deleteAccount() {
     Swal.fire({
       title: '¿Estás seguro?',
@@ -141,33 +105,25 @@ export class InformacionUsuarioComponent implements OnInit {
     });
   }
 
-  /**
-   * Método para cancelar la edición y restaurar los valores originales
-   */
   public disableEditing() {
     this.isEditing = false;
-    
-    // Deshabilitar los campos editables
     this.userInforForm.get('name')?.disable();
     this.userInforForm.get('phoneNumber')?.disable();
     this.userInforForm.get('address')?.disable();
-    
-    // Limpiar y deshabilitar los campos de contraseña
     this.userInforForm.get('password')?.reset();
-    this.userInforForm.get('confirmaPassword')?.setValue('');
     this.userInforForm.get('password')?.disable();
-    this.userInforForm.get('confirmaPassword')?.disable();
-    
-    // Restaurar los valores originales
     this.loadAccountData();
   }
-  
-  /**
-   * Metodo para guardar los cambios realizados en el formulario
-   * @returns true si se guardaron los cambios, false si no se guardaron
-   */
+
   saveChanges() {
-    console.log('pase el if de invalido');
+    if (this.userInforForm.invalid) {
+      Object.keys(this.userInforForm.controls).forEach(field => {
+        const control = this.userInforForm.get(field);
+        control?.markAsTouched({ onlySelf: true });
+      });
+      return;
+    }
+
     if (!this.account) {
       Swal.fire({
         title: 'Error',
@@ -177,9 +133,9 @@ export class InformacionUsuarioComponent implements OnInit {
       });
       return;
     }
-    
+
     const formValues = this.userInforForm.getRawValue();
-    
+
     const cuentaActualizar: ActualizarCuentaDTO = {
       email: this.account.email,
       nombre: formValues.name,
@@ -198,7 +154,7 @@ export class InformacionUsuarioComponent implements OnInit {
         });
         this.disableEditing();
         this.obtenerInformacionUsuario();
-      }, 
+      },
       error: (error) => {
         Swal.fire({
           title: 'Error',
@@ -210,9 +166,6 @@ export class InformacionUsuarioComponent implements OnInit {
     });
   }
 
-  /**
-   * Método para cargar los datos de la cuenta en el formulario
-   */
   public loadAccountData() {
     if (this.account) {
       this.userInforForm.patchValue({
@@ -225,17 +178,12 @@ export class InformacionUsuarioComponent implements OnInit {
     }
   }
 
-  /**
-   * Método para obtener la información del usuario
-   */
   public obtenerInformacionUsuario() {
     const email = this.tokenService.getIDCuenta();
     const rol = this.tokenService.getRol();
-    console.log(rol);
     this.cuentaService.obtenerInformacion(email).subscribe({
       next: (data) => {
-        this. account = data.reply;
-        console.log(this.account);
+        this.account = data.reply;
         this.loadAccountData();
       },
       error: (error) => {
@@ -248,5 +196,68 @@ export class InformacionUsuarioComponent implements OnInit {
         });
       }
     });
+  }
+
+  // Updated error message methods to match form control names
+  getNameErrorMessage(): string {
+    const nameControl = this.userInforForm.get('name');
+
+    if (nameControl?.hasError('required')) {
+      return 'El nombre es obligatorio';
+    }
+
+    if (nameControl?.hasError('maxlength')) {
+      return `El nombre no debe exceder los ${nameControl.getError('maxlength').requiredLength} caracteres`;
+    }
+
+    return 'Por favor ingrese un nombre válido';
+  }
+
+  getAddressErrorMessage(): string {
+    const addressControl = this.userInforForm.get('address');
+
+    if (addressControl?.hasError('required')) {
+      return 'La dirección es obligatoria';
+    }
+
+    if (addressControl?.hasError('maxlength')) {
+      return `La dirección no debe exceder los ${addressControl.getError('maxlength').requiredLength} caracteres`;
+    }
+
+    return 'Por favor ingrese una dirección válida';
+  }
+
+  getPhoneNumberErrorMessage(): string {
+    const phoneControl = this.userInforForm.get('phoneNumber');
+
+    if (phoneControl?.hasError('required')) {
+      return 'El teléfono es obligatorio';
+    }
+
+    if (phoneControl?.hasError('numberLength')) {
+      return 'El teléfono debe tener entre 10 y 15 dígitos';
+    }
+
+    return 'Por favor ingrese un número de teléfono válido';
+  }
+
+  getPasswordErrorMessage(): string {
+    const passwordControl = this.userInforForm.get('password');
+
+    if (passwordControl?.hasError('minlength')) {
+      return `La contraseña debe tener al menos ${passwordControl.getError('minlength').requiredLength} caracteres`;
+    }
+
+    if (passwordControl?.hasError('maxlength')) {
+      return `La contraseña no debe exceder los ${passwordControl.getError('maxlength').requiredLength} caracteres`;
+    }
+
+    return 'Por favor ingrese una contraseña válida';
+  }
+
+  // Updated to match form control names
+  shouldShowError(controlName: string): boolean {
+    const control = this.userInforForm.get(controlName);
+    return control ? control.invalid && control.touched : false;
   }
 }

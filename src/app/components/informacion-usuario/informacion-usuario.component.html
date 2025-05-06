@@ -12,7 +12,7 @@
         {{ isEditing ? 'Edición de Información de Perfil' :
         'Información de Perfil' }}
       </h5>
-      <form class="row g-3 justify-content-center" [formGroup]="userInforForm">
+      <form class="userinfo-form" [formGroup]="userInforForm">
         <div class="col-12 d-flex justify-content-center">
           <div class="form-group" style="max-width: 400px; width: 100%;">
             <label for="email">Email: </label>
@@ -20,6 +20,7 @@
               formControlName="email" />
           </div>
         </div>
+
         <div class="col-12 d-flex justify-content-center">
           <div class="form-group" style="max-width: 400px; width: 100%;">
             <label for="dni">DNI: </label>
@@ -27,13 +28,18 @@
               formControlName="dni" />
           </div>
         </div>
+
         <div class="col-12 d-flex justify-content-center">
           <div class="form-group" style="max-width: 400px; width: 100%;">
             <label for="name">Nombre: </label>
             <input type="text" id="name" class="form-control"
               formControlName="name" />
+            @if (shouldShowError('name')) {
+            <div class="error-message">{{ getNameErrorMessage() }}</div>
+            }
           </div>
         </div>
+
         <div class="col-12 d-flex justify-content-center">
           <div class="form-group" style="max-width: 400px; width: 100%;">
             <label for="phone">Teléfono: </label>
@@ -42,37 +48,43 @@
               id="phone"
               class="form-control"
               formControlName="phoneNumber" />
-            @if (userInforForm.get('phoneNumber')?.errors?.['numberLength'] &&
-            userInforForm.get('phoneNumber')?.touched) {
-            <div class="error-message">
-              El teléfono debe tener entre 10 y 15 dígitos.
-            </div>
+            @if (shouldShowError('phoneNumber')) {
+            <div class="error-message">{{ getPhoneNumberErrorMessage() }}</div>
             }
           </div>
         </div>
+
         <div class="col-12 d-flex justify-content-center">
           <div class="form-group" style="max-width: 400px; width: 100%;">
             <label for="address">Dirección: </label>
             <input type="text" id="address" class="form-control"
               formControlName="address" />
+            @if (shouldShowError('address')) {
+            <div class="error-message">{{ getAddressErrorMessage() }}</div>
+            }
           </div>
         </div>
+
         @if (isEditing) {
         <div class="col-12 d-flex justify-content-center">
           <div class="form-group" style="max-width: 400px; width: 100%;">
             <label for="password">Contraseña: </label>
-            
-            <button
-              type="button"
-              class="btn-visibility"
-              (click)="togglePasswordVisibility()"
-              aria-label="Mostrar u ocultar contraseña">
-              <i
-                [class]="isPasswordVisible ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
-            </button>
-            <input [type]="isPasswordVisible ? 'text' : 'password'"
-              id="password" class="form-control" formControlName="password"
-              placeholder="Deje vacío si no desea cambiar la contraseña" />
+            <div class="password-input-container">
+              <input [type]="isPasswordVisible ? 'text' : 'password'"
+                id="password" class="form-control" formControlName="password"
+                placeholder="Deje vacío si no desea cambiar la contraseña" />
+              <button
+                type="button"
+                class="btn-visibility"
+                (click)="togglePasswordVisibility()"
+                aria-label="Mostrar u ocultar contraseña">
+                <i
+                  [class]="isPasswordVisible ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+              </button>
+            </div>
+            @if (shouldShowError('password')) {
+            <div class="error-message">{{ getPasswordErrorMessage() }}</div>
+            }
           </div>
         </div>
         }
@@ -82,8 +94,7 @@
             <button
               type="button"
               class="btn btn-save"
-              (click)="saveChanges()"
-              [disabled]="userInforForm.invalid">
+              (click)="saveChanges()">
               Guardar Cambios
             </button>
             <button type="button" class="btn btn-back ms-2"
