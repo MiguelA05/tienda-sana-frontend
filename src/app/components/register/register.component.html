@@ -19,12 +19,19 @@
           <!-- Cédula -->
           <div class="col-md-6">
             <div class="form-group">
-              <input type="number" class="form-control" id="dni"
-                formControlName="dni" placeholder=" " />
-              <label for="dni" class="form-label">Cédula</label>
-              <i class="fa-solid fa-id-card input-icon"></i>
-              @if (isCedulaInvalid) {
-              <div class="error-message">Por favor ingrese su cédula</div>
+              <div class="floating-field">
+                <input
+                  type="number"
+                  class="form-control"
+                  id="dni"
+                  formControlName="dni"
+                  placeholder=" "
+                  [ngClass]="{'is-invalid': shouldShowError('dni')}" />
+                <label for="dni" class="form-label">Cédula</label>
+                <i class="fa-solid fa-id-card input-icon"></i>
+              </div>
+              @if (shouldShowError('dni')) {
+              <div class="error-message">{{ getDniErrorMessage() }}</div>
               }
             </div>
           </div>
@@ -32,12 +39,19 @@
           <!-- Nombre -->
           <div class="col-md-6">
             <div class="form-group">
-              <input type="text" class="form-control" id="nombre"
-                formControlName="nombre" placeholder=" " />
-              <label for="nombre" class="form-label">Nombre</label>
-              <i class="fa-solid fa-user input-icon"></i>
-              @if (isNombreInvalid) {
-              <div class="error-message">Por favor ingrese su nombre</div>
+              <div class="floating-field">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nombre"
+                  formControlName="nombre"
+                  placeholder=" "
+                  [ngClass]="{'is-invalid': shouldShowError('nombre')}" />
+                <label for="nombre" class="form-label">Nombre</label>
+                <i class="fa-solid fa-user input-icon"></i>
+              </div>
+              @if (shouldShowError('nombre')) {
+              <div class="error-message">{{ getNombreErrorMessage() }}</div>
               }
             </div>
           </div>
@@ -45,12 +59,19 @@
           <!-- Dirección -->
           <div class="col-md-6">
             <div class="form-group">
-              <input type="text" class="form-control" id="direccion"
-                formControlName="direccion" placeholder=" " />
-              <label for="direccion" class="form-label">Dirección</label>
-              <i class="fa-solid fa-location-dot input-icon"></i>
-              @if (isDireccionInvalid) {
-              <div class="error-message">Por favor ingrese su dirección</div>
+              <div class="floating-field">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="direccion"
+                  formControlName="direccion"
+                  placeholder=" "
+                  [ngClass]="{'is-invalid': shouldShowError('direccion')}" />
+                <label for="direccion" class="form-label">Dirección</label>
+                <i class="fa-solid fa-location-dot input-icon"></i>
+              </div>
+              @if (shouldShowError('direccion')) {
+              <div class="error-message">{{ getDireccionErrorMessage() }}</div>
               }
             </div>
           </div>
@@ -58,12 +79,19 @@
           <!-- Teléfono -->
           <div class="col-md-6">
             <div class="form-group">
-              <input type="tel" class="form-control" id="telefono"
-                formControlName="telefono" placeholder=" " />
-              <label for="telefono" class="form-label">Teléfono</label>
-              <i class="fa-solid fa-phone input-icon"></i>
-              @if (isTelefonoInvalid) {
-              <div class="error-message">Por favor ingrese su teléfono</div>
+              <div class="floating-field">
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="telefono"
+                  formControlName="telefono"
+                  placeholder=" "
+                  [ngClass]="{'is-invalid': shouldShowError('telefono')}" />
+                <label for="telefono" class="form-label">Teléfono</label>
+                <i class="fa-solid fa-phone input-icon"></i>
+              </div>
+              @if (shouldShowError('telefono')) {
+              <div class="error-message">{{ getTelefonoErrorMessage() }}</div>
               }
             </div>
           </div>
@@ -71,13 +99,21 @@
           <!-- Email -->
           <div class="col-md-6">
             <div class="form-group">
-              <input type="email" class="form-control" id="email"
-                formControlName="email" placeholder=" " />
-              <label for="email" class="form-label">Email</label>
-              <i class="fa-solid fa-envelope input-icon"></i>
-              @if (isEmailInvalid) {
-              <div class="error-message">Por favor ingrese un email válido</div>
+              <div class="floating-field">
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  formControlName="email"
+                  placeholder=" "
+                  [ngClass]="{'is-invalid': shouldShowError('email')}" />
+                <label for="email" class="form-label">Email</label>
+                <i class="fa-solid fa-envelope input-icon"></i>
+              </div>
+              @if (shouldShowError('email')) {
+              <div class="error-message">{{ getEmailErrorMessage() }}</div>
               }
+
             </div>
           </div>
 
@@ -91,7 +127,8 @@
                   id="contrasenia"
                   formControlName="contrasenia"
                   placeholder=" "
-                  required />
+                  required
+                  [ngClass]="{'is-invalid': shouldShowError('contrasenia')}" />
                 <label for="contrasenia" class="form-label">Contraseña</label>
                 <i class="fa-solid fa-lock input-icon"></i>
                 <button
@@ -103,9 +140,8 @@
                     [class]="isPasswordVisible ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
                 </button>
               </div>
-              @if (isPasswordInvalid) {
-              <div class="error-message">Por favor ingrese una contraseña
-                válida</div>
+              @if (shouldShowError('contrasenia')) {
+              <div class="error-message">{{ getPasswordErrorMessage() }}</div>
               }
             </div>
           </div>
@@ -120,7 +156,8 @@
                   id="confirmacionContrasena"
                   formControlName="confirmacionContrasena"
                   placeholder=" "
-                  required />
+                  required
+                  [ngClass]="{'is-invalid': shouldShowError('confirmacionContrasena')}" />
                 <label for="confirmacionContrasena"
                   class="form-label">Contraseña</label>
                 <i class="fa-solid fa-lock input-icon"></i>
@@ -133,34 +170,40 @@
                     [class]="isConfirmPasswordVisible ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
                 </button>
               </div>
-              @if (isConfirmaPasswordInvalid) {
-              <div class="error-message">Por favor confirme su
-                contraseña</div>
+              @if (shouldShowError('confirmacionContrasena')) {
+              <div class="error-message">{{ getConfirmPasswordErrorMessage()
+                }}</div>
               }
             </div>
           </div>
 
-
           <!-- Alerta de error para contraseñas que no coinciden -->
-        @if (registroForm.hasError('passwordsMismatch') && registroForm.get('confirmaPassword')?.touched) {
-          <div class="password-mismatch-alert">
-            <i class="fa-solid fa-triangle-exclamation alert-icon"></i>
-            Las contraseñas no coinciden
+          @if (shouldShowPasswordMismatchError()) {
+          <div class="col-12">
+            <div class="password-mismatch-alert">
+              <i class="fa-solid fa-triangle-exclamation alert-icon"></i>
+              Las contraseñas no coinciden
+            </div>
           </div>
-        }
+          }
 
         </div>
 
         <!-- Términos y condiciones -->
         <div class="form-check">
-          <input type="checkbox" class="form-check-input" id="terms"
-            formControlName="terms" />
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="terms"
+            formControlName="terms"
+            [ngClass]="{'is-invalid': shouldShowError('terms')}" />
           <label class="form-check-label" for="terms">
-            Acepto los <a href="https://docs.google.com/document/d/1ZekC9OX7apxYtDh7aOYmuk4TPXqtK3zBy7Ybm8Xv_Ss/edit?usp=sharing" class="terms-link">términos y condiciones</a>
+            Acepto los <a
+              href="https://docs.google.com/document/d/1ZekC9OX7apxYtDh7aOYmuk4TPXqtK3zBy7Ybm8Xv_Ss/edit?usp=sharing"
+              class="terms-link">términos y condiciones</a>
           </label>
-          @if (isTermsInvalid) {
-          <div class="error-message">Debe aceptar los términos para
-            continuar</div>
+          @if (shouldShowError('terms')) {
+          <div class="error-message">{{ getTermsErrorMessage() }}</div>
           }
         </div>
 
@@ -168,7 +211,13 @@
         <div class="button-container">
           <button type="submit" class="btn-primary"
             [disabled]="registroForm.invalid || isLoading">
+            @if(isLoading) {
+            <span class="spinner-border spinner-border-sm me-2" role="status"
+              aria-hidden="true"></span>
+            Procesando...
+            } @else {
             <i class="fa-solid fa-user-plus me-2"></i>Registrarse
+            }
           </button>
         </div>
 

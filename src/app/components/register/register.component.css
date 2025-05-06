@@ -397,6 +397,11 @@ body {
   animation: float 8s ease-in-out infinite;
 }
 
+.floating-field{
+    position: relative; 
+    width: 100%;
+}
+
 .circle-two {
   width: 200px;
   height: 200px;

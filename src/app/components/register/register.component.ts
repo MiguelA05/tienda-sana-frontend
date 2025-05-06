@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CrearCuentaDTO } from '../../dto/crear-cuenta-dto';
@@ -52,11 +52,36 @@ export class RegisterComponent {
    * Método para registrar un nuevo usuario en la plataforma
   */
   registrar(): void {
+    // Marcar todos los campos como touched para mostrar errores si existen
+    Object.keys(this.registroForm.controls).forEach(key => {
+      this.registroForm.get(key)?.markAsTouched();
+    });
+    
+
+
+
+
+
+
+
+    //TODO validar terminso y condiciones
+
+
+
+
+
+
+
+
+
+
+
     if (this.registroForm.valid) {
      const crearCuentaDTO = this.registroForm.value as CrearCuentaDTO;
      console.log(crearCuentaDTO);
      this.authService.crearCuenta(crearCuentaDTO).subscribe({
         next: (data) => {
+          this.isLoading = false;
           Swal.fire({
             title: 'Cuenta creada',
             text: 'La cuenta se ha creado correctamente, revise en su correo electrónico para activar su cuenta.'+ 
@@ -68,6 +93,7 @@ export class RegisterComponent {
           this.router.navigate(['/verificar-cuenta']);
         },
         error: (error) => {
+          this.isLoading = false;
           Swal.fire({
             title: 'Error',
             text: error.error.respuesta,
@@ -78,81 +104,164 @@ export class RegisterComponent {
       }); 
     }
   }
-  
+
   /**
-   * Metodo para verificar si el campo cédula es inválido
-   * @returns true si el campo es inválido, false si no lo es
+   * Método para obtener el mensaje de error del campo DNI
+   * @returns Mensaje de error específico
    */
-  get isCedulaInvalid(): boolean {
-    return this.isFieldInvalid('dni');
+  getDniErrorMessage(): string {
+    const dniControl = this.registroForm.get('dni');
+    
+    if (dniControl?.hasError('required')) {
+      return 'El número de cédula es obligatorio';
+    }
+    
+    if (dniControl?.hasError('maxlength')) {
+      return `La cédula no debe exceder los ${dniControl.getError('maxlength').requiredLength} caracteres`;
+    }
+    
+    return 'Por favor ingrese un número de cédula válido';
   }
 
   /**
-   * Metodo para verificar si el campo nombre es inválido
-   * @returns true si el campo es inválido, false si no lo es
+   * Método para obtener el mensaje de error del campo nombre
+   * @returns Mensaje de error específico
    */
-  get isNombreInvalid(): boolean {
-    return this.isFieldInvalid('nombre');
+  getNombreErrorMessage(): string {
+    const nombreControl = this.registroForm.get('nombre');
+    
+    if (nombreControl?.hasError('required')) {
+      return 'El nombre es obligatorio';
+    }
+    
+    if (nombreControl?.hasError('maxlength')) {
+      return `El nombre no debe exceder los ${nombreControl.getError('maxlength').requiredLength} caracteres`;
+    }
+    
+    return 'Por favor ingrese un nombre válido';
   }
 
   /**
-   * Metodo para verificar si el campo dirección es inválido
-   * @returns true si el campo es inválido, false si no lo es
+   * Método para obtener el mensaje de error del campo dirección
+   * @returns Mensaje de error específico
    */
-  get isDireccionInvalid(): boolean {
-    return this.isFieldInvalid('direccion');
+  getDireccionErrorMessage(): string {
+    const direccionControl = this.registroForm.get('direccion');
+    
+    if (direccionControl?.hasError('required')) {
+      return 'La dirección es obligatoria';
+    }
+    
+    if (direccionControl?.hasError('maxlength')) {
+      return `La dirección no debe exceder los ${direccionControl.getError('maxlength').requiredLength} caracteres`;
+    }
+    
+    return 'Por favor ingrese una dirección válida';
   }
 
   /**
-   * Metodo para verificar si el campo teléfono es inválido
-   * @returns true si el campo es inválido, false si no lo es
+   * Método para obtener el mensaje de error del campo teléfono
+   * @returns Mensaje de error específico
    */
-  get isTelefonoInvalid(): boolean {
-    return this.isFieldInvalid('telefono');
+  getTelefonoErrorMessage(): string {
+    const telefonoControl = this.registroForm.get('telefono');
+    
+    if (telefonoControl?.hasError('required')) {
+      return 'El teléfono es obligatorio';
+    }
+    
+    if (telefonoControl?.hasError('minlength')) {
+      return `El teléfono debe tener al menos ${telefonoControl.getError('minlength').requiredLength} caracteres`;
+    }
+    
+    if (telefonoControl?.hasError('maxlength')) {
+      return `El teléfono no debe exceder los ${telefonoControl.getError('maxlength').requiredLength} caracteres`;
+    }
+    
+    return 'Por favor ingrese un número de teléfono válido';
   }
 
   /**
-   * Metodo para verificar si el campo email es inválido
-   * @returns true si el campo es inválido, false si no lo es
-   */ 
-  get isEmailInvalid(): boolean {
-    return this.isFieldInvalid('email');
-  }
-
-  /**
-   * Metodo para verificar si el campo términos y condiciones es inválido
-   * @returns true si el campo es inválido, false si no lo es
+   * Método para obtener el mensaje de error del campo email
+   * @returns Mensaje de error específico
    */
-  get isTermsInvalid(): boolean {
-    return this.isFieldInvalid('terms');
+  getEmailErrorMessage(): string {
+    const emailControl = this.registroForm.get('email');
+    
+    if (emailControl?.hasError('required')) {
+      return 'El correo electrónico es obligatorio';
+    }
+    
+    if (emailControl?.hasError('email')) {
+      return 'Por favor ingrese un formato de correo electrónico válido';
+    }
+    
+    return 'Por favor ingrese un correo electrónico válido';
   }
 
   /**
-   * Metodo para verificar si el campo contraseña es inválido
-   * @returns true si el campo es inválido, false si no lo es
+   * Método para obtener el mensaje de error del campo contraseña
+   * @returns Mensaje de error específico
    */
-  get isPasswordInvalid(): boolean {
-    return this.isFieldInvalid('contrasenia');
+  getPasswordErrorMessage(): string {
+    const passwordControl = this.registroForm.get('contrasenia');
+    
+    if (passwordControl?.hasError('required')) {
+      return 'La contraseña es obligatoria';
+    }
+    
+    if (passwordControl?.hasError('minlength')) {
+      return `La contraseña debe tener al menos ${passwordControl.getError('minlength').requiredLength} caracteres`;
+    }
+    
+    if (passwordControl?.hasError('maxlength')) {
+      return `La contraseña no debe exceder los ${passwordControl.getError('maxlength').requiredLength} caracteres`;
+    }
+    
+    return 'Por favor ingrese una contraseña válida';
   }
 
   /**
-   * Metodo para verificar si el campo confirmación de contraseña es inválido
-   * @returns true si el campo es inválido, false si no lo es
+   * Método para obtener el mensaje de error del campo confirmación de contraseña
+   * @returns Mensaje de error específico
    */
-  get isConfirmaPasswordInvalid(): boolean {
-    return this.isFieldInvalid('confirmacionContrasena');
+  getConfirmPasswordErrorMessage(): string {
+    const confirmPasswordControl = this.registroForm.get('confirmacionContrasena');
+    
+    if (confirmPasswordControl?.hasError('required')) {
+      return 'La confirmación de contraseña es obligatoria';
+    }
+    
+    return 'Por favor confirme su contraseña';
   }
 
   /**
-   * Metodo para verificar si el campo es inválido
-   * @param field nombre del campo
-   * @returns true si el campo es inválido, false si no lo es
+   * Método para obtener el mensaje de error de términos y condiciones
+   * @returns Mensaje de error específico
    */
-  private isFieldInvalid(field: string): boolean {
-    const control = this.registroForm.get(field);
-    return !!(control && control.invalid && (control.dirty || control.touched));
+  getTermsErrorMessage(): string {
+    return 'Debe aceptar los términos y condiciones para continuar';
   }
 
+  /**
+   * Método para verificar si debe mostrar el error de contraseñas no coincidentes
+   * @returns true si las contraseñas no coinciden y el campo ha sido tocado
+   */
+  shouldShowPasswordMismatchError(): boolean {
+    return this.registroForm.hasError('passwordsMismatch') && 
+           (!!this.registroForm.get('confirmacionContrasena')?.touched || 
+            !!this.registroForm.get('contrasenia')?.touched);
+  }
+
+  /**
+   * Método para verificar si un campo debe mostrar error
+   * @param controlName Nombre del control a verificar
+   * @returns true si el campo tiene error y ha sido tocado
+   */
+  shouldShowError(controlName: string): boolean {
+    const control = this.registroForm.get(controlName);
+    return control ? control.invalid && control.touched : false;
+  }
 
   /**
    * Metodo para marcar todos los campos del formulario como tocados
