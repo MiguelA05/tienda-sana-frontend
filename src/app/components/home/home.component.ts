@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CardGridComponent } from "../card-grid/card-grid.component";
 import { PublicoService } from '../../services/publico.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CardGridMesaComponent } from '../card-grid-mesa/card-grid-mesa.component';
 
@@ -53,14 +53,14 @@ export class HomeComponent implements OnInit {
    mesasCurrentPage: number = 0;
 
    // Controlar la vista activa
-  activeView: string = 'mesas'; // 'productos' o 'mesas'
+  activeView: string = 'productos'; // 'productos' o 'mesas'
 
   /**
    * Constructor de la clase HomeComponent
    * @param publicoService publicoService para manejar la lógica de negocio relacionada con el cliente
    * @param formBuilder formBuilder para construir formularios reactivos
    */
-  constructor(private publicoService: PublicoService, private formBuilder: FormBuilder) {
+  constructor(private publicoService: PublicoService, private formBuilder: FormBuilder, private route: ActivatedRoute) {
     this.productos = [];
     this.mesas = [
       {
@@ -108,6 +108,12 @@ export class HomeComponent implements OnInit {
     this.createForm();
     this.createMesaForm();
     this.startSlideInterval(); // Inicia el cambio automático de subtítulos
+    this.route.queryParams.subscribe(params => {
+      if (params['view']) {
+        console.log("NOMBRE DE LA VISTA"+params['view']);
+        this.activeView = params['view'];
+      }
+    });
   }
 
   /**

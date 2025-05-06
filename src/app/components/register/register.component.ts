@@ -58,23 +58,15 @@ export class RegisterComponent {
     });
     
 
-
-
-
-
-
-
-    //TODO validar terminso y condiciones
-
-
-
-
-
-
-
-
-
-
+  if (!this.registroForm.get('terms')?.value) {
+    Swal.fire({
+      title: 'Error',
+      text: 'Debe aceptar los términos y condiciones para continuar.',
+      icon: 'error',
+      confirmButtonText: 'Aceptar'
+    });
+    return; // Detener el proceso de registro
+  }
 
     if (this.registroForm.valid) {
      const crearCuentaDTO = this.registroForm.value as CrearCuentaDTO;

@@ -2,10 +2,13 @@
 .header-container {
   width: 100%;
   padding: 0 20px;
-  position: sticky;
+  position: fixed;
   top: 0;
   z-index: 1000;
-  position: relative;
+  background-color: #ffffff;
+  /* Asegura que el fondo sea visible */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  
 }
 
 /* Main Header */
@@ -21,6 +24,7 @@
   transition: all 0.3s ease;
   position: relative;
   will-change: transform, box-shadow;
+
 }
 
 /* Al hacer scroll, añadir esta clase con JavaScript */
@@ -275,68 +279,125 @@
   list-style: none;
 }
 
+/* Botón de menú (hamburguesa) */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #495057;
+}
+
+/* Ocultar navegación en pantallas pequeñas */
+.main-nav {
+  display: flex;
+  align-items: center;
+  transition: max-height 0.3s ease;
+}
+
+.main-nav.open {
+  display: block;
+}
+
 /* Responsive styles */
 @media (max-width: 992px) {
   .main-nav {
-      display: none;
+    display: none;
   }
 }
 
 @media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .main-nav {
+    display: none;
+    flex-direction: column;
+    background-color: #ffffff;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    z-index: 1000;
+  }
+
+  .main-nav.open {
+    display: flex;
+  }
+
+  .nav-list {
+    flex-direction: column;
+    padding: 0;
+  }
+
+  .nav-item {
+    margin: 0;
+  }
+
+  .nav-link {
+    padding: 10px 20px;
+    text-align: left;
+  }
+
   .main-header {
-      padding: 12px 15px;
+    padding: 12px 15px;
   }
-  
+
   .brand-link {
-      font-size: 1.1rem;
+    font-size: 1.1rem;
   }
-  
+
   .brand-icon {
-      font-size: 1.5rem;
+    font-size: 1.5rem;
   }
-  
-  .btn-outline, .btn-primary {
-      padding: 8px 12px;
-      font-size: 0.9rem;
+
+  .btn-outline,
+  .btn-primary {
+    padding: 8px 12px;
+    font-size: 0.9rem;
   }
-  
+
   .user-name {
-      max-width: 100px;
+    max-width: 100px;
   }
 }
 
 @media (max-width: 576px) {
   .header-container {
-      padding: 0 10px;
+    padding: 0 10px;
   }
-  
+
   .main-header {
-      margin: 10px 0;
-      padding: 10px;
+    margin: 10px 0;
+    padding: 10px;
   }
-  
+
   .brand-text {
-      display: none;
+    display: none;
   }
-  
+
   .brand-icon {
-      margin-right: 0;
+    margin-right: 0;
   }
-  
+
   .auth-container {
-      gap: 8px;
+    gap: 8px;
   }
-  
-  .btn-outline span, .btn-primary span {
-      display: none;
+
+  .btn-outline span,
+  .btn-primary span {
+    display: none;
   }
-  
+
   .user-avatar {
-      margin-right: 5px;
+    margin-right: 5px;
   }
-  
+
   .user-name {
-      max-width: 60px;
+    max-width: 60px;
   }
 
 }
@@ -373,6 +434,3 @@
   border-radius: 50%;
   padding: 2px 6px;
 }
-
-
-

@@ -15,7 +15,7 @@ body {
     padding: 20px;
     transition: background 0.3s ease;
     position: relative;
-    
+    margin-top: 100px;
 }
 
 /* Alerta de contraseñas no coincidentes */

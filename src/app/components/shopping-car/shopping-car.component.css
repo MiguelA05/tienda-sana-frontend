@@ -6,6 +6,7 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     transition: background 0.3s ease;
     position: relative;
+    margin-top: 100px;
 }
 
 /* Título principal */
@@ -14,6 +15,7 @@
     color: #198754;
     letter-spacing: 0.5px;
     margin-bottom: 30px;
+    margin-top: 30px;
     position: relative;
 }
 
@@ -147,10 +149,13 @@ table {
 /* Centrar los botones en el campo de acciones */
 .action-buttons {
     display: flex;
-    justify-content: center; /* Centra horizontalmente */
-    align-items: center; /* Centra verticalmente */
-    gap: 10px; /* Espaciado entre los botones */
-  }
+    justify-content: center;
+    /* Centra horizontalmente */
+    align-items: center;
+    /* Centra verticalmente */
+    gap: 10px;
+    /* Espaciado entre los botones */
+}
 
 /* Botones */
 .btn {
@@ -170,7 +175,7 @@ table {
     padding: 12px 20px;
     font-size: 1.1rem;
     box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
-   
+
 }
 
 .btn-success:hover {
@@ -191,7 +196,7 @@ table {
     padding: 8px 12px;
     font-size: 0.9rem;
     box-shadow: 0 4px 10px rgba(220, 53, 69, 0.2);
-    
+
 }
 
 .btn-danger:hover {
@@ -204,22 +209,23 @@ table {
     transform: translateY(0);
     box-shadow: 0 2px 5px rgba(220, 53, 69, 0.2);
 }
+
 .btn-success {
-  border: none;
-  color: #ffffff;
-  padding: 8px 12px;
-  font-size: 0.9rem;
-  box-shadow: 0 4px 10px rgba(220, 53, 69, 0.2);
+    border: none;
+    color: #ffffff;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 10px rgba(220, 53, 69, 0.2);
 }
 
 .btn-success:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(220, 53, 69, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(220, 53, 69, 0.3);
 }
 
 .btn-success:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 5px rgba(220, 53, 69, 0.2);
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(220, 53, 69, 0.2);
 }
 
 
@@ -237,7 +243,17 @@ table {
 
 /* Animación de carga para el botón */
 @keyframes spinner {
-    to {transform: rotate(360deg);}
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    display: block;
+    margin-bottom: 1rem;
 }
 
 .btn[disabled] {
@@ -246,25 +262,87 @@ table {
 }
 
 /* Responsive */
-@media (max-width: 768px) {
-    .shopping-cart-container {
-        padding: 15px;
-    }
-
-    .card-header {
-        font-size: 1.1rem;
-        padding: 12px 10px;
+@media (max-width: 767px) {
+    .table-responsive table {
+        min-width: 650px;
     }
 
     .table th,
     .table td {
-        padding: 10px 5px;
-        font-size: 0.85rem;
+        padding: 8px 5px;
+        font-size: 0.8rem;
     }
 
-    .btn-success {
-        padding: 10px 15px;
-        font-size: 1rem;
+    .quantity-control .form-control {
+        padding: 6px 4px;
+        font-size: 0.8rem;
     }
+
+    .quantity-control {
+        max-width: 80px;
+    }
+
+    .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        align-items: center;
+    }
+
+    .action-buttons .btn {
+        font-size: 0.75rem;
+        padding: 6px 8px;
+        width: 100%;
+        max-width: 90px;
+    }
+
+    @media (max-width: 480px) {
+        /* Agrega indicadores de desplazamiento para que se entienda que la tabla se puede desplazar */
+        .table-responsive::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 15px;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.05));
+            pointer-events: none;
+        }
+
+        /* Ajuste de tamaño para tabla */
+        .table-responsive table {
+            min-width: 500px;
+        }
+
+        /* Ajusta botones para ser aún más compactos */
+        .action-buttons .btn {
+            font-size: 0.7rem;
+            padding: 4px 6px;
+            max-width: 75px;
+        }
+    }
+
+    /* Estilos para mantener la consistencia en el carrito */
+    .shopping-cart-container {
+        overflow: hidden;
+        /* Evita que el desbordamiento afecte el diseño */
+    }
+
+    .card {
+        margin-bottom: 20px;
+    }
+
+    /* Mejora la visualización de números en la tabla */
+    .table td:nth-child(4),
+    .table td:nth-child(6) {
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    /* Ajustes para el input de cantidad */
+    .quantity-control .form-control {
+        min-width: 50px;
+    }
+
+
 }
-

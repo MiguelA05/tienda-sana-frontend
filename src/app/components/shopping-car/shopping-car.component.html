@@ -8,58 +8,59 @@
           <label class="mb-0">Productos en el Carrito</label>
         </div>
         <div class="card-body p-0">
-          <table class="table table-hover mb-0">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Producto</th>
-                <th>Categoría</th>
-                <th>Precio</th>
-                <th>Cantidad</th>
-                <th>Total</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Uso correcto de @for -->
-              @for (item of itemsCarrito; track item.idProducto) {
-              <tr>
-                <td>{{ itemsCarrito.indexOf(item) + 1 }}</td>
-                <td>{{ item.nombreProducto }}</td>
-                <td>{{ item.categoria }}</td>
-                <td>{{ item.precio | currency }}</td>
-                <td>
-                  <div class="quantity-control">
-                    <input
-                      type="number"
-                      class="form-control"
-                      [value]="item.cantidad"
-                      min="1"
-                      [(ngModel)]="item.cantidad" />
-                  </div>
-                </td>
-                <td>{{ item.precio * item.cantidad | currency:'COP' }}</td>
-                <td>
-                  <div class="action-buttons">
-
-                    <button
-                      class="btn btn-danger"
-                      type="button"
-                      (click)="confirmarEliminacion(itemsCarrito.indexOf(item))">
-                      Eliminar
-                    </button>
-                    <button
-                      class="btn btn-success"
-                      type="button"
-                      (click)="actualizarCantidad(item)">
-                      Actualizar
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              }
-            </tbody>
-          </table>
+          <!-- Contenedor para hacer la tabla desplazable -->
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Producto</th>
+                  <th>Categoría</th>
+                  <th>Precio</th>
+                  <th>Cantidad</th>
+                  <th>Total</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of itemsCarrito; track item.idProducto) {
+                <tr>
+                  <td>{{ itemsCarrito.indexOf(item) + 1 }}</td>
+                  <td>{{ item.nombreProducto }}</td>
+                  <td>{{ item.categoria }}</td>
+                  <td>{{ item.precio | currency }}</td>
+                  <td>
+                    <div class="quantity-control">
+                      <input
+                        type="number"
+                        class="form-control"
+                        [value]="item.cantidad"
+                        min="1"
+                        [(ngModel)]="item.cantidad" />
+                    </div>
+                  </td>
+                  <td>{{ item.precio * item.cantidad | currency:'COP' }}</td>
+                  <td>
+                    <div class="action-buttons">
+                      <button
+                        class="btn btn-danger"
+                        type="button"
+                        (click)="confirmarEliminacion(itemsCarrito.indexOf(item))">
+                        Eliminar
+                      </button>
+                      <button
+                        class="btn btn-success"
+                        type="button"
+                        (click)="actualizarCantidad(item)">
+                        Actualizar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -97,7 +98,6 @@
             [disabled]="isLoading">
             Realizar Pago
           </button>
-          <!-- Uso correcto de @if -->
           @if (isLoading) {
           <div class="loading-spinner mt-3">
             <div class="spinner-border" role="status">
