@@ -28,6 +28,15 @@ export class PublicoService {
   }
 
   /**
+   * Metodo para listar las mesas de un usuario
+   * @param pagina pagina a listar
+   * @returns respuesta del servidor
+   */
+  public listarMesas(pagina: number): Observable<MensajeDTO> {
+    return this.http.get<MensajeDTO>(`${this.publicoURL}/mesas/get-all/${pagina}`);
+  }
+
+  /**
    * Meetodo para obtener la informacion de un producto
    * @param id id del producto a buscar
    * @returns respuesta del servidor

@@ -1,0 +1,165 @@
+/* Contenedor principal de la tarjeta */
+.custom-card {
+    margin: 0 auto;
+    /* Centra las tarjetas dentro de su columna */
+    max-width: 300px;
+    /* Limita el ancho máximo */
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #ffffff;
+    position: relative;
+    will-change: transform, box-shadow;
+    justify-content: center;
+    text-align: center;
+}
+
+.custom-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Encabezado de la tarjeta */
+.custom-card-header {
+    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+    color: #ffffff;
+    text-align: center;
+    padding: 15px;
+    border-radius: 12px 12px 0 0;
+}
+
+.custom-card-header mat-card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.custom-card-header mat-card-subtitle {
+    font-size: 1rem;
+    color: #e9ecef;
+}
+
+/* Imagen destacada */
+.custom-card-image {
+    border-radius: 0;
+    object-fit: cover;
+    height: 180px;
+    width: 100%;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.custom-card-image:hover {
+    transform: scale(1.05);
+    filter: brightness(0.9);
+}
+
+/* Contenido de la tarjeta */
+mat-card-content {
+    font-size: 1rem;
+    color: #495057;
+    text-align: center;
+    padding: 15px;
+}
+
+/* Estilos específicos para información de reserva */
+.reservation-info {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px;
+    padding: 10px 0;
+    border-bottom: 1px dashed #e9ecef;
+}
+
+.table-detail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(25, 135, 84, 0.1);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 5px;
+}
+
+.icon-wrapper mat-icon {
+    color: #198754;
+}
+
+/* Botones de la tarjeta */
+.custom-card-actions {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-custom {
+    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+    color: #ffffff;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+}
+
+.btn-custom:hover {
+    background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(25, 135, 84, 0.3);
+}
+
+.btn-custom-outline {
+    background: transparent;
+    color: #198754;
+    font-weight: 600;
+    padding: 10px 20px;
+    border: 2px solid #198754;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-custom-outline:hover {
+    background: rgba(25, 135, 84, 0.1);
+    color: #157347;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .custom-card {
+        margin: 10px auto;
+    }
+
+    .custom-card-header mat-card-title {
+        font-size: 1.3rem;
+    }
+
+    .custom-card-header mat-card-subtitle {
+        font-size: 0.9rem;
+    }
+
+    .custom-card-image {
+        height: 150px;
+    }
+
+    .reservation-info {
+        flex-direction: column;
+    }
+
+    .table-detail {
+        margin-bottom: 10px;
+    }
+
+    .btn-custom,
+    .btn-custom-outline {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+}
