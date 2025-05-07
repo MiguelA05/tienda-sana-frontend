@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MensajeDTO } from '../dto/mensaje-dto';
 import { FiltroProductoDTO } from '../dto/filtro-producto-dto';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ import { FiltroProductoDTO } from '../dto/filtro-producto-dto';
  */
 export class PublicoService {
 
-  private publicoURL = "http://localhost:8080/api/public";
+  private publicoURL = environment.publicoServiceUrl;
   constructor(private http: HttpClient) { }
  
  

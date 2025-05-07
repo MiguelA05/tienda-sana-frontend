@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { MensajeDTO } from '../dto/mensaje-dto';
 import { ActualizarCuentaDTO } from '../dto/actualizar-cuenta-dto';
 import { CrearVentaDTO } from '../dto/crear-venta-dto';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ import { CrearVentaDTO } from '../dto/crear-venta-dto';
  */
 export class CuentaService {
 
-  private accountURL = "http://localhost:8080/api/account";
+  private accountURL = environment.cuentaServiceUrl;
   constructor(private http: HttpClient) { }
 
   /**

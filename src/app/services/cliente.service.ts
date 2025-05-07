@@ -6,6 +6,7 @@ import { ItemCarritoDTO } from '../dto/item-carrito-dto';
 import { BorrarDetalleCarritoDTO } from '../dto/borrar-detalle-carrito-dto';
 import { ActualizarItemCarritoDTO } from '../dto/actualizar-item-carrito-dto';
 import { CrearVentaDTO } from '../dto/crear-venta-dto';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ import { CrearVentaDTO } from '../dto/crear-venta-dto';
  */
 export class ClienteService {
 
-  private clienteURL = "http://localhost:8080/api/cliente";
+  private clienteURL = environment.clienteServiceUrl;
   constructor(private http: HttpClient) { }
 
   /**
