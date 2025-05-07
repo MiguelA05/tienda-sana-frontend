@@ -402,7 +402,6 @@
 
 }
 
-
 .cart-container {
   margin-left: 15px;
   display: flex;
@@ -417,6 +416,7 @@
   color: #6c757d;
   position: relative;
   transition: color 0.3s ease;
+  margin-right: 10px;
 }
 
 .cart-button:hover {

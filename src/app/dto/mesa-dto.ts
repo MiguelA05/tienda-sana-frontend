@@ -1,5 +1,5 @@
 export interface MesaDTO {
-    id: String,
+    id: string,
     nombre: string,
     estado: boolean,
     localidad: string,

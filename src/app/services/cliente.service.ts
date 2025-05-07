@@ -7,6 +7,9 @@ import { BorrarDetalleCarritoDTO } from '../dto/borrar-detalle-carrito-dto';
 import { ActualizarItemCarritoDTO } from '../dto/actualizar-item-carrito-dto';
 import { CrearVentaDTO } from '../dto/crear-venta-dto';
 import { environment } from '../../environments/environment';
+import { MesaDTO } from '../dto/mesa-dto';
+import { BorrarMesaGestorDTO } from '../dto/borrar-mesa-gestor-dto';
+import { CrearReservaDTO } from '../dto/crear-reserva-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -70,6 +73,10 @@ export class ClienteService {
     return this.http.get<MensajeDTO>(`${this.clienteURL}/carrito/get-items/${id}`);
   }
 
+  public obtenerMesasGestorReservas(id: string): Observable<MensajeDTO> {
+    return this.http.get<MensajeDTO>(`${this.clienteURL}/gestor-reservas/get-items/${id}`);
+  }
+
   /**
    * Metodo para eliminar un item del carrito de un cliente
    * @param deleteCarDetailDTO item a eliminar del carrito
@@ -77,6 +84,10 @@ export class ClienteService {
    */
   public eliminarItemCarrito(deleteCarDetailDTO: BorrarDetalleCarritoDTO): Observable<MensajeDTO> {
     return this.http.delete<MensajeDTO>(`${this.clienteURL}/carrito/delete-item`, { body: deleteCarDetailDTO });
+  }
+
+  public eliminarMesaGestorReservas(borrarMesaGestorDTO: BorrarMesaGestorDTO): Observable<MensajeDTO> {
+    return this.http.delete<MensajeDTO>(`${this.clienteURL}/gestor-reservas/delete-item`, { body: borrarMesaGestorDTO });
   }
 
   /**
@@ -97,13 +108,21 @@ export class ClienteService {
     return this.http.post<MensajeDTO>(`${this.clienteURL}/venta/create`, createOrderDTO);
   }
 
+  public crearReserva(crearReservaDTO: CrearReservaDTO): Observable<MensajeDTO> {
+    return this.http.post<MensajeDTO>(`${this.clienteURL}/reserva/create`, crearReservaDTO);
+  }
+
   /**
    * Metodo para pagar una orden de compra
-   * @param idOrden id de la orden a pagar
+   * @param idVenta id de la orden a pagar
    * @returns respuesta del servidor
    */
-  public realizarPago(idOrden: string): Observable<MensajeDTO> {
-    return this.http.post<MensajeDTO>(`${this.clienteURL}/venta/make-payment/${idOrden}`, {});
+  public realizarPago(idVenta: string): Observable<MensajeDTO> {
+    return this.http.post<MensajeDTO>(`${this.clienteURL}/venta/make-payment/${idVenta}`, {});
+  }
+
+  public realizarPagoReserva(idReserva: string): Observable<MensajeDTO> {
+    return this.http.post<MensajeDTO>(`${this.clienteURL}/reserva/make-payment/${idReserva}`, {});
   }
 
   /**

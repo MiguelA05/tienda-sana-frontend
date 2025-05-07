@@ -1,7 +1,8 @@
+import { MesaDTO } from "./mesa-dto";
+
 export interface CrearReservaDTO {
-    idUsuario: string,
-    idMesa: string,
-    fechaReserva: string,
+    emailUsuario: string,
+    fechaReserva: Date,
     cantidadPersonas: number,
-    valorReserva: number
+    mesas: MesaDTO[],
 }

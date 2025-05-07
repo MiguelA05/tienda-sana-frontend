@@ -9,6 +9,7 @@ import { CorreoRecuperacionComponent } from './components/correo-recuperacion/co
 import { VerificarCuentaComponent } from './components/verificar-cuenta/verificar-cuenta.component';
 import { DetalleProductoComponent } from './components/detalle-producto/detalle-producto.component';
 import { HistorialComponent } from './components/historial/historial.component';
+import { GestorReservasComponent } from './components/gestor-reservas/gestor-reservas.component';
 import { LoginGuard } from './guardias/permiso.service';
 import { RolesGuard } from './guardias/roles.service';
 
@@ -25,6 +26,7 @@ export const routes: Routes = [
    { path: 'verificar-cuenta', component: VerificarCuentaComponent, canActivate: [LoginGuard] },
    { path: 'detalle-producto/:id', component: DetalleProductoComponent },
    { path: 'historial', component: HistorialComponent}, //, canActivate: [RolesGuard]
+   { path: 'gestor-reservas', component: GestorReservasComponent},
    { path: "**", pathMatch: "full", redirectTo: "" }
    
 ];
