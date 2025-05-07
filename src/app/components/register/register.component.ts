@@ -38,7 +38,7 @@ export class RegisterComponent {
       dni: ['', [Validators.required, Validators.maxLength(10)]],
       nombre: ['', [Validators.required, Validators.maxLength(50)]],
       direccion: ['', [Validators.required, Validators.maxLength(255)]],
-      telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(15)]],
+      telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(15), Validators.pattern(/^[0-9]+$/)]],
       email: ['', [Validators.required, Validators.email]],
       contrasenia: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(20)]],
       confirmacionContrasena: ['', [Validators.required]],
@@ -168,6 +168,10 @@ export class RegisterComponent {
     
     if (telefonoControl?.hasError('maxlength')) {
       return `El teléfono no debe exceder los ${telefonoControl.getError('maxlength').requiredLength} caracteres`;
+    }
+
+    if (telefonoControl?.hasError('pattern')) {
+      return 'El teléfono solo puede contener números';
     }
     
     return 'Por favor ingrese un número de teléfono válido';

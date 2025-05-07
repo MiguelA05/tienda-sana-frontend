@@ -43,7 +43,7 @@ export class InformacionUsuarioComponent implements OnInit {
       email: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
       dni: [{ value: '', disabled: true }, [Validators.required]],
       name: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(50)]],
-      phoneNumber: [{ value: '', disabled: true }, [Validators.required, this.numberLengthValidator(10, 15)]],
+      phoneNumber: [{ value: '', disabled: true }, [Validators.required, this.numberLengthValidator(10, 15), Validators.pattern(/^[0-9]+$/)]],
       address: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(255)]],
       password: ['', [Validators.maxLength(20), Validators.minLength(7)]],
     });
@@ -236,6 +236,10 @@ export class InformacionUsuarioComponent implements OnInit {
 
     if (phoneControl?.hasError('numberLength')) {
       return 'El teléfono debe tener entre 10 y 15 dígitos';
+    }
+
+    if (phoneControl?.hasError('pattern')) {
+      return 'El teléfono solo puede contener números';
     }
 
     return 'Por favor ingrese un número de teléfono válido';
