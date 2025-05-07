@@ -1,0 +1,303 @@
+/* Estilos base */
+.container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    margin: 100px auto; /* Cambiado a auto en los lados para centrar */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 30px;
+    max-width: 1000px;
+}
+
+.container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Centrar contenido dentro del container */
+.row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Estilos para títulos */
+.display-4 {
+    color: #198754;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.lead {
+    color: #495057;
+    line-height: 1.6;
+    text-align: center;
+}
+
+/* Selector de tipo de historial */
+.selector-container {
+    display: flex;
+    justify-content: center;
+    margin: 30px auto;
+    gap: 20px;
+    width: 100%;
+}
+
+.selector-option {
+    padding: 12px 24px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 180px;
+}
+
+.selector-option:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+}
+
+.selector-option.active {
+    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(25, 135, 84, 0.2);
+}
+
+/* Estilos para las cards de historial */
+.historial-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.historial-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+}
+
+.historial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.historial-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.historial-id {
+    font-weight: 600;
+    color: #495057;
+    display: flex;
+    align-items: center;
+}
+
+.estado-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.text-success {
+    background-color: rgba(25, 135, 84, 0.1);
+    color: #198754;
+}
+
+.text-warning {
+    background-color: rgba(253, 126, 20, 0.1);
+    color: #fd7e14;
+}
+
+.text-danger {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.historial-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    position: relative;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.info-row span {
+    display: flex;
+    align-items: center;
+}
+
+.productos-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 8px;
+}
+
+.total-price {
+    font-size: 1.1rem;
+    color: #198754;
+}
+
+.promocion-info {
+    display: flex;
+    align-items: center;
+    color: #198754;
+    font-weight: 500;
+}
+
+.observaciones-info {
+    background-color: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 8px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.historial-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Botones */
+.btn-custom {
+    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+    border: none;
+    font-weight: 600;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: auto;
+    margin: 0 auto;
+}
+
+.btn-custom:hover {
+    background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(25, 135, 84, 0.3);
+}
+
+.btn-secundario {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    font-weight: 600;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-secundario:hover {
+    background-color: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Estado vacío */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.empty-state i {
+    color: #adb5bd;
+    margin-bottom: 20px;
+}
+
+/* Contenedor para el spinner de carga */
+.loading-spinner-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
+}
+
+/* Spinner de carga */
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+}
+
+.spinner-border {
+    color: #198754;
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Mensajes de estado vacío */
+.card.text-center {
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .selector-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .selector-option {
+        width: 100%;
+    }
+    
+    .info-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .productos-info {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+}

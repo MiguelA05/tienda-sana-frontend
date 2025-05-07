@@ -23,20 +23,24 @@ export class ClienteService {
 
   /**
    * Metodo para listar los productos de un cliente
-   * @param clientId id del cliente
+   * @param emailUsuario id del cliente
    * @returns 
    */
-  public listarHistorialCompras(clientId: string): Observable<MensajeDTO> {
-    return this.http.get<MensajeDTO>(`${this.clienteURL}/order/history/${clientId}`);
+  public listarComprasCliente(emailUsuario: string): Observable<MensajeDTO> {
+    return this.http.get<MensajeDTO>(`${this.clienteURL}/venta/history/${emailUsuario}`);
+  }
+
+  public listarReservasCliente (emailUsuario: string): Observable<MensajeDTO> {
+    return this.http.get<MensajeDTO>(`${this.clienteURL}/reserva/history/${emailUsuario}`);
   }
 
   /**
    * Metodo para obtener el total de items en el carrito de un cliente
-   * @param clientId id del cliente
+   * @param emailUsuario id del cliente
    * @returns respuesta del servidor
    */
-  public getCartItemCount(clientId: string): Observable<number> {
-    return this.http.get<number>(`${this.clienteURL}/carrito/item-count/${clientId}`);
+  public getCartItemCount(emailUsuario: string): Observable<number> {
+    return this.http.get<number>(`${this.clienteURL}/carrito/item-count/${emailUsuario}`);
   }
 
   /**

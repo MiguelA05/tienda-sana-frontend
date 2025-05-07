@@ -1,11 +1,15 @@
+import { MesaDTO } from "./mesa-dto"
+
 export interface ItemReservaDTO {
-    idUsuario: string,
+    emailUsuaio: string,
     fechaReserva: Date,
+    estadoReserva: string
     paymentType: string,
     status: string,
     paymentDate: Date,
     transactionValue: number,
     id : string
     total: number,
-    idPromocion: string
+    cantidadPersonas: string
+    mesas: MesaDTO[]
 }

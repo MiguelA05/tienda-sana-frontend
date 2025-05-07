@@ -1,5 +1,5 @@
 export interface DetalleVentaDTO {
-    idProducto: string,
-    precio: number,
+    productoId: string,
+    valor: number,
     cantidad: number
 }

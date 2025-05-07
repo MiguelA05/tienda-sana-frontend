@@ -1,0 +1,174 @@
+<div class="container">
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+        rel="stylesheet">
+
+    <!-- Título del historial -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h1 class="display-4">Mi Historial</h1>
+            <p class="lead">Consulta tus compras y reservas realizadas</p>
+        </div>
+    </div>
+
+    <!-- Selector de tipo de historial -->
+    <div class="selector-container mb-4">
+        <div class="selector-option"
+            [class.active]="tipoHistorial === 'compras'"
+            (click)="cambiarTipoHistorial('compras')">
+            <i class="bi bi-cart-check me-2"></i>
+            Mis Compras
+        </div>
+        <div class="selector-option"
+            [class.active]="tipoHistorial === 'reservas'"
+            (click)="cambiarTipoHistorial('reservas')">
+            <i class="bi bi-calendar-check me-2"></i>
+            Mis Reservas
+        </div>
+    </div>
+
+    <!-- Historial de compras -->
+    <div *ngIf="tipoHistorial === 'compras'">
+        <!-- Spinner de carga -->
+        <div class="loading-spinner-container" *ngIf="isLoadingCompras">
+            <div class="loading-spinner">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mensaje si no hay compras -->
+        <div class="card text-center p-5"
+            *ngIf="!isLoadingCompras && compras.length === 0">
+            <div class="empty-state">
+                <i class="bi bi-bag-x display-1 text-muted"></i>
+                <h3 class="mt-3">No tienes compras realizadas</h3>
+                <p class="lead">Explora nuestros productos y realiza tu primera
+                    compra</p>
+                <button class="btn-custom mt-3" routerLink="/?view=productos">Ver
+                    productos</button>
+            </div>
+        </div>
+
+        <!-- Lista de compras -->
+        <div class="historial-list"
+            *ngIf="!isLoadingCompras && compras.length > 0">
+            <div class="historial-card" *ngFor="let compra of compras">
+                <div class="historial-header">
+                    <div class="historial-id">
+                        <i class="bi bi-receipt me-2"></i>
+                        Orden #{{ compra.id }}
+                    </div>
+                    <div class="estado-badge"
+                        [ngClass]="getEstadoClass(compra.estado)">
+                        {{ compra.estado }}
+                    </div>
+                </div>
+
+                <div class="historial-body">
+                    <div class="info-row">
+                        <span><i class="bi bi-calendar2 me-2"></i>Fecha: {{
+                            formatearFecha(compra.fecha) }}</span>
+                        <span><i class="bi bi-credit-card me-2"></i>Pago: {{
+                            compra.tipoPago }}</span>
+                    </div>
+
+                    <div class="productos-info">
+                        <div class="productos-count">
+                            <i class="bi bi-box me-2"></i>
+                            {{ getTotalProductos(compra) }} producto(s)
+                        </div>
+                        <div class="total-price">
+                            <strong>Total:</strong> {{ compra.total | currency
+                            }}
+                        </div>
+                    </div>
+
+                    <div class="promocion-info" *ngIf="compra.promocionId">
+                        <i class="bi bi-tag-fill me-2 text-success"></i>
+                        <span>Promoción aplicada</span>
+                    </div>
+                </div>
+
+                <div class="historial-footer">
+                    <button class="btn-secundario"
+                        (click)="verDetalleCompra(compra.id)">
+                        <i class="bi bi-eye me-2"></i>Ver detalles
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historial de reservas -->
+    <div *ngIf="tipoHistorial === 'reservas'">
+        <!-- Spinner de carga -->
+        <div class="loading-spinner-container" *ngIf="isLoadingReservas">
+            <div class="loading-spinner">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mensaje si no hay reservas -->
+        <div class="card text-center p-5"
+            *ngIf="!isLoadingReservas && reservas.length === 0">
+            <div class="empty-state">
+                <i class="bi bi-calendar-x display-1 text-muted"></i>
+                <h3 class="mt-3">No tienes reservas realizadas</h3>
+                <p class="lead">Reserva una mesa para disfrutar de nuestro
+                    servicio</p>
+                <button class="btn-custom mt-3" routerLink="/login">Hacer
+                    reserva</button>
+            </div>
+        </div>
+
+        <!-- Lista de reservas -->
+        <div class="historial-list"
+            *ngIf="!isLoadingReservas && reservas.length > 0">
+            <div class="historial-card" *ngFor="let reserva of reservas">
+                <div class="historial-header">
+                    <div class="historial-id">
+                        <i class="bi bi-calendar-event me-2"></i>
+                        Reserva #{{ reserva.id }}
+                    </div>
+                    <div class="estado-badge"
+                        [ngClass]="getEstadoClass(reserva.estadoReserva)">
+                        {{ reserva.estadoReserva }}
+                    </div>
+                </div>
+
+                <div class="historial-body">
+                    <div class="info-row">
+                        <span><i class="bi bi-calendar2 me-2"></i>Fecha: {{
+                            formatearFecha(reserva.fechaReserva) }}</span>
+                        <span><i class="bi bi-people me-2"></i>Personas: {{
+                            reserva.cantidadPersonas }}</span>
+                    </div>
+
+                    <!-- Mostrar información de las mesas reservadas -->
+                    <div class="mesas-info"
+                        *ngIf="reserva.mesas && reserva.mesas.length > 0">
+                        <h5 class="mt-3">Mesas reservadas:</h5>
+                        <ul>
+                            <li *ngFor="let mesa of reserva.mesas">
+                                <i class="bi bi-geo-alt me-2"></i>
+                                <strong>{{ mesa.nombre }}</strong> - Capacidad:
+                                {{ mesa.capacidad }} personas
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="historial-footer">
+                    <button class="btn-secundario"
+                        (click)="verDetalleReserva(reserva.id)">
+                        <i class="bi bi-eye me-2"></i>Ver detalles
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
