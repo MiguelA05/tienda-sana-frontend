@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { MensajeDTO } from '../dto/mensaje-dto';
 import { FiltroProductoDTO } from '../dto/filtro-producto-dto';
 import { environment } from '../../environments/environment';
+import { FiltroMesaDTO } from '../dto/filtro-mesa-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -48,12 +49,17 @@ export class PublicoService {
   
   /**
    * Metodo para filtrar los productos por un filtro  
-   * @param eventFilterDTO filtro de productos
+   * @param filtroProductoDTO filtro de productos
    * @returns respuesta del servidor
    */
-  public filtroProductos(eventFilterDTO: FiltroProductoDTO): Observable<MensajeDTO>{
-    return this.http.post<MensajeDTO>(`${this.publicoURL}/producto/filter-events`, eventFilterDTO);
+  public filtrarProductos(filtroProductoDTO: FiltroProductoDTO): Observable<MensajeDTO>{
+    return this.http.post<MensajeDTO>(`${this.publicoURL}/producto/filter-products`, filtroProductoDTO);
   }
+
+  public filtrarMesas(filtroMesaDTO: FiltroMesaDTO): Observable<MensajeDTO>{
+    return this.http.post<MensajeDTO>(`${this.publicoURL}/mesas/filter-tables`, filtroMesaDTO);
+  }
+
 
   /**
    * Metodo para realizar el pago de una orden

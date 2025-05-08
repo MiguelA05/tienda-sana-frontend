@@ -66,25 +66,25 @@
       <div class="filter-row">
         <div class="filter-field">
           <div class="floating-field">
-            <input type="text" id="name" class="form-control" formControlName="name" placeholder=" " />
-            <label for="name">Nombre</label>
+            <input type="text" id="nombreProducto" class="form-control" formControlName="nombreProducto" placeholder=" " />
+            <label for="nombreProducto">Nombre</label>
           </div>
         </div>
         <div class="filter-field">
           <div class="floating-field">
-            <input type="text" id="city" class="form-control" formControlName="city" placeholder=" " />
-            <label for="city">Cantidad</label>
+            <input type="text" id="cantidad" class="form-control" formControlName="cantidad" placeholder=" " />
+            <label for="cantidad">Cantidad</label>
           </div>
         </div>
         <div class="filter-field">
           <div class="floating-field">
-            <select id="eventType" class="form-control" formControlName="eventType">
+            <select id="tipos" class="form-control" formControlName="tipos">
               <option value="OTHER">OTHER</option>
               @for (item of tipos; track item) {
                 <option [value]="item">{{ item }}</option>
               }
             </select>
-            <label for="eventType">Categoria</label>
+            <label for="tipos">Categoria</label>
           </div>
         </div>
         <div class="filter-button">
@@ -128,8 +128,8 @@
       <div class="filter-row">
         <div class="filter-field">
           <div class="floating-field">
-            <input type="text" id="nombre" class="form-control" formControlName="nombre" placeholder=" " />
-            <label for="nombre">Nombre</label>
+            <input type="text" id="nombreMesa" class="form-control" formControlName="nombreMesa" placeholder=" " />
+            <label for="nombreMesa">Nombre</label>
           </div>
         </div>
         <div class="filter-field">

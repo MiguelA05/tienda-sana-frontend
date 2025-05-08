@@ -117,7 +117,7 @@ export class GestorReservasComponent {
   }
 
   continuarSeleccion(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/?view=mesas']);
   }
 
   /**

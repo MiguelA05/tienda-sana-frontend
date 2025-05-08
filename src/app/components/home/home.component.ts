@@ -3,9 +3,11 @@ import { CardGridComponent } from "../card-grid/card-grid.component";
 import { PublicoService } from '../../services/publico.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { FiltroProductoDTO } from '../../dto/filtro-producto-dto';
+import { FiltroMesaDTO } from '../../dto/filtro-mesa-dto'; // Ensure this path is correct
 import { CommonModule } from '@angular/common';
 import { CardGridMesaComponent } from '../card-grid-mesa/card-grid-mesa.component';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -43,16 +45,16 @@ export class HomeComponent implements OnInit {
   activeSlideIndex: number = 0;
   slideInterval: any; // Variable para almacenar el temporizador
 
-   // Nuevas variables para mesas
-   mesaFilterForm!: FormGroup;
-   mesas: any[] = [];
-   mesasDisponibles: boolean = true;
-   mesasPages: number[] = [];
-   mesaFilterUsed: boolean = false;
-   ubicaciones: string[] = [];
-   mesasCurrentPage: number = 0;
+  // Nuevas variables para mesas
+  mesaFilterForm!: FormGroup;
+  mesas: any[] = [];
+  mesasDisponibles: boolean = true;
+  mesasPages: number[] = [];
+  mesaFilterUsed: boolean = false;
+  ubicaciones: string[] = [];
+  mesasCurrentPage: number = 0;
 
-   // Controlar la vista activa
+  // Controlar la vista activa
   activeView: string = 'productos'; // 'productos' o 'mesas'
 
   /**
@@ -98,7 +100,7 @@ export class HomeComponent implements OnInit {
     this.createForm();
     this.createMesaForm();
     this.seleccionados = [];
-    
+
   }
 
   /**
@@ -110,7 +112,7 @@ export class HomeComponent implements OnInit {
     this.startSlideInterval(); // Inicia el cambio automático de subtítulos
     this.route.queryParams.subscribe(params => {
       if (params['view']) {
-        console.log("NOMBRE DE LA VISTA"+params['view']);
+        console.log("NOMBRE DE LA VISTA" + params['view']);
         this.activeView = params['view'];
       }
     });
@@ -221,9 +223,9 @@ export class HomeComponent implements OnInit {
    */
   createForm() {
     this.filterForm = this.formBuilder.group({
-      name: [''],
-      city: [''],
-      eventType: ['OTHER'],
+      nombreProducto: [''],
+      cantidad: [''],
+      tipos: ['OTHER'],
     });
   }
 
@@ -232,7 +234,7 @@ export class HomeComponent implements OnInit {
    */
   createMesaForm() {
     this.mesaFilterForm = this.formBuilder.group({
-      nombre: [''],
+      nombreMesa: [''],
       capacidad: ['', [Validators.min(0)]],
       ubicacion: [''],
     });
@@ -240,20 +242,111 @@ export class HomeComponent implements OnInit {
 
   /**
    * Método para aplicar el filtro a los productos
-   * @param page Página actual
+   * @param pagina Página actual
    */
-  public filter(page: number) {
-    // Lógica para filtrar productos
+  public filter(pagina: number) {
+    if (this.filterForm.invalid) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Por favor, complete todos los campos requeridos'
+      });
+      return;
+    }
+  
+    const filtroProductoDTO = this.filterForm.value as FiltroProductoDTO;
+    filtroProductoDTO.pagina = pagina;
+  
+    if (!filtroProductoDTO.categoria || filtroProductoDTO.categoria.trim() === '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Seleccione una categoria de producto'
+      });
+      return;
+    }
+  
+    this.publicoService.filtrarProductos(filtroProductoDTO).subscribe({
+      next: (data) => {
+        if (data.reply && data.reply.productos && data.reply.totalPages) {
+          this.pages = new Array(data.reply.totalPages);
+          this.productos = data.reply.productos;
+          this.currentPage = filtroProductoDTO.pagina;
+          this.filterUsed = true;
+          this.actualizarProductosDisponibles();
+        } else {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Sin resultados',
+            text: 'No se encontraron productos con los filtros seleccionados.'
+          });
+        }
+      },
+      error: (error) => {
+        console.error(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Ocurrió un problema al filtrar los productos. Intente nuevamente más tarde.'
+        });
+      }
+    });
   }
+
+
 
   /**
    * Método para aplicar el filtro a las mesas
    * @param page Página actual
    */
-  public filterMesas(page: number) {
-    // Lógica para filtrar mesas
-    this.mesaFilterUsed = true;
-    // Implementación del filtro...
+  public filterMesas(pagina: number) {
+    if (this.mesaFilterForm.invalid) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Por favor, complete todos los campos requeridos'
+      });
+      return;
+    }
+  
+    const filtroMesaDTO = this.mesaFilterForm.value as FiltroMesaDTO;
+    
+    filtroMesaDTO.pagina = pagina;
+  
+    if (!filtroMesaDTO.localidad || filtroMesaDTO.localidad.trim() === '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Seleccione una localidad de mesa'
+      });
+      return;
+    }
+  
+    this.publicoService.filtrarMesas(filtroMesaDTO).subscribe({
+      next: (data) => {
+        if (data.reply && data.reply.mesas && data.reply.totalPages) {
+          this.pages = new Array(data.reply.totalPages);
+          this.mesas = data.reply.mesas;
+          this.currentPage = filtroMesaDTO.pagina;
+          this.mesaFilterUsed = true;
+          this.actualizarMesasDisponibles();
+        } else {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Sin resultados',
+            text: 'No se encontraron mesas con los filtros seleccionados.'
+          });
+        }
+      },
+      error: (error) => {
+        console.error(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Ocurrió un problema al filtrar las mesas. Intente nuevamente más tarde.'
+        });
+      }
+    });
   }
 
   /**
@@ -343,4 +436,7 @@ export class HomeComponent implements OnInit {
   public irADetalleMesa(id: number) {
     // Implementación de navegación al detalle de la mesa
   }
+
+
+
 }
