@@ -3,17 +3,18 @@ import { Router } from '@angular/router';
 import { MesaDTO } from '../../dto/mesa-dto';
 import { ItemReservaDTO } from '../../dto/item-reserva-dto';
 import { ClienteService } from '../../services/cliente.service';
-import { FormsModule, FormGroup, FormBuilder } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TokenService } from '../../services/token.service';
 import { BorrarMesaGestorDTO } from '../../dto/borrar-mesa-gestor-dto';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { CrearReservaDTO } from '../../dto/crear-reserva-dto';
 import { MensajeDTO } from '../../dto/mensaje-dto'; // Ensure this file exists and contains the definition for MensajeDTO
+import { FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-gestor-reservas',
-  imports: [FormsModule, CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule],
   templateUrl: './gestor-reservas.component.html',
   styleUrl: './gestor-reservas.component.css'
 })
@@ -35,10 +36,10 @@ export class GestorReservasComponent {
 
   ngOnInit(): void {
     this.gestorForm = this.fb.group({
-      cantidadPersonasForm: [''],
-      fechaReservaForm: [''], 
-    },
-  );;
+      cantidadPersonasForm: [1, [Validators.required, Validators.min(1)]],
+      fechaReservaForm: ['', Validators.required]
+    });
+
     this.isLoading = true;
     this.cargarMesasSeleccionadas();
     this.isLoading = false;
@@ -234,6 +235,7 @@ export class GestorReservasComponent {
   formatearFecha(fecha: Date): string {
     return new Date(fecha).toLocaleDateString();
   }
+
 
 
 }
