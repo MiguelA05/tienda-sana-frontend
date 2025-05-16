@@ -1,6 +1,6 @@
 <div class="container card-grid-container">
     <div class="cards-grid">
-      @for (mesa of mesas; track mesa.imagen) {
+      @for (mesa of mesas; track mesa.id) {
         <div class="custom-card">
           <div class="card h-100" (click)="irADetalleMesa(mesa.id)">
             <img
