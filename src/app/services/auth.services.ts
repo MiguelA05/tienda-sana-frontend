@@ -7,6 +7,7 @@ import { CrearCuentaDTO } from '../dto/crear-cuenta-dto';
 import { ActivarCuentaDTO } from '../dto/activar-cuenta-dto';
 import { CambiarContraseniaDTO } from '../dto/cambiar-contrasenia-dto';
 import { TokenDTO } from '../dto/token-dto';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ import { TokenDTO } from '../dto/token-dto';
  */
 export class AuthService {
 
-  private authURL = "https://tienda-sana-backend.onrender.com/api/auth";
+  private authURL = environment.authServiceUrl;
 
   constructor(private http: HttpClient) {
     console.log(1);

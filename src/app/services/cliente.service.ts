@@ -9,6 +9,7 @@ import { CrearVentaDTO } from '../dto/crear-venta-dto';
 import { MesaDTO } from '../dto/mesa-dto';
 import { BorrarMesaGestorDTO } from '../dto/borrar-mesa-gestor-dto';
 import { CrearReservaDTO } from '../dto/crear-reserva-dto';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ import { CrearReservaDTO } from '../dto/crear-reserva-dto';
  */
 export class ClienteService {
 
-  private clienteURL = "https://tienda-sana-backend.onrender.com/api/cliente";
+  private clienteURL = environment.clienteServiceUrl;
   constructor(private http: HttpClient) { }
 
   /**

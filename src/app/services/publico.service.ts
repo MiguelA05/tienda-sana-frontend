@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { MensajeDTO } from '../dto/mensaje-dto';
 import { FiltroProductoDTO } from '../dto/filtro-producto-dto';
 import { FiltroMesaDTO } from '../dto/filtro-mesa-dto';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ import { FiltroMesaDTO } from '../dto/filtro-mesa-dto';
  */
 export class PublicoService {
 
-  private publicoURL = "https://tienda-sana-backend.onrender.com/api/public";
+  private publicoURL = environment.publicoServiceUrl;
   constructor(private http: HttpClient) { }
  
  
