@@ -1,11 +1,10 @@
-// set-env.js
-const { writeFileSync } = require('fs');
+const { writeFileSync, mkdirSync, existsSync } = require('fs');
 const dotenv = require('dotenv');
 
-// Cargar .env solo en local
-dotenv.config(); // Esto pobla process.env
+// Cargar variables de entorno desde .env (opcional en local)
+dotenv.config();
 
-// Validar que existan las variables requeridas
+// Validar variables necesarias
 const requiredVars = [
   'AUTH_SERVICE_URL',
   'CLIENTE_SERVICE_URL',
@@ -20,6 +19,13 @@ if (missing.length > 0) {
   process.exit(1);
 }
 
+// Crear carpeta si no existe
+const envDir = 'src/environments';
+if (!existsSync(envDir)) {
+  mkdirSync(envDir, { recursive: true });
+}
+
+// Plantilla
 const template = (prod) => `export const environment = {
   production: ${prod},
   authServiceUrl: '${process.env.AUTH_SERVICE_URL}',
@@ -28,7 +34,7 @@ const template = (prod) => `export const environment = {
   publicoServiceUrl: '${process.env.PUBLICO_SERVICE_URL}'
 };`;
 
-// Escribir archivos
-writeFileSync('src/environments/environment.ts', template(false));
-writeFileSync('src/environments/environment.prod.ts', template(true));
-console.log('✅ environment.ts y environment.prod.ts actualizados');
+// Crear archivos
+writeFileSync(`${envDir}/environment.ts`, template(false));
+writeFileSync(`${envDir}/environment.prod.ts`, template(true));
+console.log('✅ Archivos de entorno generados correctamente.');
