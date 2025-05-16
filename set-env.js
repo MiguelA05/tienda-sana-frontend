@@ -1,15 +1,15 @@
 const { writeFileSync } = require('fs');
 const dotenv = require('dotenv');
 const result = dotenv.config();
+const env = result.parsed || process.env;
 
-const env = result.parsed;
-
-if (!env) {
-  console.error('❌ No se encontró .env o está vacío');
+if (!env.AUTH_SERVICE_URL) {
+  console.error('❌ No se encontraron variables de entorno necesarias');
   process.exit(1);
 }
 
-const template = (prod) => `export const environment = {
+const template = (prod) => `
+export const environment = {
   production: ${prod},
   authServiceUrl: '${env.AUTH_SERVICE_URL}',
   clienteServiceUrl: '${env.CLIENTE_SERVICE_URL}',
@@ -21,5 +21,4 @@ const template = (prod) => `export const environment = {
 writeFileSync('src/environments/environment.ts', template(false));
 writeFileSync('src/environments/environment.prod.ts', template(true));
 
-console.log('✅ environment.ts y environment.prod.ts actualizados');
-console.log('🌱 Variables cargadas desde .env:', env);
+console.log('✅ Archivos de environment generados correctamente.');
