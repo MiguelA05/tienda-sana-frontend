@@ -47,10 +47,6 @@ export class HeaderComponent {
     let rutaAlterna="/register";
     ruta="/";
     
-    console.log(this.router.url);
-    console.log("-");
-    console.log(ruta);
-    console.log(this.router.url === ruta);
     if (this.router.url === ruta) {
       this.router.navigateByUrl(rutaAlterna, { skipLocationChange: true }).then(() => {
         this.router.navigate([ruta]);
