@@ -1,11 +1,14 @@
+import { DetalleVentaDTO } from "./detalle-venta-dto"
+
 export interface ItemVentaDTO {
-    idUsuario: string,
-    fechaVenta: Date,
-    paymentType: string,
-    status: string,
-    paymentDate: Date,
-    transactionValue: number,
+    clienteId: string,
+    fecha: Date,
+    productos: DetalleVentaDTO[]
+    tipoPago: string,
+    estado: string,
+    fechaPago: Date,
+    valorTransaccion: number,
     id : string
     total: number,
-    idPromocion: string
+    promocionId: string,
 }

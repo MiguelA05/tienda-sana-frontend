@@ -9,6 +9,7 @@
     transition: background 0.3s ease;
     text-align: center;
     position: relative;
+    margin-top: 100px;
 }
 
 /* Tarjeta del login */
@@ -63,6 +64,7 @@
 .login-card .form-group {
     margin-bottom: 20px;
     position: relative;
+    
 }
 
 .login-card .form-control {

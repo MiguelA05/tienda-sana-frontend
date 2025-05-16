@@ -1,4 +1,5 @@
 import { Component, HostListener } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TokenService } from '../../services/token.service';
 import { Router } from '@angular/router';
@@ -6,12 +7,12 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, CommonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-
+  isMenuOpen: boolean = false;
   title: string;
   nombreUsuario: string = "";
   isLogged = false;
@@ -46,10 +47,6 @@ export class HeaderComponent {
     let rutaAlterna="/register";
     ruta="/";
     
-    console.log(this.router.url);
-    console.log("-");
-    console.log(ruta);
-    console.log(this.router.url === ruta);
     if (this.router.url === ruta) {
       this.router.navigateByUrl(rutaAlterna, { skipLocationChange: true }).then(() => {
         this.router.navigate([ruta]);
@@ -73,6 +70,18 @@ export class HeaderComponent {
         header.classList.remove('scrolled');
       }
     }
+  }
+
+  mostrarProductos(): void {
+    this.router.navigate([''], { queryParams: { view: 'productos' } });
+  }
+
+  mostrarMesas(): void {
+    this.router.navigate([''], { queryParams: { view: 'mesas' } });
+  }
+
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 
 

@@ -8,14 +8,16 @@
     <div class="login-card">
         <!-- Encabezado -->
         <div class="card-header">
-            <i class="fa-solid fa-right-to-bracket me-2"></i>  Iniciar Sesión
+            <i class="fa-solid fa-right-to-bracket me-2"></i> Iniciar Sesión
         </div>
-        
-        <!-- Logo (opcional) -->
+
+        <!-- Logo -->
         <div class="logo">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS6V-pygE7ZUn7vu2z8eU_F1xenbk9fdZCpQ&s" alt="Logo">
-        </div> 
-        
+            <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS6V-pygE7ZUn7vu2z8eU_F1xenbk9fdZCpQ&s"
+                alt="Logo">
+        </div>
+
         <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
             <!-- Campo Email -->
             <div class="form-group">
@@ -26,58 +28,68 @@
                     formControlName="email"
                     placeholder=" "
                     required
-                />
+                    [ngClass]="{'is-invalid': shouldShowError('email')}" />
                 <label for="email" class="form-label">Correo electrónico</label>
                 <i class="fa-solid fa-envelope input-icon"></i>
-                
+
                 <!-- Mensaje de error (opcional) -->
-                @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+                @if (loginForm.get('email')?.invalid &&
+                loginForm.get('email')?.touched) {
+                <div class="error-message">
                     <div class="error-message">
-                        Por favor, ingrese un correo electrónico válido
+                        {{ getEmailErrorMessage() }}
                     </div>
+                </div>
                 }
             </div>
 
-            
             <!-- Contraseña -->
             <div class="form-group position-relative">
                 <div class="password-input-container">
-                  <input
-                    [type]="isPasswordVisible ? 'text' : 'password'"
-                    class="form-control"
-                    id="contrasenia"
-                    formControlName="contrasenia"
-                    placeholder=" "
-                    required
-                  />
-                  <label for="contrasenia" class="form-label">Contraseña</label>
-                  <i class="fa-solid fa-lock input-icon"></i>
-                  <button
-                    type="button"
-                    class="btn-visibility"
-                    (click)="togglePasswordVisibility()"
-                    aria-label="Mostrar u ocultar contraseña"
-                  >
-                    <i [class]="isPasswordVisible ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
-                  </button>
+                    <input
+                        [type]="isPasswordVisible ? 'text' : 'password'"
+                        class="form-control"
+                        id="contrasenia"
+                        formControlName="contrasenia"
+                        placeholder=" "
+                        required
+                        [ngClass]="{'is-invalid': shouldShowError('contrasenia')}" />
+                    <label for="contrasenia"
+                        class="form-label">Contraseña</label>
+                    <i class="fa-solid fa-lock input-icon"></i>
+                    <button
+                        type="button"
+                        class="btn-visibility"
+                        (click)="togglePasswordVisibility()"
+                        aria-label="Mostrar u ocultar contraseña">
+                        <i
+                            [class]="isPasswordVisible ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+                    </button>
                 </div>
-                @if (loginForm.get('contrasenia')?.invalid && loginForm.get('contrasenia')?.touched) {
-                  <div class="error-message">Por favor ingrese una contraseña válida</div>
+                <!-- Mensaje de error específico para contraseña -->
+                @if (shouldShowError('contrasenia')) {
+                <div class="error-message">{{ getPasswordErrorMessage() }}</div>
                 }
-              </div>
+            </div>
 
             <!-- Botón de enviar -->
             <div class="d-grid">
-                <button 
-                    type="submit" 
-                    class="btn-success" 
+                <button
+                    type="submit"
+                    class="btn-success"
                     [disabled]="loginForm.invalid"
-                    [ngClass]="{'btn-loading': isLoading}"
-                >
-                    <i class="fa-solid fa-arrow-right-to-bracket me-2"></i>Ingresar
+                    [ngClass]="{'btn-loading': isLoading}">
+                    @if(isLoading) {
+                    <span class="spinner-border spinner-border-sm me-2"
+                        role="status" aria-hidden="true"></span>
+                    Procesando...
+                    } @else {
+                    <i
+                        class="fa-solid fa-arrow-right-to-bracket me-2"></i>Ingresar
+                    }
                 </button>
             </div>
-            
+
             <!-- Link de recuperación -->
             <div class="links-container">
                 <a routerLink="/correo-recuperacion">

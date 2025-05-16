@@ -15,7 +15,7 @@ body {
     padding: 20px;
     transition: background 0.3s ease;
     position: relative;
-    
+    margin-top: 100px;
 }
 
 /* Alerta de contraseñas no coincidentes */
@@ -395,6 +395,11 @@ body {
   top: -100px;
   right: -100px;
   animation: float 8s ease-in-out infinite;
+}
+
+.floating-field{
+    position: relative; 
+    width: 100%;
 }
 
 .circle-two {

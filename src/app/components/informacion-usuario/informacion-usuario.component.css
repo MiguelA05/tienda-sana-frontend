@@ -6,6 +6,17 @@ input:disabled {
   cursor: not-allowed;
 }
 
+/* Mensajes de error */
+.error-message {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    transition: opacity 0.3s ease;
+    text-align: left;
+    
+}
+
+
 .container-fluid {
     display: flex;
     justify-content: center;
@@ -16,6 +27,7 @@ input:disabled {
     transition: background 0.3s ease;
     position: relative;
     overflow: hidden;
+    margin-top: 100px;
 }
 
 /* Tarjeta de perfil */
@@ -308,7 +320,7 @@ input:disabled {
 
   .btn-visibility {
     position: absolute;
-    top: 60%;
+    top: 50%;
     right: 10px;
     transform: translateY(-50%);
     background: none;

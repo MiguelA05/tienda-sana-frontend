@@ -6,6 +6,9 @@ import { ItemCarritoDTO } from '../dto/item-carrito-dto';
 import { BorrarDetalleCarritoDTO } from '../dto/borrar-detalle-carrito-dto';
 import { ActualizarItemCarritoDTO } from '../dto/actualizar-item-carrito-dto';
 import { CrearVentaDTO } from '../dto/crear-venta-dto';
+import { MesaDTO } from '../dto/mesa-dto';
+import { BorrarMesaGestorDTO } from '../dto/borrar-mesa-gestor-dto';
+import { CrearReservaDTO } from '../dto/crear-reserva-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -22,20 +25,24 @@ export class ClienteService {
 
   /**
    * Metodo para listar los productos de un cliente
-   * @param clientId id del cliente
+   * @param emailUsuario id del cliente
    * @returns 
    */
-  public listarHistorialCompras(clientId: string): Observable<MensajeDTO> {
-    return this.http.get<MensajeDTO>(`${this.clienteURL}/order/history/${clientId}`);
+  public listarComprasCliente(emailUsuario: string): Observable<MensajeDTO> {
+    return this.http.get<MensajeDTO>(`${this.clienteURL}/venta/history/${emailUsuario}`);
+  }
+
+  public listarReservasCliente (emailUsuario: string): Observable<MensajeDTO> {
+    return this.http.get<MensajeDTO>(`${this.clienteURL}/reserva/history/${emailUsuario}`);
   }
 
   /**
    * Metodo para obtener el total de items en el carrito de un cliente
-   * @param clientId id del cliente
+   * @param emailUsuario id del cliente
    * @returns respuesta del servidor
    */
-  public getCartItemCount(clientId: string): Observable<number> {
-    return this.http.get<number>(`${this.clienteURL}/carrito/item-count/${clientId}`);
+  public getCartItemCount(emailUsuario: string): Observable<number> {
+    return this.http.get<number>(`${this.clienteURL}/carrito/item-count/${emailUsuario}`);
   }
 
   /**
@@ -65,6 +72,10 @@ export class ClienteService {
     return this.http.get<MensajeDTO>(`${this.clienteURL}/carrito/get-items/${id}`);
   }
 
+  public obtenerMesasGestorReservas(id: string): Observable<MensajeDTO> {
+    return this.http.get<MensajeDTO>(`${this.clienteURL}/gestor-reservas/get-items/${id}`);
+  }
+
   /**
    * Metodo para eliminar un item del carrito de un cliente
    * @param deleteCarDetailDTO item a eliminar del carrito
@@ -72,6 +83,10 @@ export class ClienteService {
    */
   public eliminarItemCarrito(deleteCarDetailDTO: BorrarDetalleCarritoDTO): Observable<MensajeDTO> {
     return this.http.delete<MensajeDTO>(`${this.clienteURL}/carrito/delete-item`, { body: deleteCarDetailDTO });
+  }
+
+  public eliminarMesaGestorReservas(borrarMesaGestorDTO: BorrarMesaGestorDTO): Observable<MensajeDTO> {
+    return this.http.delete<MensajeDTO>(`${this.clienteURL}/gestor-reservas/delete-item`, { body: borrarMesaGestorDTO });
   }
 
   /**
@@ -92,13 +107,21 @@ export class ClienteService {
     return this.http.post<MensajeDTO>(`${this.clienteURL}/venta/create`, createOrderDTO);
   }
 
+  public crearReserva(crearReservaDTO: CrearReservaDTO): Observable<MensajeDTO> {
+    return this.http.post<MensajeDTO>(`${this.clienteURL}/reserva/create`, crearReservaDTO);
+  }
+
   /**
    * Metodo para pagar una orden de compra
-   * @param idOrden id de la orden a pagar
+   * @param idVenta id de la orden a pagar
    * @returns respuesta del servidor
    */
-  public realizarPago(idOrden: string): Observable<MensajeDTO> {
-    return this.http.post<MensajeDTO>(`${this.clienteURL}/venta/make-payment/${idOrden}`, {});
+  public realizarPago(idVenta: string): Observable<MensajeDTO> {
+    return this.http.post<MensajeDTO>(`${this.clienteURL}/venta/make-payment/${idVenta}`, {});
+  }
+
+  public realizarPagoReserva(idReserva: string): Observable<MensajeDTO> {
+    return this.http.post<MensajeDTO>(`${this.clienteURL}/reserva/make-payment/${idReserva}`, {});
   }
 
   /**

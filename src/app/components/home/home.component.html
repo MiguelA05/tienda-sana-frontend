@@ -1,7 +1,7 @@
+<!-- Carrusel -->
 <div class="elegant-carousel-container">
   <div id="carouselId" class="elegant-carousel">
     <div class="carousel-inner">
-      <!-- Uso correcto de @for -->
       @for (item of carouselItems; track item.imageUrl) {
         <div
           class="carousel-item"
@@ -35,64 +35,148 @@
   </div>
 </div>
 
-<!-- filtros
-<div class="filter-container">
-  <form class="elegant-filter-bar" [formGroup]="filterForm" (ngSubmit)="filter(0)">
-    <h4 class="filter-title">Encuentra lo que buscas</h4>
-    <div class="filter-row">
-      <div class="filter-field">
-        <div class="floating-field">
-          <input type="text" id="name" class="form-control" formControlName="name" placeholder=" " />
-          <label for="name">Nombre</label>
-        </div>
-      </div>
-      <div class="filter-field">
-        <div class="floating-field">
-          <input type="text" id="city" class="form-control" formControlName="city" placeholder=" " />
-          <label for="city">Cantidad</label>
-        </div>
-      </div>
-      <div class="filter-field">
-        <div class="floating-field">
-          <select id="eventType" class="form-control" formControlName="eventType">
-            <option value="OTHER">OTHER</option>
-           
-            @for (item of tipos; track item) {
-              <option [value]="item">{{ item }}</option>
-            }
-          </select>
-          <label for="eventType">Categoria</label>
-        </div>
-      </div>
-      <div class="filter-button">
-        <button class="btn-filter" type="submit">
-          <i class="fas fa-search"></i> Filtrar
-        </button>
-      </div>
-    </div>
-  </form>
+<!-- Selector de vistas -->
+<div class="view-selector">
+  <div class="btn-group" role="group" aria-label="Seleccionar vista">
+    <button 
+      type="button" 
+      class="btn view-btn" 
+      [class.active]="activeView === 'productos'"
+      (click)="changeView('productos')"
+    >
+      <i class="bi bi-box-seam"></i> Productos
+    </button>
+    <button 
+      type="button" 
+      class="btn view-btn" 
+      [class.active]="activeView === 'mesas'"
+      (click)="changeView('mesas')"
+    >
+      <i class="bi bi-table"></i> Mesas Reservables
+    </button>
+  </div>
 </div>
--->
 
-<!-- Productos -->
-<app-card-grid [products]="productos"></app-card-grid>
+<!-- Vista de Productos -->
+<div *ngIf="activeView === 'productos'">
+  <!-- Filtro de productos -->
+  <div class="filter-container">
+    <form class="elegant-filter-bar" [formGroup]="filterForm" (ngSubmit)="filter(0)">
+      <h4 class="filter-title">Encuentra los productos que buscas</h4>
+      <div class="filter-row">
+        <div class="filter-field">
+          <div class="floating-field">
+            <input type="text" id="nombreProducto" class="form-control" formControlName="nombreProducto" placeholder=" " />
+            <label for="nombreProducto">Nombre</label>
+          </div>
+        </div>
+        <div class="filter-field">
+          <div class="floating-field">
+            <input type="text" id="cantidad" class="form-control" formControlName="cantidad" placeholder=" " />
+            <label for="cantidad">Cantidad</label>
+          </div>
+        </div>
+        <div class="filter-field">
+          <div class="floating-field">
+            <select id="tipos" class="form-control" formControlName="tipos">
+              <option value="OTHER">OTHER</option>
+              @for (item of tipos; track item) {
+                <option [value]="item">{{ item }}</option>
+              }
+            </select>
+            <label for="tipos">Categoria</label>
+          </div>
+        </div>
+        <div class="filter-button">
+          <button class="btn-filter" type="submit">
+            <i class="fas fa-search"></i> Filtrar
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
 
-<!-- Paginación -->
-<nav class="elegant-pagination">
-  <ul class="pagination-list">
-    <li class="pagination-item" [class.disabled]="currentPage === 0">
-      <a class="pagination-link" (click)="previousPage()">Anterior</a>
-    </li>
-    <!-- Uso correcto de @for -->
-    @for (item of pages; track item) {
-      <li class="pagination-item" [class.active]="currentPage === pages.indexOf(item)">
-        <a class="pagination-link" (click)="filterUsed ? filter(pages.indexOf(item)) : obtenerProductos(pages.indexOf(item))">
-          {{ pages.indexOf(item) + 1 }}
-        </a>
+  <!-- Grid de Productos -->
+  <app-card-grid [products]="productos"></app-card-grid>
+
+  <!-- Paginación de productos -->
+  <nav class="elegant-pagination">
+    <ul class="pagination-list">
+      <li class="pagination-item" [class.disabled]="currentPage === 0">
+        <a class="pagination-link" (click)="previousPage()">Anterior</a>
       </li>
-    }
-    <li class="pagination-item" [class.disabled]="!productosDisponibles">
-      <a class="pagination-link" (click)="nextPage()">Siguiente</a>
-    </li>
-  </ul>
-</nav>
+      @for (item of pages; track item) {
+        <li class="pagination-item" [class.active]="currentPage === pages.indexOf(item)">
+          <a class="pagination-link" (click)="filterUsed ? filter(pages.indexOf(item)) : obtenerProductos(pages.indexOf(item))">
+            {{ pages.indexOf(item) + 1 }}
+          </a>
+        </li>
+      }
+      <li class="pagination-item" [class.disabled]="!productosDisponibles">
+        <a class="pagination-link" (click)="nextPage()">Siguiente</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<!-- Vista de Mesas Reservables -->
+<div *ngIf="activeView === 'mesas'">
+  <!-- Filtro de mesas -->
+  <div class="filter-container">
+    <form class="elegant-filter-bar" [formGroup]="mesaFilterForm" (ngSubmit)="filterMesas(0)">
+      <h4 class="filter-title">Encuentra la mesa perfecta para tu reserva</h4>
+      <div class="filter-row">
+        <div class="filter-field">
+          <div class="floating-field">
+            <input type="text" id="nombreMesa" class="form-control" formControlName="nombreMesa" placeholder=" " />
+            <label for="nombreMesa">Nombre</label>
+          </div>
+        </div>
+        <div class="filter-field">
+          <div class="floating-field">
+            <input type="number" id="capacidad" class="form-control" formControlName="capacidad" placeholder=" " min="0"/>
+            <label for="capacidad">Capacidad</label>
+          </div>
+        </div>
+        <div class="filter-field">
+          <div class="floating-field">
+            <select id="ubicacion" class="form-control" formControlName="ubicacion">
+              <option value="">Todas</option>
+              @for (ubicacion of ubicaciones; track ubicacion) {
+                <option [value]="ubicacion">{{ ubicacion }}</option>
+              }
+            </select>
+            <label for="ubicacion">Ubicación</label>
+          </div>
+        </div>
+        <div class="filter-button">
+          <button class="btn-filter" type="submit">
+            <i class="fas fa-search"></i> Filtrar
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Grid de Mesas -->
+  <app-mesas-grid [mesas]="mesas"></app-mesas-grid>
+
+  <!-- Paginación de mesas -->
+  <nav class="elegant-pagination">
+    <ul class="pagination-list">
+      <li class="pagination-item" [class.disabled]="mesasCurrentPage === 0">
+        <a class="pagination-link" (click)="previousPageMesas()">Anterior</a>
+      </li>
+      @for (item of mesasPages; track item) {
+        <li class="pagination-item" [class.active]="mesasCurrentPage === mesasPages.indexOf(item)">
+          <a class="pagination-link" (click)="mesaFilterUsed ? filterMesas(mesasPages.indexOf(item)) : obtenerMesas(mesasPages.indexOf(item))">
+            {{ mesasPages.indexOf(item) + 1 }}
+          </a>
+        </li>
+      }
+      <li class="pagination-item" [class.disabled]="!mesasDisponibles">
+        <a class="pagination-link" (click)="nextPageMesas()">Siguiente</a>
+      </li>
+    </ul>
+  </nav>
+</div>

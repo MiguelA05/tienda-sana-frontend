@@ -118,8 +118,14 @@
   width: 100%;
 }
 
+.btn-custom:disabled {
+  background: linear-gradient(135deg, #6c757d 0%, #adb5bd 100%);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 .btn-custom:hover {
-  background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
   transform: translateY(-3px);
   box-shadow: 0 8px 15px rgba(25, 135, 84, 0.3);
 }

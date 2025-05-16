@@ -1,23 +1,35 @@
 <div class="container card-grid-container">
   <div class="cards-grid">
     @for (item of products; track item.id) {
-      <div class="custom-card">
-        <div class="card h-100" (click)="irADetalleProducto(item.id)">
-          <img
-            class="custom-card-image"
-            [src]="item.imagen"
-            alt="Imagen del producto"
-          />
-          <div class="card-body">
-            <h5 class="card-title">{{ item.nombre }}</h5>
-            <p class="card-text text-muted">{{ item.categoria }}</p>
-            <p class="card-text text-success">{{ item.precioUnitario | currency }}</p>
-          </div>
-          <div class="card-footer text-center">
-            <button class="btn btn-custom">Ver Detalles</button>
-          </div>
+    <div class="custom-card">
+      <div class="card h-100" (click)="irADetalleProducto(item.id)">
+        <img
+          class="custom-card-image"
+          [src]="item.imagen"
+          alt="Imagen del producto" />
+        <div class="card-body">
+          <h5 class="card-title">{{ item.nombre }}</h5>
+          <p class="card-text text-muted">{{ item.categoria }}</p>
+          <p class="card-text text-success">{{ item.precioUnitario | currency
+            }}</p>
+        </div>
+        <div class="card-footer text-center">
+          <button
+            class="btn-custom"
+            (click)="agregarAlCarrito($event, item)"
+            [disabled]="isLoading">
+            <ng-container *ngIf="!isLoading">
+              <i class="bi bi-cart me-2"></i>Agregar al carrito
+            </ng-container>
+            <ng-container *ngIf="isLoading">
+              <span class="spinner-border spinner-border-sm" role="status"
+                aria-hidden="true"></span>
+              Procesando...
+            </ng-container>
+          </button>
         </div>
       </div>
+    </div>
     }
   </div>
 </div>

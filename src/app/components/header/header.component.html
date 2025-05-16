@@ -9,15 +9,19 @@
       </a>
     </div>
 
+    <!-- Botón de menú para pantallas pequeñas -->
+    <button class="menu-toggle" (click)="toggleMenu()">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
     <!-- Navegación -->
-    <nav class="main-nav">
+    <nav class="main-nav" [ngClass]="{ 'open': isMenuOpen }">
       <ul class="nav-list">
-        
         <li class="nav-item">
-          <a class="nav-link" href="">Productos</a>
+          <a class="nav-link" (click)="mostrarProductos()">Productos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="">Mesas</a>
+          <a class="nav-link" (click)="mostrarMesas()">Mesas</a>
         </li>
       </ul>
     </nav>
@@ -25,43 +29,52 @@
     <!-- Usuario / Login-Registro -->
     <div class="auth-container">
       @if(!isLogged) {
-        <button type="button" routerLink="/login" class="btn-outline">
-          <i class="fa-solid fa-sign-in-alt me-2"></i>Login
-        </button>
-        <button type="button" routerLink="/register" class="btn-primary">
-          <i class="fa-solid fa-user-plus me-2"></i>Registro
-        </button>
-      } @else {
-        <div class="user-dropdown">
-          <button class="user-button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-            <div class="user-avatar">
-              <i class="fa-solid fa-user"></i>
-            </div>
-            <span class="user-name">{{ nombreUsuario }}</span>
-            <i class="fa-solid fa-chevron-down dropdown-icon"></i>
-          </button>
-          <ul class="dropdown-menu">
-            <li class="dropdown-item">
-              <a routerLink="/info-usuario">
-                <i class="fa-solid fa-user-circle me-2"></i>Ver perfil
-              </a>
-            </li>
-            <li class="dropdown-divider"></li>
-            <li class="dropdown-item">
-              <a (click)="logout()">
-                <i class="fa-solid fa-sign-out-alt me-2"></i>Cerrar sesión
-              </a>
-            </li>
-          </ul>
-        </div>
-
-
-        <!-- Ícono del carrito de compras -->
-    <div class="cart-container">
-      <button type="button" class="cart-button" routerLink="/carrito">
-        <i class="fa-solid fa-shopping-cart"></i>  
+      <button type="button" routerLink="/login" class="btn-outline">
+        <i class="fa-solid fa-sign-in-alt me-2"></i>Login
       </button>
-    </div>
+      <button type="button" routerLink="/register" class="btn-primary">
+        <i class="fa-solid fa-user-plus me-2"></i>Registro
+      </button>
+      } @else {
+      <div class="user-dropdown">
+        <button class="user-button" id="userDropdown" data-bs-toggle="dropdown"
+          aria-expanded="false">
+          <div class="user-avatar">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <span class="user-name">{{ nombreUsuario }}</span>
+          <i class="fa-solid fa-chevron-down dropdown-icon"></i>
+        </button>
+        <ul class="dropdown-menu">
+          <li class="dropdown-item">
+            <a routerLink="/info-usuario">
+              <i class="fa-solid fa-user-circle me-2"></i> Ver perfil
+            </a>
+          </li>
+          <li class="dropdown-divider"></li>
+          <li class="dropdown-item">
+            <a routerLink="/historial">
+              <i class="fa-solid fa-history me-2"></i> Historial
+            </a>
+          </li>
+          <li class="dropdown-divider"></li>
+          <li class="dropdown-item">
+            <a (click)="logout()">
+              <i class="fa-solid fa-sign-out-alt me-2"></i> Cerrar sesión
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Ícono del carrito de compras -->
+      <div class="cart-container">
+        <button type="button" class="cart-button" routerLink="/carrito">
+          <i class="fa-solid fa-shopping-cart"></i>
+        </button>
+        <button type="button" class="cart-button" routerLink="/gestor-reservas">
+          <i class="fa-solid fa-calendar-check"></i>
+        </button>
+      </div>
       }
     </div>
   </header>
