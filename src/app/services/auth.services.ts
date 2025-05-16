@@ -19,7 +19,7 @@ import { environment } from '../../environments/environment';
  */
 export class AuthService {
 
-  private authURL = environment.authServiceUrl; // URL del servicio de autenticacion
+  private authURL = environment.authServiceUrl;
 
   constructor(private http: HttpClient) {
     console.log(1);
