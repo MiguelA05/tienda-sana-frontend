@@ -1,9 +1,9 @@
 export interface ItemMesaDTO {
-    idMesa: string,
+    id: string,
     nombre: string,
     estado: string,
-    capacidad: number,
     localidad: string,
     precioReserva: number,
-    imagenReferencial: string
+    capacidad: number,
+    imagen: string
 }
