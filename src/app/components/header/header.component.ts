@@ -17,6 +17,7 @@ export class HeaderComponent {
   nombreUsuario: string = "";
   isLogged = false;
   email: string = "";
+  activeNav: 'productos' | 'mesas' = 'productos';
 
   /**
    * Constructor de la clase HeaderComponent
@@ -73,10 +74,12 @@ export class HeaderComponent {
   }
 
   mostrarProductos(): void {
+    this.activeNav = 'productos';
     this.router.navigate([''], { queryParams: { view: 'productos' } });
   }
 
   mostrarMesas(): void {
+     this.activeNav = 'mesas';
     this.router.navigate([''], { queryParams: { view: 'mesas' } });
   }
 
