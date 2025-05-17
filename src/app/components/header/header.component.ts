@@ -41,24 +41,6 @@ export class HeaderComponent {
   }
 
   /**
-   * Método para navegar a la página de inicio de sesión
-   */
-  public llevarIncioSesion() {
-    let ruta;
-    let rutaAlterna="/register";
-    ruta="/";
-    
-    if (this.router.url === ruta) {
-      this.router.navigateByUrl(rutaAlterna, { skipLocationChange: true }).then(() => {
-        this.router.navigate([ruta]);
-      });
-    } else {
-      this.router.navigate([ruta]);
-    }
-
-  }
-
-  /**
    * Método para navegar en la aplicación
    */
   @HostListener('window:scroll', [])
@@ -79,7 +61,7 @@ export class HeaderComponent {
   }
 
   mostrarMesas(): void {
-     this.activeNav = 'mesas';
+    this.activeNav = 'mesas';
     this.router.navigate([''], { queryParams: { view: 'mesas' } });
   }
 
