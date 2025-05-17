@@ -302,8 +302,38 @@
 
 /* Responsive styles */
 @media (max-width: 992px) {
+  .menu-toggle {
+    display: block;
+  }
+
   .main-nav {
     display: none;
+    flex-direction: column;
+    background-color: #ffffff;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    z-index: 1000;
+  }
+
+  .main-nav.open {
+    display: flex !important; /* Asegura que se muestre cuando esté abierto */
+  }
+
+  .nav-list {
+    flex-direction: column;
+    padding: 0;
+  }
+
+  .nav-item {
+    margin: 0;
+  }
+
+  .nav-link {
+    padding: 10px 20px;
+    text-align: left;
   }
 }
 

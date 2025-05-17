@@ -192,6 +192,7 @@
 .filter-button {
   display: flex;
   align-items: flex-end;
+  margin-bottom: 10px;
 }
 
 /* Campos flotantes */

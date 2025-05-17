@@ -84,7 +84,6 @@ export class HomeComponent implements OnInit {
     this.startSlideInterval(); // Inicia el cambio automático de subtítulos
     this.route.queryParams.subscribe(params => {
       if (params['view']) {
-        console.log("NOMBRE DE LA VISTA" + params['view']);
         this.activeView = params['view'];
       }
     });
@@ -144,7 +143,6 @@ export class HomeComponent implements OnInit {
   public obtenerProductos(page: number) {
     this.publicoService.listarProductos(page).subscribe({
       next: (data) => {
-        console.log(data);
         this.pages = Array.from({ length: data.reply.totalPaginas }, (_, i) => i + 1);
         this.productos = data.reply.productos;
         this.currentPage = page;
@@ -163,7 +161,6 @@ export class HomeComponent implements OnInit {
   public obtenerMesas(page: number) {
     this.publicoService.listarMesas(page).subscribe({
       next: (data) => {
-        console.log(data);
         this.mesasPages = Array.from({ length: data.reply.totalPaginas }, (_, i) => i + 1);
         this.mesas = data.reply.mesas;
         this.mesasCurrentPage = page;
@@ -213,9 +210,9 @@ export class HomeComponent implements OnInit {
    */
   createMesaForm() {
     this.mesaFilterForm = this.formBuilder.group({
-      nombreMesa: [''],
+      nombre: [''],
       capacidad: ['', [Validators.min(0)]],
-      ubicacion: [''],
+      localidad: [''],
     });
   }
 
@@ -235,16 +232,10 @@ export class HomeComponent implements OnInit {
   
     const filtroProductoDTO = this.filterForm.value as FiltroProductoDTO;
     filtroProductoDTO.pagina = pagina;
-    console.log("Caats: ", this.filterForm.value.categoria);
-  
-    
     
     this.publicoService.filtrarProductos(filtroProductoDTO).subscribe({
       next: (data) => {
-        console.log("Data de filtro: ", data.reply.productos);
-        console.log("Paginas: ", data.reply.totalPaginas);
         if (data.reply && data.reply.productos.length > 0) {
-          console.log(data);
           this.pages = new Array(data.reply.totalPages);
           this.productos = data.reply.productos;
           this.currentPage = filtroProductoDTO.pagina;
@@ -289,18 +280,10 @@ export class HomeComponent implements OnInit {
     
     filtroMesaDTO.pagina = pagina;
   
-    if (!filtroMesaDTO.localidad || filtroMesaDTO.localidad.trim() === '') {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Seleccione una localidad de mesa'
-      });
-      return;
-    }
-  
     this.publicoService.filtrarMesas(filtroMesaDTO).subscribe({
       next: (data) => {
-        if (data.reply && data.reply.mesas && data.reply.totalPages) {
+        console.log("Test data"+data.reply);
+        if (data.reply && data.reply.mesas.length > 0) {
           this.pages = new Array(data.reply.totalPages);
           this.mesas = data.reply.mesas;
           this.currentPage = filtroMesaDTO.pagina;
