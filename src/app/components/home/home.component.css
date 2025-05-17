@@ -10,6 +10,7 @@
   position: relative;
 }
 
+
 .elegant-carousel {
   position: relative;
   border-radius: 12px;
@@ -34,7 +35,7 @@
   object-fit: cover;
   width: 100%;
   object-position: center;
-  
+
 }
 
 .elegant-carousel .carousel-item img {
@@ -126,6 +127,35 @@
   opacity: 0;
   transform: translateX(-50%) translateY(20px);
   transition: all 0.5s ease;
+}
+
+.btn-filter:disabled {
+  background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+  opacity: 0.9;
+  cursor: wait;
+  min-width: 90px;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+/* Estilos para la alternativa de un único spinner */
+.btn-filter .fa-circle-notch {
+  color: #fff;
+  animation: fa-spin 1.2s infinite linear;
+}
+
+/* Añadir un efecto de pulso sutil al botón mientras carga */
+@keyframes buttonPulse {
+  0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(25, 135, 84, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
+}
+
+.btn-filter:disabled {
+  animation: buttonPulse 2s infinite;
 }
 
 .carousel-item.active .elegant-caption {
@@ -230,10 +260,10 @@
   padding: 0 5px;
 }
 
-.floating-field input:focus ~ label,
-.floating-field input:not(:placeholder-shown) ~ label,
-.floating-field select:focus ~ label,
-.floating-field select:not([value=""]) ~ label {
+.floating-field input:focus~label,
+.floating-field input:not(:placeholder-shown)~label,
+.floating-field select:focus~label,
+.floating-field select:not([value=""])~label {
   top: 0;
   left: 10px;
   transform: translateY(-50%);
@@ -327,61 +357,66 @@
 /* Responsive */
 @media (max-width: 992px) {
   .elegant-carousel .carousel-item {
-      height: 200px;
+    height: 200px;
   }
-  
+
   .elegant-caption {
-      bottom: 30px;
-      max-width: 90%;
+    bottom: 30px;
+    max-width: 90%;
   }
 }
 
 @media (max-width: 768px) {
   .filter-row {
-      flex-direction: column;
-      gap: 15px;
+    flex-direction: column;
+    gap: 15px;
   }
-  
+
   .filter-field {
-      width: 100%;
+    width: 100%;
   }
-  
+
   .filter-button {
-      width: 100%;
+    width: 100%;
   }
-  
+
   .btn-filter {
-      width: 100%;
+    width: 100%;
   }
-  
+
   .elegant-carousel .carousel-item {
-      height: 50px;
+    height: 50px;
   }
-  
+
   .elegant-caption {
-      bottom: 30px;
-      padding: 10px 15px;
+    bottom: 30px;
+    padding: 10px 15px;
   }
-  
+
   .elegant-caption h3 {
-      font-size: 1.2rem;
+    font-size: 1.2rem;
   }
-  
+
   .elegant-caption p {
-      font-size: 1rem;
+    font-size: 1rem;
   }
 }
 
 @media (max-width: 576px) {
-  .elegant-carousel .carousel-item {
-      height: 250px;
+  .btn-filter .spinner-border {
+    width: 1.2em;
+    height: 1.2em;
+    margin-right: 0.3rem;
   }
-  
+
+  .elegant-carousel .carousel-item {
+    height: 250px;
+  }
+
   .pagination-link {
-      min-width: 35px;
-      height: 35px;
-      padding: 0 10px;
-      font-size: 0.9rem;
+    min-width: 35px;
+    height: 35px;
+    padding: 0 10px;
+    font-size: 0.9rem;
   }
 }
-

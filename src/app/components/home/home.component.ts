@@ -34,6 +34,7 @@ export class HomeComponent implements OnInit {
     }
   ];
 
+  isLoading: boolean = false;
   currentPage: number = 0;
   filterForm!: FormGroup;
   productos: any[] = [];
@@ -192,7 +193,8 @@ export class HomeComponent implements OnInit {
       },
       error: (error) => {
         console.error(error);
-    }});
+      }
+    });
   }
 
   public obtenerLocalidades() {
@@ -202,7 +204,8 @@ export class HomeComponent implements OnInit {
       },
       error: (error) => {
         console.error(error);
-    }});
+      }
+    });
   }
 
   /**
@@ -221,20 +224,23 @@ export class HomeComponent implements OnInit {
    * @param pagina Página actual
    */
   public filtrarProductos(pagina: number) {
-    if (this.filterForm.invalid) {
+    if (this.isProductoFilterEmpty()) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Por favor, complete todos los campos requeridos'
+        text: 'Por favor, complete al menos uno de los campos con datos válidos'
       });
       return;
     }
-  
+
+    this.isLoading = true;
+
     const filtroProductoDTO = this.filterForm.value as FiltroProductoDTO;
     filtroProductoDTO.pagina = pagina;
-    
+
     this.publicoService.filtrarProductos(filtroProductoDTO).subscribe({
       next: (data) => {
+        this.isLoading = false;
         if (data.reply && data.reply.productos.length > 0) {
           this.pages = new Array(data.reply.totalPages);
           this.productos = data.reply.productos;
@@ -250,6 +256,7 @@ export class HomeComponent implements OnInit {
         }
       },
       error: (error) => {
+        this.isLoading = false;
         console.error(error);
         Swal.fire({
           icon: 'error',
@@ -260,6 +267,15 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  private isProductoFilterEmpty(): boolean {
+  const { nombre, cantidad, categoria } = this.filterForm.value;
+  return (
+    (!nombre || nombre.trim() === '') &&
+    (!cantidad || isNaN(Number(cantidad)) || Number(cantidad) <= 0) &&
+    (!categoria || categoria.trim() === '')
+  );
+}
+
 
 
   /**
@@ -267,22 +283,23 @@ export class HomeComponent implements OnInit {
    * @param page Página actual
    */
   public filterMesas(pagina: number) {
-    if (this.mesaFilterForm.invalid) {
+    if (this.isMesaFilterEmpty()) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Por favor, complete todos los campos requeridos'
+        text: 'Por favor, complete al menos uno de los campos con datos válidos'
       });
       return;
     }
-  
+
+    this.isLoading = true;
+
     const filtroMesaDTO = this.mesaFilterForm.value as FiltroMesaDTO;
-    
     filtroMesaDTO.pagina = pagina;
-  
+
     this.publicoService.filtrarMesas(filtroMesaDTO).subscribe({
       next: (data) => {
-        console.log("Test data"+data.reply);
+        this.isLoading = false;
         if (data.reply && data.reply.mesas.length > 0) {
           this.pages = new Array(data.reply.totalPages);
           this.mesas = data.reply.mesas;
@@ -298,6 +315,7 @@ export class HomeComponent implements OnInit {
         }
       },
       error: (error) => {
+        this.isLoading = false;
         console.error(error);
         Swal.fire({
           icon: 'error',
@@ -307,6 +325,16 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+
+  private isMesaFilterEmpty(): boolean {
+  const { nombre, capacidad, localidad } = this.mesaFilterForm.value;
+  return (
+    (!nombre || nombre.trim() === '') &&
+    (!capacidad || isNaN(Number(capacidad)) || Number(capacidad) < 0) &&
+    (!localidad || localidad.trim() === '')
+  );
+}
+
 
   /**
    * Método para agregar un producto a la lista de seleccionados
