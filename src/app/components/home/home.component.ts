@@ -73,7 +73,8 @@ export class HomeComponent implements OnInit {
     this.createForm();
     this.createMesaForm();
     this.seleccionados = [];
-
+    this.filterUsed = false;
+    this.mesaFilterUsed = false;
   }
 
   /**
@@ -233,10 +234,11 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-    this.isLoading = true;
-
+    this.isLoading = true; 
+    this.filterUsed= true;
     const filtroProductoDTO = this.filterForm.value as FiltroProductoDTO;
     filtroProductoDTO.pagina = pagina;
+    console.log(filtroProductoDTO.pagina);
 
     this.publicoService.filtrarProductos(filtroProductoDTO).subscribe({
       next: (data) => {
@@ -293,7 +295,7 @@ export class HomeComponent implements OnInit {
     }
 
     this.isLoading = true;
-
+    this.mesaFilterUsed = true;
     const filtroMesaDTO = this.mesaFilterForm.value as FiltroMesaDTO;
     filtroMesaDTO.pagina = pagina;
 
