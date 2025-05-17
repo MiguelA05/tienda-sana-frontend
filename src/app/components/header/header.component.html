@@ -18,10 +18,14 @@
     <nav class="main-nav" [ngClass]="{ 'open': isMenuOpen }">
       <ul class="nav-list">
         <li class="nav-item">
-          <a class="nav-link" (click)="mostrarProductos()">Productos</a>
+          <a class="nav-link"
+            [ngClass]="{ 'active': activeNav === 'productos' }"
+            (click)="mostrarProductos()">Productos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" (click)="mostrarMesas()">Mesas</a>
+          <a class="nav-link"
+            [ngClass]="{ 'active': activeNav === 'mesas' }"
+            (click)="mostrarMesas()">Mesas</a>
         </li>
       </ul>
     </nav>
