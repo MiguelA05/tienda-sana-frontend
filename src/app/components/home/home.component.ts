@@ -64,35 +64,7 @@ export class HomeComponent implements OnInit {
    */
   constructor(private publicoService: PublicoService, private formBuilder: FormBuilder, private route: ActivatedRoute) {
     this.productos = [];
-    this.mesas = [
-      {
-        idMesa: '1',
-        nombre: 'Mesa 1',
-        estado: 'disponible',
-        capacidad: 4,
-        localidad: 'Zona 1',
-        precioReserva: 100,
-        imagenReferencial: 'https://reimse.mx/wp-content/uploads/2020/02/mesa-madera-exteriores-ata-160.jpg'
-      },
-      {
-        idMesa: '2',
-        nombre: 'Mesa 2',
-        estado: 'reservada',
-        capacidad: 6,
-        localidad: 'Zona 2',
-        precioReserva: 150,
-        imagenReferencial: 'https://rimax.vtexassets.com/arquivos/ids/160176-800-auto?v=638792130136770000&width=800&height=auto&aspect=true'
-      },
-      {
-        idMesa: '3',
-        nombre: 'Mesa 3',
-        estado: 'disponible',
-        capacidad: 8,
-        localidad: 'Zona 3',
-        precioReserva: 200,
-        imagenReferencial: 'https://media.istockphoto.com/id/1250026682/es/foto/mesa-de-centro-aislada-sobre-fondo-blanco-con-trayectoria-de-recorte-incluida-renderizado-3d.jpg?s=612x612&w=0&k=20&c=ZcsccUB2uQC0q1jwJF7Mo2529loph2fonVAotzsm8Ps='
-      }
-    ];
+    this.mesas = [];
     this.obtenerProductos(this.currentPage);
     this.obtenerMesas(this.mesasCurrentPage); // Inicializa la lista de mesas
     this.obtenerCategorias();
