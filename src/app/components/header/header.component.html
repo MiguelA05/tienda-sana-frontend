@@ -3,7 +3,7 @@
   <header class="main-header">
     <!-- Logo y título -->
     <div class="brand">
-      <a class="brand-link" routerLink="/">
+      <a class="brand-link" (click)="goHome($event)">
         <i class="fa-solid fa-seedling brand-icon"></i>
         <span class="brand-text">{{ title }}</span>
       </a>

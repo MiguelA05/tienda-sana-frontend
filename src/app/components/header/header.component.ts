@@ -1,8 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { TokenService } from '../../services/token.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -24,13 +23,21 @@ export class HeaderComponent {
    * @param tokenService tokenService para gestionar el token de autenticación
    * @param router router para navegar entre rutas
    */
-  constructor(private tokenService: TokenService,private router: Router) {
+  constructor(private tokenService: TokenService, private router: Router) {
     this.title = 'Tienda Sana';
     this.isLogged = this.tokenService.isLogged();
     if (this.isLogged) {
       this.email = this.tokenService.getEmail();
       this.nombreUsuario = this.tokenService.getNombre();
     }
+    // Detecta cambios de ruta para actualizar el nav activo
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        if (event.url === '/' || event.url.startsWith('/?reset')) {
+          this.activeNav = 'productos';
+        }
+      }
+    });
   }
 
   /**
@@ -69,5 +76,9 @@ export class HeaderComponent {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
+  goHome(event: Event) {
+    event.preventDefault();
+    this.router.navigate(['/'], { queryParams: { reset: true } });
+  }
 
 }

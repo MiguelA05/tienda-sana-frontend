@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CardGridComponent } from "../card-grid/card-grid.component";
 import { PublicoService } from '../../services/publico.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { FiltroProductoDTO } from '../../dto/filtro-producto-dto';
 import { FiltroMesaDTO } from '../../dto/filtro-mesa-dto'; // Ensure this path is correct
 import { CommonModule } from '@angular/common';
@@ -63,7 +63,7 @@ export class HomeComponent implements OnInit {
    * @param publicoService publicoService para manejar la lógica de negocio relacionada con el cliente
    * @param formBuilder formBuilder para construir formularios reactivos
    */
-  constructor(private publicoService: PublicoService, private formBuilder: FormBuilder, private route: ActivatedRoute) {
+  constructor(private publicoService: PublicoService, private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router) {
     this.productos = [];
     this.mesas = [];
     this.obtenerProductos(this.currentPage);
@@ -85,6 +85,24 @@ export class HomeComponent implements OnInit {
     this.createMesaForm();
     this.startSlideInterval(); // Inicia el cambio automático de subtítulos
     this.route.queryParams.subscribe(params => {
+      if (params['reset']) {
+        this.resetForm();
+        this.filterUsed = false;
+        this.currentPage = 0;
+        this.obtenerProductos(this.currentPage);
+        this.resetMesaForm();
+        this.mesaFilterUsed = false;
+        this.mesasCurrentPage = 0;
+        this.obtenerMesas(this.mesasCurrentPage);
+        this.activeView = 'productos';
+        // Limpia el parámetro 'reset' de la URL
+        this.router.navigate([], {
+          queryParams: { reset: null },
+          queryParamsHandling: 'merge',
+          replaceUrl: true
+        });
+        // Notifica al HeaderComponent (opcional, si usas un servicio compartido)
+      }
       if (params['view']) {
         this.activeView = params['view'];
       }
