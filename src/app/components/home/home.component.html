@@ -61,13 +61,13 @@
 <div *ngIf="activeView === 'productos'">
   <!-- Filtro de productos -->
   <div class="filter-container">
-    <form class="elegant-filter-bar" [formGroup]="filterForm" (ngSubmit)="filter(0)">
+    <form class="elegant-filter-bar" [formGroup]="filterForm" (ngSubmit)="filtrarProductos(0)">
       <h4 class="filter-title">Encuentra los productos que buscas</h4>
       <div class="filter-row">
         <div class="filter-field">
           <div class="floating-field">
-            <input type="text" id="nombreProducto" class="form-control" formControlName="nombreProducto" placeholder=" " />
-            <label for="nombreProducto">Nombre</label>
+            <input type="text" id="nombre" class="form-control" formControlName="nombre" placeholder=" " />
+            <label for="nombre">Nombre</label>
           </div>
         </div>
         <div class="filter-field">
@@ -78,18 +78,18 @@
         </div>
         <div class="filter-field">
           <div class="floating-field">
-            <select id="tipos" class="form-control" formControlName="tipos">
-              <option value="OTHER">OTHER</option>
-              @for (item of tipos; track item) {
+            <select id="categoria" class="form-control" formControlName="categoria">
+              
+              @for (item of categoria; track item) {
                 <option [value]="item">{{ item }}</option>
               }
             </select>
-            <label for="tipos">Categoria</label>
+            <label for="categoria">Categoria</label>
           </div>
         </div>
         <div class="filter-button">
           <button class="btn-filter" type="submit">
-            <i class="fas fa-search"></i> Filtrar
+            <i class="fas fa-search" ></i> Filtrar
           </button>
         </div>
       </div>
@@ -107,7 +107,7 @@
       </li>
       @for (item of pages; track item) {
         <li class="pagination-item" [class.active]="currentPage === pages.indexOf(item)">
-          <a class="pagination-link" (click)="filterUsed ? filter(pages.indexOf(item)) : obtenerProductos(pages.indexOf(item))">
+          <a class="pagination-link" (click)="filterUsed ? filtrarProductos(pages.indexOf(item)) : obtenerProductos(pages.indexOf(item))">
             {{ pages.indexOf(item) + 1 }}
           </a>
         </li>

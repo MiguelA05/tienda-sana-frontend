@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit {
   productosDisponibles: boolean = true;
   pages: number[] = [];
   filterUsed: boolean = false;
-  tipos: string[] = [];
+  categoria: string[] = [];
   activeSlideIndex: number = 0;
   slideInterval: any; // Variable para almacenar el temporizador
 
@@ -96,7 +96,7 @@ export class HomeComponent implements OnInit {
     this.obtenerProductos(this.currentPage);
     this.obtenerMesas(this.mesasCurrentPage); // Inicializa la lista de mesas
     this.obtenerCategorias();
-    this.obtenerUbicaciones();
+    this.obtenerLocalidades();
     this.createForm();
     this.createMesaForm();
     this.seleccionados = [];
@@ -204,29 +204,36 @@ export class HomeComponent implements OnInit {
   }
 
   /**
-   * Método para obtener las categorías de productos
-   */
-  public obtenerCategorias() {
-    // Lógica para obtener categorías
-  }
-
-  /**
-   * Método para obtener las ubicaciones de mesas
-   */
-  public obtenerUbicaciones() {
-    // Simular que obtenemos ubicaciones desde un servicio
-    this.ubicaciones = ['Terraza', 'Interior', 'Zona VIP', 'Jardín'];
-  }
-
-  /**
    * Método para crear el formulario reactivo
    */
   createForm() {
     this.filterForm = this.formBuilder.group({
-      nombreProducto: [''],
+      nombre: [''],
       cantidad: [''],
-      tipos: ['OTHER'],
+      categoria: [''],
     });
+
+    this.obtenerCategorias();
+  }
+
+  public obtenerCategorias() {
+    this.publicoService.listarTipos().subscribe({
+      next: (data) => {
+        this.categoria = data.reply;
+      },
+      error: (error) => {
+        console.error(error);
+    }});
+  }
+
+  public obtenerLocalidades() {
+    this.publicoService.listarLocalidades().subscribe({
+      next: (data) => {
+        this.ubicaciones = data.reply;
+      },
+      error: (error) => {
+        console.error(error);
+    }});
   }
 
   /**
@@ -244,7 +251,7 @@ export class HomeComponent implements OnInit {
    * Método para aplicar el filtro a los productos
    * @param pagina Página actual
    */
-  public filter(pagina: number) {
+  public filtrarProductos(pagina: number) {
     if (this.filterForm.invalid) {
       Swal.fire({
         icon: 'error',
@@ -256,19 +263,16 @@ export class HomeComponent implements OnInit {
   
     const filtroProductoDTO = this.filterForm.value as FiltroProductoDTO;
     filtroProductoDTO.pagina = pagina;
+    console.log("Caats: ", this.filterForm.value.categoria);
   
-    if (!filtroProductoDTO.categoria || filtroProductoDTO.categoria.trim() === '') {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Seleccione una categoria de producto'
-      });
-      return;
-    }
-  
+    
+    
     this.publicoService.filtrarProductos(filtroProductoDTO).subscribe({
       next: (data) => {
-        if (data.reply && data.reply.productos && data.reply.totalPages) {
+        console.log("Data de filtro: ", data.reply.productos);
+        console.log("Paginas: ", data.reply.totalPaginas);
+        if (data.reply && data.reply.productos.length > 0) {
+          console.log(data);
           this.pages = new Array(data.reply.totalPages);
           this.productos = data.reply.productos;
           this.currentPage = filtroProductoDTO.pagina;
@@ -356,7 +360,7 @@ export class HomeComponent implements OnInit {
   public nextPage() {
     this.currentPage++;
     if (this.filterUsed) {
-      this.filter(this.currentPage);
+      this.filtrarProductos(this.currentPage);
     } else {
       this.obtenerProductos(this.currentPage);
     }
@@ -369,7 +373,7 @@ export class HomeComponent implements OnInit {
   public previousPage() {
     this.currentPage--;
     if (this.filterUsed) {
-      this.filter(this.currentPage);
+      this.filtrarProductos(this.currentPage);
     } else {
       this.obtenerProductos(this.currentPage);
     }

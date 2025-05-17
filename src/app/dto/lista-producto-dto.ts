@@ -1,6 +1,8 @@
 import { ItemProductoDTO } from "./item-producto-dto";
 
 export interface ListaProductoDTO {
-    paginasTotales: number,
+    totalPaginas: number,
     productos: ItemProductoDTO[]
 }
+
+     

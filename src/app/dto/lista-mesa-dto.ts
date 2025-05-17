@@ -1,6 +1,6 @@
 import { ItemMesaDTO } from "./item-mesa-dto";
 
 export interface ListaMesaDTO {
-    paginasTotates: number,
+    totalPaginas: number,
     mesas: ItemMesaDTO[]
 }

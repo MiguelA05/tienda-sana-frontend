@@ -38,6 +38,16 @@ export class PublicoService {
     return this.http.get<MensajeDTO>(`${this.publicoURL}/mesas/get-all/${pagina}`);
   }
 
+  public listarTipos(): Observable<MensajeDTO> {
+    return this.http.get<MensajeDTO>(`${this.publicoURL}/productos/get-types`);
+  }
+
+  public listarLocalidades(): Observable<MensajeDTO> {
+    return this.http.get<MensajeDTO>(`${this.publicoURL}/mesas/get-locality`);
+  }
+
+
+
   /**
    * Meetodo para obtener la informacion de un producto
    * @param id id del producto a buscar
@@ -53,7 +63,8 @@ export class PublicoService {
    * @returns respuesta del servidor
    */
   public filtrarProductos(filtroProductoDTO: FiltroProductoDTO): Observable<MensajeDTO>{
-    return this.http.post<MensajeDTO>(`${this.publicoURL}/producto/filter-products`, filtroProductoDTO);
+    console.log("filtroProductoDTO");
+    return this.http.post<MensajeDTO>(`${this.publicoURL}/productos/filter-products`, filtroProductoDTO);
   }
 
   public filtrarMesas(filtroMesaDTO: FiltroMesaDTO): Observable<MensajeDTO>{
