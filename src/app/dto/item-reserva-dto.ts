@@ -8,8 +8,8 @@ export interface ItemReservaDTO {
     status: string,
     paymentDate: Date,
     transactionValue: number,
-    id : string
+    idReserva : string
     total: number,
-    cantidadPersonas: string
+    cantidadPersonas: number
     mesas: MesaDTO[]
 }
