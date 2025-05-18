@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControlOptions, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -15,9 +15,9 @@ import { Router } from '@angular/router';
   templateUrl: './cambiar-password.component.html',
   styleUrls: ['./cambiar-password.component.css']
 })
-export class CambiarPasswordComponent {
+export class CambiarPasswordComponent implements OnInit {
   changePasswordForm!: FormGroup;
-  email: string;
+  email!: string;
   isLoading: boolean = false;
   isPasswordVisible = false;
   isConfirmPasswordVisible = false;
@@ -35,7 +35,10 @@ export class CambiarPasswordComponent {
     private authService: AuthService,
     private router: Router
   ) {
-    this.email = this.dataService.getData();
+
+  }
+  ngOnInit(): void {
+    this.email = localStorage.getItem('emailRecuperacion') || '';
     this.createForm();
   }
 
@@ -43,7 +46,8 @@ export class CambiarPasswordComponent {
    * Método para enviar el formulario de cambio de contraseña
    */
   public changePassword() {
-    const cambiarContra = this.changePasswordForm.value as CambiarContraseniaDTO;
+    const cambiarContra = this.changePasswordForm.getRawValue() as CambiarContraseniaDTO;
+    console.log("ESTE ES EL CODIGO: "+cambiarContra.codigoVerificacion);
     this.authService.cambiarContrasenia(cambiarContra).subscribe({
       next: () => {
         Swal.fire({
@@ -72,7 +76,7 @@ export class CambiarPasswordComponent {
     this.changePasswordForm = this.formBuilder.group(
       {
         email: [
-          '',
+          { value: this.email, disabled: true }, ,
           [
             Validators.required,
             Validators.email,
@@ -112,30 +116,47 @@ export class CambiarPasswordComponent {
    * Método para verificar si un campo es inválido
    */
   public reenviarCodigo() {
-    this.authService.enviarCodigoRecuperacion(this.email).subscribe({
-      next: () => {
+    const emailToSend = this.changePasswordForm.get('email')?.value;
+    this.isLoading = true;
+    this.authService.enviarCodigoRecuperacion(emailToSend).subscribe({
+      next: (data) => {
+        this.isLoading = false;
         Swal.fire({
           title: 'Código reenviado',
           text: 'El código de recuperación ha sido enviado a su correo electrónico',
           icon: 'success',
           confirmButtonText: 'Aceptar'
         });
+        this.isLoading = false;
       },
       error: (error) => {
-        Swal.fire({
-          title: 'Error',
-          text: error.error.reply,
-          icon: 'error',
-          confirmButtonText: 'Aceptar'
-        });
+        if (this.changePasswordForm.get('email')?.value === '') {
+          this.isLoading = false;
+          Swal.fire({
+            title: 'Error',
+            text: 'No se ha ingresado un correo electrónico',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          })
+          this.isLoading = false;
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: error.error.reply,
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          });
+          this.isLoading = false;
+        }
+
       }
     });
   }
 
-   /**
-   * Método para obtener el mensaje de error del campo contraseña
-   * @returns Mensaje de error específico
-   */
+  /**
+  * Método para obtener el mensaje de error del campo contraseña
+  * @returns Mensaje de error específico
+  */
   getPasswordErrorMessage(): string {
     const passwordControl = this.changePasswordForm.get('nuevaContrasenia');
 

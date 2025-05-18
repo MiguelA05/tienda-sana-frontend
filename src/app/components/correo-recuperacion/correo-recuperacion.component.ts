@@ -65,7 +65,7 @@ export class CorreoRecuperacionComponent {
           icon: 'success',
           confirmButtonText: 'Aceptar'
         });
-        this.dataService.setData(this.recoveryForm.get('email')?.value);
+        localStorage.setItem('emailRecuperacion', this.recoveryForm.get('email')?.value);
         this.router.navigate(['/cambiar-password']);
       },
       error: (error) => {

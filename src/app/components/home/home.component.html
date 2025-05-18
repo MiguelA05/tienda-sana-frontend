@@ -69,13 +69,12 @@
           </div>
         </div>
         <div class="filter-button">
-          <!-- Botón de filtrado actualizado -->
-          <!-- Alternativa opcional con único icono giratorio Font Awesome -->
+          <!-- Botón de filtrado  -->
           <button class="btn-filter" type="submit" [disabled]="isLoading">
             @if (isLoading) {
             <i class="fas fa-circle-notch fa-spin fa-lg"></i>
             } @else {
-            <i class="fas fa-search"></i> Filtrar
+            <i class="fas fa-search" style="margin-right: 8px;"></i> Filtrar
             }
           </button>
         </div>
@@ -87,7 +86,6 @@
       parte superior izquierda.
     </div>
   </div>
-
   <!-- Grid de Productos -->
   <app-card-grid [products]="productos"></app-card-grid>
 
@@ -158,7 +156,7 @@
             @if (isLoading) {
             <i class="fas fa-circle-notch fa-spin fa-lg"></i>
             } @else {
-            <i class="fas fa-search"></i> Filtrar
+            <i class="fas fa-search" style="margin-right: 8px;"></i> Filtrar
             }
           </button>
         </div>

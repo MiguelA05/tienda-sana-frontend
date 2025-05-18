@@ -43,7 +43,7 @@ export class InformacionUsuarioComponent implements OnInit {
       email: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
       dni: [{ value: '', disabled: true }, [Validators.required]],
       name: [
-        '',
+        { value: '', disabled: true },
         [
           Validators.required,
           Validators.maxLength(50),
@@ -52,7 +52,7 @@ export class InformacionUsuarioComponent implements OnInit {
       ],
       phoneNumber: [{ value: '', disabled: true }, [Validators.required, this.numberLengthValidator(10, 15), Validators.pattern(/^[0-9]+$/)]],
       address: [
-        '',
+        { value: '', disabled: true },
         [
           Validators.required,
           Validators.minLength(10),

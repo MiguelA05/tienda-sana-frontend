@@ -47,11 +47,11 @@
         <div class="reserva-info-card">
             <div class="reserva-header">
                 <div class="reserva-title">
-                    <i class="bi bi-calendar-event me-2"></i>
+                    <i class="bi bi-calendar-event me-2" style="margin-right: 8px;"></i>
                     Detalles de la reserva
                 </div>
                 <div class="reserva-date">
-                    <i class="bi bi-calendar2-check me-2"></i>
+                    <i class="bi bi-calendar2-check me-2" style="margin-right: 8px;"></i>
                     Fecha: {{ fechaReserva | date:'dd/MM/yyyy' }}
                 </div>
             </div>
@@ -59,7 +59,7 @@
                 <div class="reserva-body">
                     <div class="info-row">
                         <div class="info-item">
-                            <i class="bi bi-people me-2"></i>
+                            <i class="bi bi-people me-2" style="margin-right: 8px;"></i>
                             <span>Personas: </span>
                             <input
                                 type="number"
@@ -69,7 +69,7 @@
                                 min="1" max="50">
                         </div>
                         <div class="info-item">
-                            <i class="bi bi-calendar-date me-2"></i>
+                            <i class="bi bi-calendar-date me-2" style="margin-right: 8px;"></i>
                             <span>Fecha: </span>
                             <input
                                 type="date"
@@ -84,7 +84,7 @@
 
         <!-- Lista de mesas seleccionadas -->
         <h4 class="section-title mt-4 mb-3">
-            <i class="bi bi-table me-2"></i>
+            <i class="bi bi-table me-2" style="margin-right: 8px;"></i>
             Mesas seleccionadas
         </h4>
 
@@ -111,7 +111,7 @@
                 <div class="mesa-actions">
                     <button class="btn-eliminar"
                         (click)="confirmarEliminacion(i)">
-                        <i class="bi bi-trash"></i>
+                        <i class="bi bi-trash" ></i>
                     </button>
                 </div>
             </div>
@@ -121,7 +121,7 @@
         <!-- Resumen de la reserva -->
         <div class="resumen-card mt-4">
             <h4 class="resumen-title">
-                <i class="bi bi-receipt me-2"></i>
+                <i class="bi bi-receipt me-2" style="margin-right: 8px;"></i>
                 Resumen
             </h4>
             <div class="resumen-items">
@@ -143,7 +143,7 @@
         <!-- Acciones finales -->
         <div class="gestor-actions mt-4">
             <button class="btn-secundario" (click)="continuarSeleccion()">
-                <i class="bi bi-chevron-left me-2"></i>
+                <i class="bi bi-chevron-left me-2" ></i>
                 Continuar seleccionando
             </button>
             <button class="btn-custom" (click)="crearReserva()">

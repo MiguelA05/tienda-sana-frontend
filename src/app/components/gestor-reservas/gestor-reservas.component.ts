@@ -50,7 +50,7 @@ export class GestorReservasComponent {
   cargarMesasSeleccionadas(): void {
     console.log("Obteniendo mesas para el gestor...");
     const clienteId = this.tokenService.getIDCuenta();
-    this.clienteService.obtenerItemsCarrito(clienteId).subscribe({
+    this.clienteService.obtenerMesasGestorReservas(clienteId).subscribe({
       next: (response) => {
         this.mesasSeleccionadas = response.reply;
         console.log("Items del gestor:", this.mesasSeleccionadas);

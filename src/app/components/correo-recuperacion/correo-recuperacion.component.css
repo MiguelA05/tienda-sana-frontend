@@ -20,6 +20,32 @@
     
 }
 
+.form-actions {
+    margin-top: 30px;
+}
+
+/* Botones */
+.btn-success {
+    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+    border: none;
+    font-weight: 600;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+    color: #ffffff;
+    width: 100%;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(25, 135, 84, 0.3);
+}
+
 /* Elementos decorativos */
 .decorative-circles {
     position: absolute;
@@ -216,6 +242,11 @@
     }
 
     .btn-custom {
+        padding: 10px 15px;
+        font-size: 1rem;
+    }
+
+    .btn-success {
         padding: 10px 15px;
         font-size: 1rem;
     }
