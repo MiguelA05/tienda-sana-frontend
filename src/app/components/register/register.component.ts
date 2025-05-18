@@ -118,7 +118,7 @@ export class RegisterComponent {
           this.isLoading = false;
           Swal.fire({
             title: 'Error',
-            text: error.error.respuesta,
+            text: "Error al crear la cuenta, el correo electrónico o DNI ya está en uso y/o registrados en el sistema",
             icon: 'error',
             confirmButtonText: 'Aceptar'
           })

@@ -81,7 +81,7 @@ export class VerificarCuentaComponent implements OnInit {
       error: error => {
         Swal.fire({
           title: 'Error',
-          text: error.error.reply,
+          text: "Error al activar la cuenta, el código de verificación es incorrecto",
           icon: 'error',
           confirmButtonText: 'Aceptar'
         })
