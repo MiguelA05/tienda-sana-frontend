@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule } from '@angular/common';
 import { LoginDTO } from '../../dto/login-dto';
 import { AuthService } from '../../services/auth.services';
 import { TokenService } from '../../services/token.service';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -14,18 +15,19 @@ import Swal from 'sweetalert2';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {  
+export class LoginComponent implements OnInit {
   isLoading: boolean = false;
   loginForm!: FormGroup;
   isPasswordVisible = false;
 
   /**
-   * Constructor de la clase LoginComponent
    * @param fb formBuilder para construir formularios reactivos
    * @param authService authService para manejar la autenticación
    * @param tokenService tokenService para manejar el token de autenticación
+   * @param router Router para la navegación
    */
-  constructor(private fb: FormBuilder, private authService: AuthService, private tokenService:TokenService ) {}
+  constructor(private fb: FormBuilder, private authService: AuthService, private tokenService: TokenService, private router: Router) { }
+
 
   /**
    * Método para inicializar el componente
@@ -48,17 +50,35 @@ export class LoginComponent implements OnInit {
     });
 
     if (this.loginForm.valid) {
-      const loginDTO= this.loginForm.value as LoginDTO;
+      const loginDTO = this.loginForm.value as LoginDTO;
       this.authService.iniciarSesion(loginDTO).subscribe({
         next: (data) => {
           this.tokenService.login(data.reply.token);
         },
         error: (error) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: error.error.reply,
-          });
+          if (error.error.reply === 'Cuenta no activada' || error.error.respuesta === 'Cuenta no activada') {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Cuenta no activada en el sistema',
+              text: 'Tu cuenta aún no ha sido activada. ¿Deseas activar tu cuenta ahora?',
+              showCancelButton: true,
+              confirmButtonText: 'Activar cuenta',
+              cancelButtonText: 'Cancelar'
+            }).then(result => {
+              if (result.isConfirmed) {
+                // Redirige a la pantalla de verificación de cuenta
+                this.router.navigate(['/verificar-cuenta'], {
+                  queryParams: { email: this.loginForm.get('email')?.value }
+                });
+              }
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error de inicio de sesión',
+              text: error.error.reply,
+            });
+          }
         }
 
       })
@@ -80,15 +100,15 @@ export class LoginComponent implements OnInit {
    */
   public getEmailErrorMessage(): string | null {
     const emailControl = this.loginForm.get('email');
-    
+
     if (emailControl?.hasError('required')) {
       return 'El correo electrónico es obligatorio';
     }
-    
+
     if (emailControl?.hasError('email')) {
       return 'Por favor, ingrese un formato de correo electrónico válido';
     }
-    
+
     return null;
   }
 
@@ -98,19 +118,19 @@ export class LoginComponent implements OnInit {
    */
   public getPasswordErrorMessage(): string | null {
     const passwordControl = this.loginForm.get('contrasenia');
-    
+
     if (passwordControl?.hasError('required')) {
       return 'La contraseña es obligatoria';
     }
-    
+
     if (passwordControl?.hasError('minlength')) {
       return `La contraseña debe tener al menos ${passwordControl.getError('minlength').requiredLength} caracteres`;
     }
-    
+
     if (passwordControl?.hasError('maxlength')) {
       return `La contraseña no debe exceder los ${passwordControl.getError('maxlength').requiredLength} caracteres`;
     }
-    
+
     return null;
   }
 

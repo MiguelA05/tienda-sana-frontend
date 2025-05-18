@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { DataService } from '../../services/data.services';
 import { ActivarCuentaDTO } from '../../dto/activar-cuenta-dto';
 import { AuthService } from '../../services/auth.services';
 import Swal from 'sweetalert2';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -14,11 +14,11 @@ import { CommonModule } from '@angular/common';
   templateUrl: './verificar-cuenta.component.html',
   styleUrl: './verificar-cuenta.component.css'
 })
-export class VerificarCuentaComponent {
+export class VerificarCuentaComponent implements OnInit {
 
   verificarCuentaForm!: FormGroup;
   email: string;
-  isLoading: boolean=false;
+  isLoading: boolean = false;
 
   /**
    * Constructor de la clase VerificarCuentaComponent
@@ -27,9 +27,19 @@ export class VerificarCuentaComponent {
    * @param authService AuthService para manejar la autenticación
    * @param router Router para navegar entre rutas
    */
-  constructor(private formbuilder: FormBuilder, private dataService: DataService, private authService: AuthService, private router: Router) {
+  constructor( private route: ActivatedRoute, private formbuilder: FormBuilder, private dataService: DataService, private authService: AuthService, private router: Router) {
     this.email = this.dataService.getData();
     this.createForm();
+  }
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      const email = params['email'] || '';
+      this.verificarCuentaForm = this.formbuilder.group({
+        email: [{ value: email, disabled: true }, [Validators.required, Validators.email]],
+        codigoVerificacionRegistro: ['', Validators.required]
+      });
+    });
   }
 
   /**
@@ -48,17 +58,18 @@ export class VerificarCuentaComponent {
           )
         ]
       ],
-      codigoVerificacionRegistro: ['', [Validators.required,Validators.minLength(6), Validators.maxLength(6)]]
+      codigoVerificacionRegistro: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]]
     })
   }
 
   /**
    * Método para verificar la cuenta del usuario
    */
-  public activarCuenta(){
-    const activarCuenta = this.verificarCuentaForm.value as ActivarCuentaDTO;
+  public activarCuenta() {
+    const activarCuenta = this.verificarCuentaForm.getRawValue() as ActivarCuentaDTO;
+    console.log("ESTE ES EL EMAIL: "+activarCuenta.email);
     this.authService.validarCodigoRegistro(activarCuenta).subscribe({
-      next: (data) => {   
+      next: (data) => {
         Swal.fire({
           title: 'Cuenta activada',
           text: 'La cuenta se ha activada correctamente',
@@ -70,11 +81,11 @@ export class VerificarCuentaComponent {
       error: error => {
         Swal.fire({
           title: 'Error',
-          text: error.error.respuesta,
+          text: error.error.reply,
           icon: 'error',
           confirmButtonText: 'Aceptar'
         })
-        this.isLoading=false;
+        this.isLoading = false;
       }
     });
   }
@@ -83,26 +94,29 @@ export class VerificarCuentaComponent {
    * Método para reenviar el código de verificación al correo electrónico
    */
   public reenviarCodigo() {
-    const emailToSend= this.verificarCuentaForm.get('email')?.value;
+    const emailToSend = this.verificarCuentaForm.get('email')?.value;
+    this.isLoading = true;
     this.authService.reenviarCodigoVerificacion(emailToSend).subscribe({
       next: (data) => {
+        this.isLoading = false;
         Swal.fire({
           title: 'Código reenviado',
           text: 'El código de verificación ha sido reenviado a su correo electrónico',
           icon: 'success',
           confirmButtonText: 'Aceptar'
         });
-        this.isLoading=false;
+        this.isLoading = false;
       },
       error: (error) => {
-        if(this.verificarCuentaForm.get('email')?.value === '') {
+        if (this.verificarCuentaForm.get('email')?.value === '') {
+          this.isLoading = false;
           Swal.fire({
             title: 'Error',
             text: 'No se ha ingresado un correo electrónico',
             icon: 'error',
             confirmButtonText: 'Aceptar'
           })
-          this.isLoading=false;
+          this.isLoading = false;
         } else {
           Swal.fire({
             title: 'Error',
@@ -110,7 +124,7 @@ export class VerificarCuentaComponent {
             icon: 'error',
             confirmButtonText: 'Aceptar'
           });
-          this.isLoading=false;
+          this.isLoading = false;
         }
 
       }
