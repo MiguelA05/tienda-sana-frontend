@@ -2,6 +2,7 @@ import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { TokenService } from '../../services/token.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -16,7 +17,7 @@ export class HeaderComponent {
   nombreUsuario: string = "";
   isLogged = false;
   email: string = "";
-  activeNav: 'productos' | 'mesas' = 'productos';
+  activeNav: 'productos' | 'mesas' | null = null;
 
   /**
    * Constructor de la clase HeaderComponent
@@ -30,12 +31,23 @@ export class HeaderComponent {
       this.email = this.tokenService.getEmail();
       this.nombreUsuario = this.tokenService.getNombre();
     }
-    // Detecta cambios de ruta para actualizar el nav activo
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        if (event.url === '/' || event.url.startsWith('/?reset')) {
+
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      const urlTree = this.router.parseUrl(event.urlAfterRedirects);
+      if (event.urlAfterRedirects === '/' || event.urlAfterRedirects.startsWith('/?')) {
+        const view = urlTree.queryParams['view'];
+        
+        if (view === 'mesas') {
+          this.activeNav = 'mesas';
+        } else if (view === 'productos') {
           this.activeNav = 'productos';
+        } else {
+          this.activeNav = null;
         }
+      } else {
+        this.activeNav = null;
       }
     });
   }
@@ -78,7 +90,14 @@ export class HeaderComponent {
 
   goHome(event: Event) {
     event.preventDefault();
-    this.router.navigate(['/'], { queryParams: { reset: true } });
+    if (this.activeNav === 'productos') {
+      this.router.navigate(['/'], { queryParams: { view: 'productos', reset: true } });
+    } else if (this.activeNav === 'mesas') {
+      this.router.navigate(['/'], { queryParams: { view: 'mesas', reset: true } });
+    } else {
+      this.router.navigate(['/'], { queryParams: { reset: true } });
+      this.activeNav = null;
+    }
   }
 
 }

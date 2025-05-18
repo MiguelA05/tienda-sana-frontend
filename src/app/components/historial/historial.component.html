@@ -132,7 +132,7 @@
                 <div class="historial-header">
                     <div class="historial-id">
                         <i class="bi bi-calendar-event me-2"></i>
-                        Reserva #{{ reserva.id }}
+                        Reserva #{{ reserva.idReserva }}
                     </div>
                     <div class="estado-badge"
                         [ngClass]="getEstadoClass(reserva.estadoReserva)">
@@ -164,7 +164,7 @@
 
                 <div class="historial-footer">
                     <button class="btn-secundario"
-                        (click)="verDetalleReserva(reserva.id)">
+                        (click)="verDetalleReserva(reserva.idReserva)">
                         <i class="bi bi-eye me-2"></i>Ver detalles
                     </button>
                 </div>

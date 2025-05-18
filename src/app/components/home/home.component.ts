@@ -321,7 +321,7 @@ export class HomeComponent implements OnInit {
       next: (data) => {
         this.isLoading = false;
         if (data.reply && data.reply.mesas.length > 0) {
-          this.pages = new Array(data.reply.totalPages);
+          this.mesasPages = new Array(data.reply.totalPages);
           this.mesas = data.reply.mesas;
           this.currentPage = filtroMesaDTO.pagina;
           this.mesaFilterUsed = true;
