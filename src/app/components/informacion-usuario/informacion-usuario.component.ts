@@ -42,10 +42,25 @@ export class InformacionUsuarioComponent implements OnInit {
     this.userInforForm = this.formBuilder.group({
       email: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
       dni: [{ value: '', disabled: true }, [Validators.required]],
-      name: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(50)]],
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(50),
+          Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/) // Solo letras y espacios
+        ]
+      ],
       phoneNumber: [{ value: '', disabled: true }, [Validators.required, this.numberLengthValidator(10, 15), Validators.pattern(/^[0-9]+$/)]],
       address: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(255)]],
-      password: ['', [Validators.maxLength(20), Validators.minLength(7)]],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(20),
+          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/)
+        ]
+      ],
     });
   }
 
@@ -205,9 +220,11 @@ export class InformacionUsuarioComponent implements OnInit {
     if (nameControl?.hasError('required')) {
       return 'El nombre es obligatorio';
     }
-
     if (nameControl?.hasError('maxlength')) {
       return `El nombre no debe exceder los ${nameControl.getError('maxlength').requiredLength} caracteres`;
+    }
+    if (nameControl?.hasError('pattern')) {
+      return 'El nombre solo puede contener letras y espacios';
     }
 
     return 'Por favor ingrese un nombre válido';
@@ -223,6 +240,7 @@ export class InformacionUsuarioComponent implements OnInit {
     if (addressControl?.hasError('maxlength')) {
       return `La dirección no debe exceder los ${addressControl.getError('maxlength').requiredLength} caracteres`;
     }
+
 
     return 'Por favor ingrese una dirección válida';
   }
@@ -256,6 +274,23 @@ export class InformacionUsuarioComponent implements OnInit {
       return `La contraseña no debe exceder los ${passwordControl.getError('maxlength').requiredLength} caracteres`;
     }
 
+    if (passwordControl?.hasError('pattern')) {
+      // Mensajes detallados para cada requisito
+      const value = passwordControl.value || '';
+      if (!/[A-Z]/.test(value)) {
+        return 'La contraseña debe contener al menos una letra mayúscula';
+      }
+      if (!/[a-z]/.test(value)) {
+        return 'La contraseña debe contener al menos una letra minúscula';
+      }
+      if (!/\d/.test(value)) {
+        return 'La contraseña debe contener al menos un número';
+      }
+      if (!/[\W_]/.test(value)) {
+        return 'La contraseña debe contener al menos un carácter especial';
+      }
+      return 'La contraseña no cumple con los requisitos de seguridad';
+    }
     return 'Por favor ingrese una contraseña válida';
   }
 

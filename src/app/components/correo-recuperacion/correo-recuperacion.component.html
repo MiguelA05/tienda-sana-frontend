@@ -16,19 +16,27 @@
           Ingrese su correo electrónico para recibir un código de verificación.
         </p>
 
-        <!-- Campo de correo con etiqueta flotante -->
-        <div class="form-group position-relative mb-4 floating-field">
-          <input
-            type="email"
-            id="email"
-            formControlName="email"
-            placeholder=" "
-            class="form-control"
-            required
-          />
-          <label for="email" class="form-label">Correo Electrónico</label>
-          <i class="fa-solid fa-envelope input-icon"></i>
-        </div>
+
+        <!-- Email -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <div class="floating-field">
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  formControlName="email"
+                  placeholder=" "
+                  [ngClass]="{'is-invalid': shouldShowError('email')}" />
+                <label for="email" class="form-label">Email</label>
+                <i class="fa-solid fa-envelope input-icon"></i>
+              </div>
+              @if (shouldShowError('email')) {
+              <div class="error-message">{{ getEmailErrorMessage() }}</div>
+              }
+
+            </div>
+          </div>
 
         <!-- Botón de envío -->
         <div class="text-center mb-3">

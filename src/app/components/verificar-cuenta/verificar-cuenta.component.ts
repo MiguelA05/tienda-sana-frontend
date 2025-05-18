@@ -38,7 +38,16 @@ export class VerificarCuentaComponent {
   public createForm() {
     console.log(this.email);
     this.verificarCuentaForm = this.formbuilder.group({
-      email: [this.email, [Validators.required, Validators.email]],
+      email: [
+        this.email,
+        [
+          Validators.required,
+          Validators.email,
+          Validators.pattern(
+            /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+          )
+        ]
+      ],
       codigoVerificacionRegistro: ['', [Validators.required,Validators.minLength(6), Validators.maxLength(6)]]
     })
   }

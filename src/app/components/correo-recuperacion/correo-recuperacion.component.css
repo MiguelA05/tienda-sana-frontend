@@ -10,6 +10,16 @@
     position: relative;
 }
 
+/* Mensajes de error */
+.error-message {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    transition: opacity 0.3s ease;
+    text-align: left;
+    
+}
+
 /* Elementos decorativos */
 .decorative-circles {
     position: absolute;

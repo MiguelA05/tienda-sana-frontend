@@ -38,7 +38,16 @@ export class CorreoRecuperacionComponent {
    */
   private createForm() {
     this.recoveryForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]]
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.email,
+          Validators.pattern(
+            /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+          )
+        ]
+      ],
     });
   }
 
@@ -78,5 +87,33 @@ export class CorreoRecuperacionComponent {
         }
       }
     });
+  }
+
+  /**
+   * Método para verificar si un campo debe mostrar error
+   * @param controlName Nombre del control a verificar
+   * @returns true si el campo tiene error y ha sido tocado
+   */
+  shouldShowError(controlName: string): boolean {
+    const control = this.recoveryForm.get(controlName);
+    return control ? control.invalid && control.touched : false;
+  }
+
+  /**
+   * Método para obtener el mensaje de error del campo email
+   * @returns Mensaje de error específico
+   */
+  getEmailErrorMessage(): string {
+    const emailControl = this.recoveryForm.get('email');
+
+    if (emailControl?.hasError('required')) {
+      return 'El correo electrónico es obligatorio';
+    }
+
+    if (emailControl?.hasError('email') || emailControl?.hasError('pattern')) {
+      return 'Por favor ingrese un formato de correo electrónico válido (nombreusuario@dominio)';
+    }
+
+    return 'Por favor ingrese un correo electrónico válido';
   }
 }

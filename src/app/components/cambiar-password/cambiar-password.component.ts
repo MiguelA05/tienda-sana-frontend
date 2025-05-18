@@ -19,6 +19,8 @@ export class CambiarPasswordComponent {
   changePasswordForm!: FormGroup;
   email: string;
   isLoading: boolean = false;
+  isPasswordVisible = false;
+  isConfirmPasswordVisible = false;
 
   /**
    * Constructor de la clase CambiarPasswordComponent
@@ -69,9 +71,26 @@ export class CambiarPasswordComponent {
   private createForm() {
     this.changePasswordForm = this.formBuilder.group(
       {
-        email: [this.email, [Validators.required, Validators.email]],
+        email: [
+          '',
+          [
+            Validators.required,
+            Validators.email,
+            Validators.pattern(
+              /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+            )
+          ]
+        ],
         codigoVerificacion: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
-        nuevaContrasenia: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(7)]],
+        nuevaContrasenia: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.maxLength(20),
+            Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/)
+          ]
+        ],
         confirmacionContrasenia: ['', [Validators.required]]
       },
       { validators: this.passwordsMatchValidator } as AbstractControlOptions
@@ -112,4 +131,106 @@ export class CambiarPasswordComponent {
       }
     });
   }
+
+   /**
+   * Método para obtener el mensaje de error del campo contraseña
+   * @returns Mensaje de error específico
+   */
+  getPasswordErrorMessage(): string {
+    const passwordControl = this.changePasswordForm.get('nuevaContrasenia');
+
+    if (passwordControl?.hasError('required')) {
+      return 'La contraseña es obligatoria';
+    }
+
+    if (passwordControl?.hasError('minlength')) {
+      return `La contraseña debe tener al menos ${passwordControl.getError('minlength').requiredLength} caracteres`;
+    }
+
+    if (passwordControl?.hasError('maxlength')) {
+      return `La contraseña no debe exceder los ${passwordControl.getError('maxlength').requiredLength} caracteres`;
+    }
+    if (passwordControl?.hasError('pattern')) {
+      const value = passwordControl.value || '';
+      if (!/[A-Z]/.test(value)) {
+        return 'La contraseña debe contener al menos una letra mayúscula';
+      }
+      if (!/[a-z]/.test(value)) {
+        return 'La contraseña debe contener al menos una letra minúscula';
+      }
+      if (!/\d/.test(value)) {
+        return 'La contraseña debe contener al menos un número';
+      }
+      if (!/[\W_]/.test(value)) {
+        return 'La contraseña debe contener al menos un carácter especial';
+      }
+      return 'La contraseña no cumple con los requisitos de seguridad';
+    }
+    return 'Por favor ingrese una contraseña válida';
+  }
+
+
+  getConfirmPasswordErrorMessage(): string {
+    const confirmPasswordControl = this.changePasswordForm.get('confirmacionContrasena');
+
+    if (confirmPasswordControl?.hasError('required')) {
+      return 'La confirmación de contraseña es obligatoria';
+    }
+
+    return 'Por favor confirme su contraseña';
+  }
+
+  /**
+   * Método para obtener el mensaje de error del campo email
+   * @returns Mensaje de error específico
+   */
+  getEmailErrorMessage(): string {
+    const emailControl = this.changePasswordForm.get('email');
+
+    if (emailControl?.hasError('required')) {
+      return 'El correo electrónico es obligatorio';
+    }
+
+    if (emailControl?.hasError('email') || emailControl?.hasError('pattern')) {
+      return 'Por favor ingrese un formato de correo electrónico válido (nombreusuario@dominio)';
+    }
+
+    return 'Por favor ingrese un correo electrónico válido';
+  }
+
+  /**
+   * Método para verificar si debe mostrar el error de contraseñas no coincidentes
+   * @returns true si las contraseñas no coinciden y el campo ha sido tocado
+   */
+  shouldShowPasswordMismatchError(): boolean {
+    return this.changePasswordForm.hasError('passwordsMismatch') &&
+      (!!this.changePasswordForm.get('confirmacionContrasenia')?.touched ||
+        !!this.changePasswordForm.get('nuevaContrasenia')?.touched);
+  }
+
+  /**
+   * Método para verificar si un campo debe mostrar error
+   * @param controlName Nombre del control a verificar
+   * @returns true si el campo tiene error y ha sido tocado
+   */
+  shouldShowError(controlName: string): boolean {
+    const control = this.changePasswordForm.get(controlName);
+    return control ? control.invalid && control.touched : false;
+  }
+
+
+  /**
+   * Método para mostrar u ocultar la contraseña
+   */
+  togglePasswordVisibility(): void {
+    this.isPasswordVisible = !this.isPasswordVisible;
+  }
+
+  /**
+   * Método para mostrar u ocultar la confirmación de contraseña
+   */
+  toggleConfirmPasswordVisibility(): void {
+    this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible;
+  }
+
 }
