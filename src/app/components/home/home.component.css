@@ -10,6 +10,18 @@
   position: relative;
 }
 
+.reset-filters-hint {
+  margin: 10px 0 15px 0;
+  color: #198754;
+  background: #f8f9fa;
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  gap: 8px;
+}
 
 .elegant-carousel {
   position: relative;
@@ -178,7 +190,7 @@
 
 /* Barra de filtros */
 .filter-container {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   position: relative;
 }
 

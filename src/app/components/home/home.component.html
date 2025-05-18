@@ -33,32 +33,13 @@
   </div>
 </div>
 
-<!-- Selector de vistas -->
-<div class="view-selector">
-  <div class="btn-group" role="group" aria-label="Seleccionar vista">
-    <button
-      type="button"
-      class="btn view-btn"
-      [class.active]="activeView === 'productos'"
-      (click)="changeView('productos')">
-      <i class="bi bi-box-seam"></i> Productos
-    </button>
-    <button
-      type="button"
-      class="btn view-btn"
-      [class.active]="activeView === 'mesas'"
-      (click)="changeView('mesas')">
-      <i class="bi bi-table"></i> Mesas Reservables
-    </button>
-  </div>
-</div>
-
 <!-- Vista de Productos -->
 <div *ngIf="activeView === 'productos'">
   <!-- Filtro de productos -->
   <div class="filter-container">
     <form class="elegant-filter-bar" [formGroup]="filterForm"
       (ngSubmit)="filtrarProductos(0)">
+
       <h4 class="filter-title">Encuentra los productos que buscas</h4>
       <div class="filter-row">
         <div class="filter-field">
@@ -98,9 +79,13 @@
             }
           </button>
         </div>
-
       </div>
     </form>
+    <div *ngIf="filterUsed" class="reset-filters-hint">
+      <i class="fa-solid fa-info-circle"></i>
+      Para reiniciar los filtros, presiona el icono de <b>Tienda Sana</b> en la
+      parte superior izquierda.
+    </div>
   </div>
 
   <!-- Grid de Productos -->
@@ -130,6 +115,11 @@
 
 <!-- Vista de Mesas Reservables -->
 <div *ngIf="activeView === 'mesas'">
+  <div *ngIf="mesaFilterUsed" class="reset-filters-hint">
+    <i class="fa-solid fa-info-circle"></i>
+    Para reiniciar los filtros, presiona el icono de <b>Tienda Sana</b> en la
+    parte superior izquierda.
+  </div>
   <!-- Filtro de mesas -->
   <div class="filter-container">
     <form class="elegant-filter-bar" [formGroup]="mesaFilterForm"
@@ -174,6 +164,11 @@
         </div>
       </div>
     </form>
+    <div *ngIf="mesaFilterUsed" class="reset-filters-hint">
+      <i class="fa-solid fa-info-circle"></i>
+      Para reiniciar los filtros, presiona el icono de <b>Tienda Sana</b> en la
+      parte superior izquierda.
+    </div>
   </div>
 
   <!-- Grid de Mesas -->
