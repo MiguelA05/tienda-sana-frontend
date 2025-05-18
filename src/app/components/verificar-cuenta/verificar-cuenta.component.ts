@@ -39,7 +39,7 @@ export class VerificarCuentaComponent {
     console.log(this.email);
     this.verificarCuentaForm = this.formbuilder.group({
       email: [
-        this.email,
+        { value: this.email, disabled: true },
         [
           Validators.required,
           Validators.email,

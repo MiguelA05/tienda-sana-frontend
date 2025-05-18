@@ -21,11 +21,13 @@
             <div class="form-group">
               <div class="floating-field">
                 <input
-                  type="number"
+                  type="text"
                   class="form-control"
                   id="dni"
                   formControlName="dni"
                   placeholder=" "
+                  maxlength="10"
+                  pattern="[0-9]*"
                   [ngClass]="{'is-invalid': shouldShowError('dni')}" />
                 <label for="dni" class="form-label">Cédula</label>
                 <i class="fa-solid fa-id-card input-icon"></i>

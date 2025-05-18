@@ -44,7 +44,16 @@ export class RegisterComponent {
           Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/) // Solo letras y espacios
         ]
       ],
-      direccion: ['', [Validators.required, Validators.maxLength(255)]],
+      direccion: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(255),
+          Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\.,#\-]+$/)
+          // Letras, números, espacios, punto, coma, numeral, guion
+        ]
+      ],
       telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(15), Validators.pattern(/^[0-9]+$/)]],
       email: [
         '',
@@ -77,10 +86,7 @@ export class RegisterComponent {
   */
   registrar(): void {
     // Marcar todos los campos como touched para mostrar errores si existen
-    Object.keys(this.registroForm.controls).forEach(key => {
-      this.registroForm.get(key)?.markAsTouched();
-    });
-
+     this.markFormGroupTouched(this.registroForm);
 
     if (!this.registroForm.get('terms')?.value) {
       Swal.fire({
@@ -169,12 +175,16 @@ export class RegisterComponent {
     if (direccionControl?.hasError('required')) {
       return 'La dirección es obligatoria';
     }
-
+    if (direccionControl?.hasError('minlength')) {
+      return `La dirección debe tener al menos ${direccionControl.getError('minlength').requiredLength} caracteres`;
+    }
     if (direccionControl?.hasError('maxlength')) {
       return `La dirección no debe exceder los ${direccionControl.getError('maxlength').requiredLength} caracteres`;
     }
-
-    return 'Por favor ingrese una dirección válida';
+    if (direccionControl?.hasError('pattern')) {
+      return 'La dirección solo puede contener letras, números, espacios y los caracteres . , # -';
+    }
+    return 'Por favor ingrese una dirección válida (ej: Calle 123 #45-67, Barrio Central)';
   }
 
   /**
@@ -271,7 +281,7 @@ export class RegisterComponent {
 
     return 'Por favor confirme su contraseña';
   }
-  
+
 
   /**
    * Método para obtener el mensaje de error de términos y condiciones

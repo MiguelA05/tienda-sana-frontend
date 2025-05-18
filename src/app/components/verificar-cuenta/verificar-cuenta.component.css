@@ -52,9 +52,16 @@
     animation: slide 15s linear infinite;
 }
 
+/* Contenedor de verificación */
+.verification-container {
+    width: 100%;
+    max-width: 450px;
+    z-index: 1;
+    position: relative;
+}
+
 /* Tarjeta de verificación */
 .verification-card {
-    max-width: 400px;
     width: 100%;
     padding: 25px;
     border-radius: 12px;
@@ -62,8 +69,6 @@
     background-color: #ffffff;
     transform: translateY(0);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    z-index: 1;
-    position: relative;
     will-change: transform, box-shadow;
 }
 
@@ -77,23 +82,44 @@
     background: linear-gradient(135deg, #198754 0%, #20c997 100%);
     color: #ffffff;
     text-align: center;
-    font-size: 1.6rem;
-    font-weight: 600;
     border-radius: 8px;
     padding: 20px 15px;
     margin-bottom: 25px;
     box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
     letter-spacing: 0.5px;
-    margin-bottom: 50px;
+}
+
+.verification-card .card-header h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+
+/* Cuerpo de la tarjeta */
+.verification-card .card-body {
+    padding: 15px 0;
+}
+
+/* Secciones */
+.section {
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.section-title {
+    font-size: 1.2rem;
+    color: #198754;
+    margin-bottom: 15px;
+    font-weight: 500;
 }
 
 /* Campos del formulario */
-.verification-form .form-group {
+.form-group {
     margin-bottom: 20px;
     position: relative;
 }
 
-.verification-form .form-control {
+.form-control {
     border-radius: 8px;
     border: 1.5px solid #e0e0e0;
     padding: 12px 15px;
@@ -101,16 +127,22 @@
     font-size: 1rem;
     transition: all 0.3s ease;
     background-color: #f9f9f9;
+    width: 100%;
 }
 
-.verification-form .form-control:focus {
+.form-control:focus {
     border-color: #198754;
     box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.2);
     background-color: #ffffff;
 }
 
+.form-control.is-invalid {
+    border-color: #dc3545;
+    background-image: none;
+}
+
 /* Etiquetas flotantes */
-.verification-form .form-label {
+.form-label {
     position: absolute;
     top: 25px;
     left: 40px;
@@ -122,8 +154,8 @@
     padding: 0 5px;
 }
 
-.verification-form .form-control:focus ~ .form-label,
-.verification-form .form-control:not(:placeholder-shown) ~ .form-label {
+.form-control:focus ~ .form-label,
+.form-control:not(:placeholder-shown) ~ .form-label {
     top: 0;
     left: 10px;
     transform: translateY(-50%);
@@ -133,7 +165,7 @@
 }
 
 /* Íconos en los campos */
-.verification-form .input-icon {
+.input-icon {
     position: absolute;
     top: 25px;
     left: 15px;
@@ -142,17 +174,16 @@
     transition: color 0.3s ease;
 }
 
-.verification-form .form-control:focus ~ .input-icon {
+.form-control:focus ~ .input-icon {
     color: #198754;
 }
 
 /* Botones */
-.btn-custom {
+.btn-success {
     background: linear-gradient(135deg, #198754 0%, #20c997 100%);
     border: none;
     font-weight: 600;
     padding: 12px 20px;
-    margin-top: 20px;
     font-size: 1.1rem;
     border-radius: 8px;
     cursor: pointer;
@@ -163,35 +194,65 @@
     width: 100%;
 }
 
-.btn-custom:hover {
+.btn-success:hover {
     background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(25, 135, 84, 0.3);
 }
 
-.btn-secondary {
-    background-color: #6c757d;
+.btn-link {
+    background: none;
     border: none;
-    font-weight: 600;
-    padding: 12px 20px;
-    font-size: 1.1rem;
-    border-radius: 8px;
+    color: #198754;
+    padding: 5px;
+    font-size: 0.9rem;
     cursor: pointer;
+    text-decoration: none;
     transition: all 0.3s ease;
-    color: #ffffff;
-    margin-top: 10px;
-    width: 100%;
+    display: block;
 }
 
-.btn-secondary:hover {
-    background-color: #5a6268;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+.btn-link:hover {
+    color: #157347;
+    text-decoration: underline;
 }
 
-/* Spinner de carga */
+.form-actions {
+    margin-top: 30px;
+}
+
+/* Estado de carga del botón */
+.btn-loading {
+    position: relative;
+    color: transparent !important;
+}
+
+.btn-loading:after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+/* Indicador de carga */
+.loading-indicator {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
 .spinner-border {
     color: #198754;
+    width: 2rem;
+    height: 2rem;
 }
 
 /* Mensajes de error */
@@ -203,18 +264,57 @@
     text-align: left;
 }
 
+.card-header h2 {
+  color: #fff;
+}
+
+
+/* Animaciones */
+@keyframes float {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes slide {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 /* Responsive */
 @media (max-width: 576px) {
     .verification-card {
         padding: 20px 15px;
     }
 
-    .verification-card .card-header {
+    .verification-card .card-header h2 {
         font-size: 1.4rem;
+    }
+
+    .verification-card .card-header {
         padding: 15px 10px;
     }
 
-    .btn-custom {
+    .btn-success {
         padding: 10px 15px;
         font-size: 1rem;
     }

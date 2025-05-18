@@ -51,7 +51,16 @@ export class InformacionUsuarioComponent implements OnInit {
         ]
       ],
       phoneNumber: [{ value: '', disabled: true }, [Validators.required, this.numberLengthValidator(10, 15), Validators.pattern(/^[0-9]+$/)]],
-      address: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(255)]],
+      address: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(255),
+          Validators.pattern(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\.,#\-]+$/)
+          // Letras, números, espacios, punto, coma, numeral, guion
+        ]
+      ],
       password: [
         '',
         [
@@ -236,13 +245,16 @@ export class InformacionUsuarioComponent implements OnInit {
     if (addressControl?.hasError('required')) {
       return 'La dirección es obligatoria';
     }
-
+    if (addressControl?.hasError('minlength')) {
+      return `La dirección debe tener al menos ${addressControl.getError('minlength').requiredLength} caracteres`;
+    }
     if (addressControl?.hasError('maxlength')) {
       return `La dirección no debe exceder los ${addressControl.getError('maxlength').requiredLength} caracteres`;
     }
-
-
-    return 'Por favor ingrese una dirección válida';
+    if (addressControl?.hasError('pattern')) {
+      return 'La dirección solo puede contener letras, números, espacios y los caracteres . , # -';
+    }
+    return 'Por favor ingrese una dirección válida (ej: Calle 123 #45-67, Barrio Central)';
   }
 
   getPhoneNumberErrorMessage(): string {
