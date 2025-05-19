@@ -43,7 +43,6 @@ export class ShoppingCarComponent {
     this.route.queryParams.subscribe(params => {
       const paymentGatewayStatus = params['collection_status'] || params['status'];
       const paymentId = params['payment_id'];
-
       const pendingVentaId = sessionStorage.getItem('pendingVentaId');
 
       if (pendingVentaId) {
@@ -52,9 +51,9 @@ export class ShoppingCarComponent {
       } else if (paymentGatewayStatus) {
         console.warn('Estado de pago en URL sin venta pendiente en sesión:', paymentGatewayStatus);
         if (paymentGatewayStatus === 'approved' || paymentGatewayStatus === 'success') {
-            Swal.fire('Pago Registrado', 'Se detectó un pago, pero no se pudo asociar directamente a una sesión activa.', 'success');
+          Swal.fire('Pago Registrado', 'Se detectó un pago, pero no se pudo asociar directamente a una sesión activa.', 'success');
         } else if (paymentGatewayStatus === 'rejected' || paymentGatewayStatus === 'failure') {
-            Swal.fire('Pago Fallido', 'Se detectó un intento de pago fallido.', 'error');
+          Swal.fire('Pago Fallido', 'Se detectó un intento de pago fallido.', 'error');
         }
       }
     });
@@ -102,6 +101,7 @@ export class ShoppingCarComponent {
         next: (response: MensajeDTO) => {
           this.isLoading = false;
           const paymentUrl = response.reply.paymentUrl;
+          sessionStorage.removeItem('pendingVentaId');
           sessionStorage.setItem('pendingVentaId', this.ventaId!);
           window.location.href = paymentUrl;
         },
@@ -115,9 +115,9 @@ export class ShoppingCarComponent {
         }
       });
     } else {
-        this.isLoading = false;
-        console.error("realizarPago llamado sin ventaId");
-        Swal.fire('Error Interno', 'No se pudo procesar el pago debido a un error interno (ventaId faltante).', 'error');
+      this.isLoading = false;
+      console.error("realizarPago llamado sin ventaId");
+      Swal.fire('Error Interno', 'No se pudo procesar el pago debido a un error interno (ventaId faltante).', 'error');
     }
   }
 
@@ -136,9 +136,9 @@ export class ShoppingCarComponent {
         icon: 'success',
         confirmButtonText: 'Aceptar'
       }).then(() => {
-        this.itemsCarrito = []; 
+        this.itemsCarrito = [];
         this.calcularTotales();
-        this.obtenerItemsCarrito(); 
+        this.obtenerItemsCarrito();
       });
     } else if (status === 'pending' || status === 'in_process') {
       Swal.fire({
