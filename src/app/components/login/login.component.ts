@@ -49,13 +49,22 @@ export class LoginComponent implements OnInit {
       this.loginForm.get(key)?.markAsTouched();
     });
 
+    if (!this.loginForm.valid) {
+      this.isLoading = false;
+      return;
+    }
+
+    this.isLoading = true;
+
     if (this.loginForm.valid) {
       const loginDTO = this.loginForm.value as LoginDTO;
       this.authService.iniciarSesion(loginDTO).subscribe({
         next: (data) => {
+          this.isLoading = false;
           this.tokenService.login(data.reply.token);
         },
         error: (error) => {
+          this.isLoading = false;
           if (error.error.reply === 'Cuenta no activada' || error.error.respuesta === 'Cuenta no activada') {
             Swal.fire({
               icon: 'warning',

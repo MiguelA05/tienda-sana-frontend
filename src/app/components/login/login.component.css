@@ -64,14 +64,15 @@
 .login-card .form-group {
     margin-bottom: 20px;
     position: relative;
-    
+
 }
 
 .login-card .form-control {
     border-radius: 8px;
     border: 1.5px solid #e0e0e0;
     padding: 12px 15px;
-    padding-left: 40px; /* Espacio para el icono */
+    padding-left: 40px;
+    /* Espacio para el icono */
     font-size: 1rem;
     transition: all 0.3s ease;
     background-color: #f9f9f9;
@@ -96,8 +97,8 @@
     padding: 0 5px;
 }
 
-.login-card .form-control:focus ~ .form-label,
-.login-card .form-control:not(:placeholder-shown) ~ .form-label {
+.login-card .form-control:focus~.form-label,
+.login-card .form-control:not(:placeholder-shown)~.form-label {
     top: 0;
     left: 10px;
     transform: translateY(-50%);
@@ -116,7 +117,7 @@
     transition: color 0.3s ease;
 }
 
-.login-card .form-control:focus ~ .input-icon {
+.login-card .form-control:focus~.input-icon {
     color: #198754;
 }
 
@@ -258,7 +259,9 @@
 
 /* Animación de carga para el botón */
 @keyframes spinner {
-    to {transform: rotate(360deg);}
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .login-card .btn-loading {
@@ -269,16 +272,23 @@
 .login-card .btn-loading::after {
     content: '';
     position: absolute;
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     top: 50%;
     left: 50%;
-    margin-top: -8px;
-    margin-left: -8px;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    border: 2px solid #ffffff;
-    border-top-color: transparent;
-    animation: spinner 0.6s linear infinite;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+/* Indicador de carga */
+.loading-indicator {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
 }
 
 /* Responsive */
@@ -286,19 +296,19 @@
     .login-card {
         padding: 20px 15px;
     }
-    
+
     .login-card .card-header {
         font-size: 1.4rem;
         padding: 15px 10px;
     }
-    
+
     .login-card .btn-success {
         padding: 10px 15px;
         font-size: 1rem;
     }
 }
 
-    /* Elementos decorativos */
+/* Elementos decorativos */
 .decorative-circles {
     position: absolute;
     width: 100%;
@@ -344,9 +354,9 @@
 .password-input-container {
     position: relative;
     width: 100%;
-  }
-  
-  .btn-visibility {
+}
+
+.btn-visibility {
     position: absolute;
     top: 50%;
     right: 10px;
@@ -357,8 +367,8 @@
     font-size: 1.2rem;
     color: #6c757d;
     z-index: 10;
-  }
-  
-  .btn-visibility:hover {
+}
+
+.btn-visibility:hover {
     color: #495057;
-  }
+}

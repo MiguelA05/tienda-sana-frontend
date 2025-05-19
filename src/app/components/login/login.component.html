@@ -77,18 +77,15 @@
                 <button
                     type="submit"
                     class="btn-success"
-                    [disabled]="loginForm.invalid"
+                    [disabled]="loginForm.invalid || isLoading"
                     [ngClass]="{'btn-loading': isLoading}">
-                    @if(isLoading) {
-                    <span class="spinner-border spinner-border-sm me-2"
-                        role="status" aria-hidden="true"></span>
-                    Procesando...
-                    } @else {
-                    <i
-                        class="fa-solid fa-arrow-right-to-bracket me-2"></i>Ingresar
-                    }
+                    <i class="fa-solid fa-arrow-right-to-bracket me-2"></i>Ingresar
+                    
                 </button>
             </div>
+
+
+         
 
             <!-- Link de recuperación -->
             <div class="links-container">
