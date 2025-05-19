@@ -228,18 +228,33 @@ table {
     box-shadow: 0 2px 5px rgba(220, 53, 69, 0.2);
 }
 
+/* Add these styles for better spinner visibility */
+.table-loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.9);
+}
 
-/* Spinner de carga */
 .loading-spinner {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-.spinner-border {
-    color: #198754;
-    width: 1.5rem;
-    height: 1.5rem;
+.loading-spinner .spinner-border {
+  color: #198754 !important;
+  border-width: 0.3em;
+  margin-bottom: 0.75rem;
 }
+
+.loading-text {
+  color: #198754;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
 
 /* Animación de carga para el botón */
 @keyframes spinner {
@@ -297,6 +312,7 @@ table {
     }
 
     @media (max-width: 480px) {
+
         /* Agrega indicadores de desplazamiento para que se entienda que la tabla se puede desplazar */
         .table-responsive::after {
             content: "";
