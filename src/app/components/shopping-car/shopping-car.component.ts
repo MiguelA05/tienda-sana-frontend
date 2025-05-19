@@ -45,10 +45,26 @@ export class ShoppingCarComponent {
       const paymentId = params['payment_id'];
       const pendingVentaId = sessionStorage.getItem('pendingVentaId');
 
-      if (pendingVentaId) {
+      // Si hay venta pendiente y algún estado, procesa normalmente
+      if (pendingVentaId && paymentGatewayStatus) {
         console.log(`Retorno de pasarela detectado. Venta pendiente: ${pendingVentaId}, Estado Pasarela: ${paymentGatewayStatus}, PaymentID: ${paymentId}`);
         this.procesarRetornoPasarela(paymentGatewayStatus, pendingVentaId);
-      } else if (paymentGatewayStatus) {
+        sessionStorage.removeItem('pendingVentaId');
+      }
+      // Si hay venta pendiente pero NO hay estado, asume retorno incompleto
+      else if (pendingVentaId && !paymentGatewayStatus) {
+        Swal.fire({
+          title: 'Pago No Completado',
+          text: `Parece que interrumpiste el proceso de pago antes de completarlo. La orden asociada (ID: ${pendingVentaId}) será cancelada.`,
+          icon: 'warning',
+          confirmButtonText: 'Entendido'
+        }).then(() => {
+          this.llamarCancelarVenta(pendingVentaId);
+          sessionStorage.removeItem('pendingVentaId');
+        });
+      }
+      // Si solo hay estado pero no venta pendiente
+      else if (paymentGatewayStatus) {
         console.warn('Estado de pago en URL sin venta pendiente en sesión:', paymentGatewayStatus);
         if (paymentGatewayStatus === 'approved' || paymentGatewayStatus === 'success') {
           Swal.fire('Pago Registrado', 'Se detectó un pago, pero no se pudo asociar directamente a una sesión activa.', 'success');
@@ -58,7 +74,6 @@ export class ShoppingCarComponent {
       }
     });
   }
-
   /**
    * Método para crear una venta
    */
@@ -101,7 +116,7 @@ export class ShoppingCarComponent {
         next: (response: MensajeDTO) => {
           this.isLoading = false;
           const paymentUrl = response.reply.paymentUrl;
-          sessionStorage.removeItem('pendingVentaId');
+          sessionStorage.removeItem('pendingVentaId'); // Limpia antes de guardar
           sessionStorage.setItem('pendingVentaId', this.ventaId!);
           window.location.href = paymentUrl;
         },
@@ -178,8 +193,6 @@ export class ShoppingCarComponent {
       next: (response: MensajeDTO) => {
         this.isLoading = false;
         console.log('Venta cancelada exitosamente:', response.reply);
-        Swal.fire('Orden Cancelada', `La orden (ID: ${ventaId}) ha sido cancelada.`, 'info');
-        this.obtenerItemsCarrito(); // Refresh cart contents
       },
       error: (err) => {
         this.isLoading = false;
