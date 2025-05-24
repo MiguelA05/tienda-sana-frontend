@@ -27,7 +27,7 @@ export class ClienteService {
   /**
    * Metodo para listar los productos de un cliente
    * @param emailUsuario id del cliente
-   * @returns 
+   * @returns
    */
   public listarComprasCliente(emailUsuario: string): Observable<MensajeDTO> {
     return this.http.get<MensajeDTO>(`${this.clienteURL}/venta/history/${emailUsuario}`);
@@ -143,6 +143,24 @@ export class ClienteService {
     return this.http.delete<MensajeDTO>(`${this.clienteURL}/venta/cancel/${orderId}`);
   }
 
+  public agregarMesaGestorReservas(mesaDTO: MesaDTO): Observable<MensajeDTO> {
+    return this.http.put<MensajeDTO>(`${this.clienteURL}/gestor-reservas/add-item`,mesaDTO);
+  }
 
+  public borrarMesaGestorReservas(mesaBorrarDTO: BorrarMesaGestorDTO): Observable<MensajeDTO> {
+    return this.http.delete<MensajeDTO>(`${this.clienteURL}/gestor-reservas/delete-item/${mesaBorrarDTO}`);
+  }
+
+  public listarMesasGestorReservas(emailUsuario: String): Observable<MensajeDTO> {
+    return this.http.get<MensajeDTO>(`${this.clienteURL}/gestor-reservas/get-items/${emailUsuario}`);
+  }
+
+  public cancelarReserva(reservaId: String): Observable<MensajeDTO> {
+    return this.http.delete<MensajeDTO>(`${this.clienteURL}/reserva/cancel/${reservaId}`);
+  }
+
+  public obtenerInfoReserva(reservaId: String): Observable<MensajeDTO> {
+    return this.http.get<MensajeDTO>(`${this.clienteURL}/reserva/get-info/${reservaId}`);
+  }
 
 }

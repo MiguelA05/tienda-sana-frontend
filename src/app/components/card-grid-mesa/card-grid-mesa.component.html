@@ -24,7 +24,9 @@
               <p class="card-text text-success">{{ mesa.precioReserva | currency }}</p>
             </div>
             <div class="card-footer text-center">
-              <button class="btn btn-custom">Reservar Mesa</button>
+              <button class="btn btn-custom"
+                      (click)="reservarMesa($event, mesa)"
+              >Reservar Mesa</button>
             </div>
           </div>
         </div>
