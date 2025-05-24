@@ -8,6 +8,8 @@ import {ItemCarritoDTO} from '../../dto/item-carrito-dto';
 import {TokenService} from '../../services/token.service';
 import {ClienteService} from '../../services/cliente.service';
 import {MesaDTO} from '../../dto/mesa-dto';
+import {CrearReservaDTO} from '../../dto/crear-reserva-dto';
+import {MensajeDTO} from '../../dto/mensaje-dto';
 
 @Component({
   selector: 'app-mesas-grid',
@@ -19,6 +21,7 @@ import {MesaDTO} from '../../dto/mesa-dto';
 export class CardGridMesaComponent {
   @Input() mesas: ItemMesaDTO[] = [];
   cantidadSeleccionada: number = 1;
+  isLoading: boolean = false;
 
   constructor(private router: Router,
               private clienteService: ClienteService,
@@ -32,7 +35,7 @@ export class CardGridMesaComponent {
 
   reservarMesa(event: Event, mesa: ItemMesaDTO): void {
     console.log("Programar la funcion de registrar reserva");
-    /*
+
     event.stopPropagation(); // Detener propagación del evento
 
     if (!this.tokenService.getToken()) {
@@ -63,37 +66,50 @@ export class CardGridMesaComponent {
       return;
     }
 
-    const carItem: ItemCarritoDTO = {
-      idUsuario: this.obtenerIdUsuario(),
-      idProducto: selectedMesa.id,
-      nombreProducto: selectedMesa.nombre,
-      categoria: selectedMesa.categoria,
-      precio: selectedMesa.precioUnitario,
-      cantidad: cantidad,
-      total: producto.precioUnitario * cantidad
-    };
+    let email:any;
 
-    if (!carItem.idProducto || !carItem.idUsuario || carItem.cantidad <= 0) {
-      console.error("Datos inválidos para agregar al carrito:", carItem);
-      Swal.fire("Error!", "Los datos enviados al servidor son inválidos.", "error");
-      this.isLoading = false;
-      return;
-    }
+    this.clienteService.obtenerReservaEmail(this.tokenService.getEmail()).subscribe((mensaje: MensajeDTO) => {
+      if (!mensaje.error) {
+        email = mensaje.reply; // <- aquí accedes a los datos
+        console.log(mensaje.reply)
+        const reservation: MesaDTO = {
+          id: mesa.id,
+          nombre: mesa.nombre,
+          estado: "Reservada",
+          localidad: mesa.localidad,
+          precioReserva: mesa.precioReserva,
+          capacidad: mesa.capacidad,
+          imagen: mesa.imagen,
+          idReserva: "-",
+          idGestorReserva: ""+email
+        };
 
-    this.isLoading = true;
+        if (!reservation.id || !reservation.estado || reservation.capacidad <= 0) {
+          console.error("Datos inválidos para agregar al gestor de reservas:", reservation);
+          Swal.fire("Error!", "Los datos enviados al servidor son inválidos.", "error");
+          this.isLoading = false;
+          return;
+        }
 
-    this.clienteService.crearReserva(carItem).subscribe({
-      next: () => {
-        Swal.fire("Éxito!", "Se ha agregado el item al carrito", "success");
-        this.isLoading = false;
-      },
-      error: (error) => {
-        Swal.fire("Error!", error.error.respuesta || "Hubo un problema al agregar el item.", "error");
-        this.isLoading = false;
+        this.isLoading = true;
+
+        this.clienteService.agregarMesaGestorReservas(reservation).subscribe({
+          next: () => {
+            Swal.fire("Éxito!", "Se ha agregado la reserva al gestor de reservas", "success");
+            this.isLoading = false;
+          },
+          error: (error) => {
+            Swal.fire("Error!", error.error.respuesta || "Hubo un problema al agregar el item.", "error");
+            this.isLoading = false;
+          }
+        });
+      } else {
+        Swal.fire("Error!",'Ocurrió un error: '+ mensaje);
       }
     });
 
-     */
+
+
   }
 
 }

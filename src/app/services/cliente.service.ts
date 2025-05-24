@@ -163,4 +163,8 @@ export class ClienteService {
     return this.http.get<MensajeDTO>(`${this.clienteURL}/reserva/get-info/${reservaId}`);
   }
 
+  public obtenerReservaEmail(email: String): Observable<MensajeDTO> {
+    return this.http.get<MensajeDTO>(`${this.clienteURL}/reserva/get-reservation-manager/${email}`);
+  }
+
 }
