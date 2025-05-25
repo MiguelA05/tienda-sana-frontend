@@ -143,8 +143,28 @@
     width: 100%;
 }
 
+.btn-custom:disabled {
+  background: linear-gradient(135deg, #6c757d 0%, #adb5bd 100%); /* Estilo para deshabilitado */
+  cursor: not-allowed;
+  transform: none; /* Evitar transformaciones en estado deshabilitado */
+  box-shadow: none; /* Sin sombra en estado deshabilitado */
+}
+
+.btn-custom:hover:not(:disabled) { /* Aplicar hover solo si no está deshabilitado */
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(25, 135, 84, 0.3);
+}
+
+.btn-custom:active:not(:disabled) { /* Aplicar active solo si no está deshabilitado */
+  transform: translateY(-1px);
+}
+
+.btn-custom .spinner-border-sm {
+  margin-right: 0.5em; /* Espacio entre el spinner y el texto "Procesando..." */
+}
+
 .btn-custom:hover {
-    background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+   
     transform: translateY(-3px);
     box-shadow: 0 8px 15px rgba(25, 135, 84, 0.3);
 }

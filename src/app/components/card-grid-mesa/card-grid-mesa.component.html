@@ -1,35 +1,37 @@
 <div class="container card-grid-container">
-    <div class="cards-grid">
-      @for (mesa of mesas; track mesa.id) {
-        <div class="custom-card">
-          <div class="card h-100" (click)="irADetalleMesa(mesa.id)">
-            <img
-              class="custom-card-image"
-              [src]="mesa.imagen"
-              alt="Imagen de la mesa"
-            />
-            <div class="card-body">
-              <h5 class="card-title">{{ mesa.nombre }}</h5>
-              <p class="card-text text-muted">{{ mesa.localidad }}</p>
-              <div class="mesa-info">
-                <div class="info-item">
-                  <i class="bi bi-people-fill"></i>
-                  <span>{{ mesa.capacidad }} personas</span>
-                </div>
-                <div class="info-item">
-                  <i class="bi bi-clock-fill"></i>
-                  <span>{{ mesa.estado }}</span>
-                </div>
-              </div>
-              <p class="card-text text-success">{{ mesa.precioReserva | currency }}</p>
+  <div class="cards-grid">
+    @for (mesa of mesas; track mesa.id) {
+    <div class="custom-card">
+      <div class="card h-100" (click)="irADetalleMesa(mesa.id)">
+        <img class="custom-card-image" [src]="mesa.imagen" alt="Imagen de la mesa" />
+        <div class="card-body">
+          <h5 class="card-title">{{ mesa.nombre }}</h5>
+          <p class="card-text text-muted">{{ mesa.localidad }}</p>
+          <div class="mesa-info">
+            <div class="info-item">
+              <i class="bi bi-people-fill"></i>
+              <span>{{ mesa.capacidad }} personas</span>
             </div>
-            <div class="card-footer text-center">
-              <button class="btn btn-custom"
-                      (click)="reservarMesa($event, mesa)"
-              >Reservar Mesa</button>
+            <div class="info-item">
+              <i class="bi bi-clock-fill"></i>
+              <span>{{ mesa.estado }}</span>
             </div>
           </div>
+          <p class="card-text text-success">{{ mesa.precioReserva | currency }}</p>
         </div>
-      }
+        <div class="card-footer text-center">
+          <button class="btn btn-custom" (click)="reservarMesa($event, mesa)" [disabled]="isLoading">
+            <ng-container *ngIf="!isLoading">
+              <i class="bi bi-calendar-check me-2"></i>Agregar a gestor de reservas
+            </ng-container>
+            <ng-container *ngIf="isLoading">
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              Procesando...
+            </ng-container>
+          </button>
+        </div>
+      </div>
     </div>
+    }
   </div>
+</div>
