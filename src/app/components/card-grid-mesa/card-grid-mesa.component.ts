@@ -75,7 +75,7 @@ export class CardGridMesaComponent {
         const reservation: MesaDTO = {
           id: mesa.id,
           nombre: mesa.nombre,
-          estado: "Reservada",
+          estado: "Disponible",
           localidad: mesa.localidad,
           precioReserva: mesa.precioReserva,
           capacidad: mesa.capacidad,

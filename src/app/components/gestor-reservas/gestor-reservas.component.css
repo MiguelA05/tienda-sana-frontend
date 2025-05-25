@@ -87,6 +87,17 @@
     align-items: center;
     gap: 10px;
     flex: 1;
+    min-width: 280px; /* Asegurar que el contenedor del info-item tenga suficiente espacio */
+}
+
+.info-item > span {
+    white-space: nowrap; /* Evitar que el texto "Seleccionar Fecha y Hora:" se rompa en dos líneas */
+}
+
+input[type="datetime-local"].fecha-input {
+    min-width: 210px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .form-control {
@@ -102,7 +113,8 @@
 }
 
 .personas-input, .fecha-input {
-    max-width: 150px;
+    max-width: 220px; /* Aumentar un poco el ancho si es necesario */
+    padding-right: 30px; /* Añadir padding a la derecha para dejar espacio al icono interno si es posible */
 }
 
 /* Estilos para la lista de mesas */
