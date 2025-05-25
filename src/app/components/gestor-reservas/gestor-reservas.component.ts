@@ -185,8 +185,8 @@ export class GestorReservasComponent {
     this.clienteService.crearReserva(crearReservaDTO).subscribe({
       next: (response: MensajeDTO) => {
         this.reservaId = response.reply;
-        this.isLoading = false;
         this.procederPago();
+       
       },
       error: (error) => {
         console.log("El error es: ", error.error?.reply || error.message);
@@ -215,6 +215,7 @@ export class GestorReservasComponent {
           console.error('URL de pago no encontrada en la respuesta:', response);
           Swal.fire('Error', 'No se pudo obtener la URL de pago. Intenta nuevamente.', 'error');
         }
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error al realizar el pago:', error);

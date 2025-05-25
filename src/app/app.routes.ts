@@ -25,8 +25,8 @@ export const routes: Routes = [
    { path: 'correo-recuperacion', component: CorreoRecuperacionComponent, canActivate: [LoginGuard] },
    { path: 'verificar-cuenta', component: VerificarCuentaComponent, canActivate: [LoginGuard] },
    { path: 'detalle-producto/:id', component: DetalleProductoComponent },
-   { path: 'historial', component: HistorialComponent}, //, canActivate: [RolesGuard]
-   { path: 'gestor-reservas', component: GestorReservasComponent},
+   { path: 'historial', component: HistorialComponent, canActivate: [RolesGuard]}, //, canActivate: [RolesGuard]
+   { path: 'gestor-reservas', component: GestorReservasComponent, canActivate: [RolesGuard], data: { expectedRole: ['CLIENTE'] } },
    { path: "**", pathMatch: "full", redirectTo: "" }
    
 ];
