@@ -97,10 +97,6 @@ export class CardGridMesaComponent {
           next: () => {
             Swal.fire("Éxito!", "Se ha agregado la reserva al gestor de reservas", "success");
             this.isLoading = false;
-            const index = this.mesas.indexOf(mesa);
-            if (index > -1) {
-              this.mesas.splice(index, 1);
-            }
           },
           error: (error) => {
             Swal.fire("Error!", error.error.respuesta || "Hubo un problema al agregar el item.", "error");
