@@ -27,6 +27,11 @@
             [ngClass]="{ 'active': activeNav === 'mesas' }"
             (click)="mostrarMesas()">Mesas</a>
         </li>
+        @if (isLogged && isAdmin) {
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/admin" routerLinkActive="active">Administración</a>
+          </li>
+        }
       </ul>
     </nav>
 

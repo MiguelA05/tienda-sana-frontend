@@ -10,6 +10,7 @@ const requiredVars = [
   'CLIENTE_SERVICE_URL',
   'CUENTA_SERVICE_URL',
   'PUBLICO_SERVICE_URL',
+  'ADMIN_SERVICE_URL',
 ];
 
 const missing = requiredVars.filter((key) => !process.env[key]);
@@ -31,7 +32,8 @@ const template = (prod) => `export const environment = {
   authServiceUrl: '${process.env.AUTH_SERVICE_URL}',
   clienteServiceUrl: '${process.env.CLIENTE_SERVICE_URL}',
   cuentaServiceUrl: '${process.env.CUENTA_SERVICE_URL}',
-  publicoServiceUrl: '${process.env.PUBLICO_SERVICE_URL}'
+  publicoServiceUrl: '${process.env.PUBLICO_SERVICE_URL}',
+  adminServiceUrl: '${process.env.ADMIN_SERVICE_URL}'
 };`;
 
 // Crear archivos

@@ -1,0 +1,113 @@
+<div class="page-header d-flex flex-wrap justify-content-between align-items-start gap-2">
+  <div>
+    <h1>Proveedores</h1>
+    <p class="text-muted mb-0">Alta, edición y baja lógica (API admin).</p>
+  </div>
+  <button type="button" class="btn btn-success" (click)="startCreate()">
+    <i class="fa-solid fa-plus me-1"></i> Nuevo proveedor
+  </button>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-white fw-semibold">
+        {{ editingId ? 'Editar proveedor' : 'Crear proveedor' }}
+      </div>
+      <div class="card-body">
+        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+          <div class="mb-3">
+            <label class="form-label" for="sup-cat">Categoría</label>
+            <input id="sup-cat" class="form-control" formControlName="category" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="sup-name">Nombre</label>
+            <input id="sup-name" class="form-control" formControlName="name" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="sup-prod">Producto que suministra</label>
+            <input id="sup-prod" class="form-control" formControlName="suppliedProduct" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="sup-contact">Contacto</label>
+            <input id="sup-contact" class="form-control" formControlName="contact" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="sup-addr">Dirección</label>
+            <input id="sup-addr" class="form-control" formControlName="address" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="sup-city">Ciudad</label>
+            <input id="sup-city" class="form-control" formControlName="city" />
+          </div>
+          <div class="d-flex gap-2 flex-wrap">
+            <button type="submit" class="btn btn-success" [disabled]="form.invalid">
+              {{ editingId ? 'Guardar cambios' : 'Registrar' }}
+            </button>
+            @if (editingId) {
+              <button type="button" class="btn btn-outline-secondary" (click)="cancelEdit()">Cancelar</button>
+            }
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-white fw-semibold">Listado</div>
+      <div class="card-body p-0">
+        @if (loading) {
+          <div class="p-4 text-center text-muted">Cargando…</div>
+        } @else {
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Nombre</th>
+                  <th>Categoría</th>
+                  <th>Ciudad</th>
+                  <th>Estado</th>
+                  <th class="text-end">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of suppliers; track row.id) {
+                  <tr>
+                    <td>{{ row.name }}</td>
+                    <td>{{ row.category }}</td>
+                    <td>{{ row.city }}</td>
+                    <td>
+                      <span class="badge rounded-pill" [ngClass]="badgeClass(row.status)">
+                        {{ labelStatus(row.status) }}
+                      </span>
+                    </td>
+                    <td class="text-end">
+                      <div class="btn-group btn-group-sm flex-wrap justify-content-end">
+                        <button type="button" class="btn btn-outline-primary" (click)="startEdit(row)">Editar</button>
+                        <button
+                          type="button"
+                          class="btn btn-outline-secondary"
+                          (click)="deactivate(row)"
+                          [disabled]="row.status === 'INACTIVE'">
+                          Desactivar
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-outline-success"
+                          (click)="activate(row)"
+                          [disabled]="row.status === 'ACTIVE'">
+                          Reactivar
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

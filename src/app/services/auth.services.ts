@@ -21,10 +21,7 @@ export class AuthService {
 
   private authURL = environment.authServiceUrl;
 
-  constructor(private http: HttpClient) {
-    console.log(1);
-    console.log("AuthService URL: ", this.authURL);
-  }
+  constructor(private http: HttpClient) {}
 
   /**
    * Metodo para crear una cuenta de usuario
@@ -41,7 +38,6 @@ export class AuthService {
    * @returns respuesta del servidor
    */
   public iniciarSesion(loginDTO: LoginDTO): Observable<MensajeDTO> {
-    console.log("AuthService URL: ", this.authURL);
     return this.http.post<MensajeDTO>(`${this.authURL}/login`, loginDTO);
   }
 

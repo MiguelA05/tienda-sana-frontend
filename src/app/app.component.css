@@ -1,0 +1,18 @@
+/* Vistas públicas: ancho completo y espacio bajo el header fijo */
+.main-content--public {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  padding-top: 96px;
+  box-sizing: border-box;
+}
+
+/* Panel admin: ancho completo y espacio bajo el header fijo */
+.main-content--admin {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  padding-top: 96px;
+  align-items: stretch;
+  justify-content: flex-start;
+}

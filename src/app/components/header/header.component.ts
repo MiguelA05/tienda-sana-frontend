@@ -18,6 +18,7 @@ export class HeaderComponent {
   isLogged = false;
   email: string = "";
   activeNav: 'productos' | 'mesas' | null = null;
+  isAdmin = false;
 
   /**
    * Constructor de la clase HeaderComponent
@@ -30,6 +31,7 @@ export class HeaderComponent {
     if (this.isLogged) {
       this.email = this.tokenService.getEmail();
       this.nombreUsuario = this.tokenService.getNombre();
+      this.isAdmin = this.tokenService.getRol() === 'ADMIN';
     }
 
     this.router.events.pipe(

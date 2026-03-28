@@ -1,6 +1,10 @@
 <app-header></app-header>
 
-<div class="main-content d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+<div
+  class="main-content w-100"
+  [class.main-content--admin]="isAdminLayout"
+  [class.main-content--public]="!isAdminLayout"
+  style="min-height: 100vh">
   <router-outlet></router-outlet>
 </div>
 

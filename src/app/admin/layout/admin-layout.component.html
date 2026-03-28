@@ -1,0 +1,27 @@
+<div class="admin-shell">
+  <aside class="admin-sidebar" aria-label="Navegación administración">
+    <div class="sidebar-brand">
+      <i class="fa-solid fa-seedling" aria-hidden="true"></i>
+      <span>Admin Tienda Sana</span>
+    </div>
+    <nav class="sidebar-nav">
+      @for (item of nav; track item.path) {
+        <a
+          class="sidebar-link"
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }">
+          <i class="fa-solid {{ item.icon }}" aria-hidden="true"></i>
+          {{ item.label }}
+        </a>
+      }
+    </nav>
+    <a routerLink="/" class="sidebar-back">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      Volver al sitio
+    </a>
+  </aside>
+  <main class="admin-main">
+    <router-outlet />
+  </main>
+</div>

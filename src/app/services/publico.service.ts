@@ -63,7 +63,6 @@ export class PublicoService {
    * @returns respuesta del servidor
    */
   public filtrarProductos(filtroProductoDTO: FiltroProductoDTO): Observable<MensajeDTO>{
-    console.log("filtroProductoDTO");
     return this.http.post<MensajeDTO>(`${this.publicoURL}/productos/filter-products`, filtroProductoDTO);
   }
 

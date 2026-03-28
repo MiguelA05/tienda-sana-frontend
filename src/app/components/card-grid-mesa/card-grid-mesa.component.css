@@ -5,21 +5,22 @@
     border-radius: 15px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
     margin-bottom: 30px;
+    box-sizing: border-box;
 }
 
 /* Grid de tarjetas */
 .cards-grid {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
+    column-gap: 20px;
     row-gap: 20px;
-    /* Espaciado vertical */
-    justify-items: center;
+    justify-items: stretch;
 }
 
 /* Tarjetas individuales */
 .custom-card {
     width: 100%;
-    max-width: 350px;
+    max-width: none;
     border-radius: 12px;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -185,6 +186,18 @@
 @media (min-width: 992px) {
     .cards-grid {
         grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1200px) {
+    .cards-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width: 1400px) {
+    .cards-grid {
+        grid-template-columns: repeat(5, 1fr);
     }
 }
 

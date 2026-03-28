@@ -27,6 +27,13 @@ export const routes: Routes = [
    { path: 'detalle-producto/:id', component: DetalleProductoComponent },
    { path: 'historial', component: HistorialComponent, canActivate: [RolesGuard], data: { expectedRole: ['CLIENTE'] }}, //, canActivate: [RolesGuard]
    { path: 'gestor-reservas', component: GestorReservasComponent, canActivate: [RolesGuard], data: { expectedRole: ['CLIENTE'] } },
+   {
+     path: 'admin',
+     canActivate: [RolesGuard],
+     data: { expectedRole: ['ADMIN'] },
+     loadChildren: () =>
+       import('./admin/admin.routes').then((m) => m.ADMIN_ROUTES),
+   },
    { path: "**", pathMatch: "full", redirectTo: "" }
    
 ];

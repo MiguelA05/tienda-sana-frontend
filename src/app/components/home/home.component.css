@@ -1,5 +1,11 @@
 /* Estilos para la página de inicio */
 
+.home-page {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
 /* Carousel elegante */
 .elegant-carousel-container {
   position: relative;
