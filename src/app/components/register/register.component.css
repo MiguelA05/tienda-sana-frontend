@@ -5,17 +5,31 @@ body {
     padding: 0;
 }
 
-/* Contenedor principal */
-.container {
+/* Fondo a todo el ancho: no usar la clase `container` de Bootstrap (max-width fijo). */
+.register-page {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    max-width: 100%;
     min-height: 100vh;
+    box-sizing: border-box;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     padding: 20px;
     transition: background 0.3s ease;
-    position: relative;
     margin-top: 100px;
+}
+
+.register-page-inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
 }
 
 /* Alerta de contraseñas no coincidentes */
@@ -373,13 +387,15 @@ body {
 }
 
 
-    /* Elementos decorativos */
+    /* Elementos decorativos (referencia: .register-page con position relative) */
 .decorative-circles {
   position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   z-index: 0;
   overflow: hidden;
+  pointer-events: none;
 }
 
 .circle {

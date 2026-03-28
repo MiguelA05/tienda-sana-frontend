@@ -238,7 +238,7 @@
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
   padding: 8px 0;
   border: none;
-  z-index: 1000;
+  z-index: 1050;
   transform: translateY(10px);
   opacity: 0;
   visibility: hidden;

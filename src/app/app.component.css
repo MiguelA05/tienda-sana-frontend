@@ -1,9 +1,8 @@
-/* Vistas públicas: ancho completo y espacio bajo el header fijo */
+/* Vistas públicas: ancho completo (sin padding global: cada vista compensa el header) */
 .main-content--public {
   display: block;
   width: 100%;
   max-width: 100%;
-  padding-top: 96px;
   box-sizing: border-box;
 }
 

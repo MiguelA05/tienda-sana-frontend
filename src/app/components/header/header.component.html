@@ -45,30 +45,41 @@
         <i class="fa-solid fa-user-plus me-2" style="margin-right: 8px;"></i>Registro
       </button>
       } @else {
-      <div class="user-dropdown">
-        <button class="user-button" id="userDropdown" data-bs-toggle="dropdown"
-          aria-expanded="false">
+      <div class="user-dropdown" (click)="$event.stopPropagation()">
+        <button
+          type="button"
+          class="user-button"
+          id="userDropdown"
+          (click)="toggleUserDropdown($event)"
+          [attr.aria-expanded]="isUserDropdownOpen"
+          aria-haspopup="true"
+          aria-controls="userDropdownMenu">
           <div class="user-avatar">
             <i class="fa-solid fa-user"></i>
           </div>
           <span class="user-name">{{ nombreUsuario }}</span>
           <i class="fa-solid fa-chevron-down dropdown-icon"></i>
         </button>
-        <ul class="dropdown-menu">
-          <li class="dropdown-item">
-            <a routerLink="/info-usuario">
+        <ul
+          id="userDropdownMenu"
+          class="dropdown-menu"
+          [class.show]="isUserDropdownOpen"
+          role="menu"
+          [attr.aria-hidden]="!isUserDropdownOpen">
+          <li class="dropdown-item" role="none">
+            <a routerLink="/info-usuario" role="menuitem" (click)="closeUserDropdown()">
               <i class="fa-solid fa-user-circle me-2" style="margin-right: 8px;"></i> Ver perfil
             </a>
           </li>
           <li class="dropdown-divider"></li>
-          <li class="dropdown-item">
-            <a routerLink="/historial">
+          <li class="dropdown-item" role="none">
+            <a routerLink="/historial" role="menuitem" (click)="closeUserDropdown()">
               <i class="fa-solid fa-history me-2" style="margin-right: 8px;"></i> Historial
             </a>
           </li>
           <li class="dropdown-divider"></li>
-          <li class="dropdown-item">
-            <a (click)="logout()">
+          <li class="dropdown-item" role="none">
+            <a href="#" role="menuitem" (click)="logout(); closeUserDropdown(); $event.preventDefault()">
               <i class="fa-solid fa-sign-out-alt me-2" style="margin-right: 8px;"></i> Cerrar sesión
             </a>
           </li>

@@ -13,6 +13,8 @@ import { filter } from 'rxjs/operators';
 })
 export class HeaderComponent {
   isMenuOpen: boolean = false;
+  /** Menú de usuario: control explícito (Bootstrap JS no siempre enlaza bien en Angular). */
+  isUserDropdownOpen = false;
   title: string;
   nombreUsuario: string = "";
   isLogged = false;
@@ -88,6 +90,21 @@ export class HeaderComponent {
 
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  toggleUserDropdown(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isUserDropdownOpen = !this.isUserDropdownOpen;
+  }
+
+  closeUserDropdown(): void {
+    this.isUserDropdownOpen = false;
+  }
+
+  @HostListener('document:click')
+  onDocumentClick(): void {
+    this.isUserDropdownOpen = false;
   }
 
   goHome(event: Event) {

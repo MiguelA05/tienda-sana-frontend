@@ -1,9 +1,12 @@
-/* Contenedor principal */
-.container {
+/* Fondo a todo el ancho: evitar la clase `container` de Bootstrap (max-width fijo). */
+.login-page {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    max-width: 100%;
     min-height: 100vh;
+    box-sizing: border-box;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     padding: 20px;
     transition: background 0.3s ease;
