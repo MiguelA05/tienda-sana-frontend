@@ -24,6 +24,7 @@ import { ProductService } from '../services/product.service';
 import { LotService } from '../services/lot.service';
 import { TableService } from '../services/table.service';
 import { AdminTable } from '../models/admin-table.model';
+import { effectiveTableStatus } from '../services/table.service';
 import { Product } from '../models/product.model';
 import { Supplier } from '../models/supplier.model';
 
@@ -104,10 +105,11 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   private busy(t: AdminTable): boolean {
-    if (!t.active) {
+    if (!t.visibleToClient) {
       return false;
     }
-    return t.status === 'OCCUPIED' || t.status === 'RESERVED';
+    const e = effectiveTableStatus(t);
+    return e === 'OCCUPIED' || e === 'RESERVED';
   }
 
   private destroyCharts(): void {
@@ -172,7 +174,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       const c = new Chart(tblCanvas, {
         type: 'doughnut',
         data: {
-          labels: ['Disponibles', 'Reservadas', 'Ocupadas', 'Inactivas'],
+          labels: ['Disponibles', 'Reservadas', 'Ocupadas', 'Ocultas al público'],
           datasets: [
             {
               data: [
@@ -293,15 +295,16 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     let ocupadas = 0;
     let inactivas = 0;
     for (const t of tables) {
-      if (!t.active) {
+      if (!t.visibleToClient) {
         inactivas++;
         continue;
       }
-      if (t.status === 'AVAILABLE') {
+      const e = effectiveTableStatus(t);
+      if (e === 'AVAILABLE') {
         disponibles++;
-      } else if (t.status === 'RESERVED') {
+      } else if (e === 'RESERVED') {
         reservadas++;
-      } else if (t.status === 'OCCUPIED') {
+      } else if (e === 'OCCUPIED') {
         ocupadas++;
       }
     }

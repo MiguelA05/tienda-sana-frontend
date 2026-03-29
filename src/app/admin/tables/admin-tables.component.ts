@@ -1,15 +1,18 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   FormBuilder,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { TableService } from '../services/table.service';
+import { TableService, TableOperationalStatus } from '../services/table.service';
 import { NotificationService } from '../services/notification.service';
-import { AdminTable, TableOperationalStatus } from '../models/admin-table.model';
+import { AdminTable } from '../models/admin-table.model';
 import { AdminTableMapComponent } from './table-map/table-map.component';
+
+const ESTADOS_MESA = ['Disponible', 'Reservada', 'Ocupada'] as const;
 
 @Component({
   selector: 'app-admin-tables',
@@ -22,16 +25,24 @@ export class AdminTablesComponent implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly tableService = inject(TableService);
   private readonly notify = inject(NotificationService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
   tables: AdminTable[] = [];
   loading = true;
   editingId: string | null = null;
   private sub = new Subscription();
 
+  readonly estadosMesa = ESTADOS_MESA;
+
   readonly form = this.fb.nonNullable.group({
-    capacity: [4, [Validators.required, Validators.min(1)]],
-    location: ['Interior', [Validators.required, Validators.maxLength(120)]],
-    active: [true],
+    nombre: ['', [Validators.required, Validators.maxLength(200)]],
+    estado: ['Disponible' as string, Validators.required],
+    localidad: ['', [Validators.required, Validators.maxLength(120)]],
+    precioReserva: [0, [Validators.required, Validators.min(0)]],
+    capacidad: [4, [Validators.required, Validators.min(1)]],
+    imagen: ['', [Validators.required, Validators.maxLength(2000)]],
+    visibleToClient: [true],
   });
 
   ngOnInit(): void {
@@ -49,6 +60,7 @@ export class AdminTablesComponent implements OnInit, OnDestroy {
         next: (rows) => {
           this.tables = rows;
           this.loading = false;
+          this.applyEditQueryParam();
         },
         error: () => {
           this.notify.error('No se pudieron cargar las mesas');
@@ -61,18 +73,47 @@ export class AdminTablesComponent implements OnInit, OnDestroy {
   startCreate(): void {
     this.editingId = null;
     this.form.reset({
-      capacity: 4,
-      location: 'Interior',
-      active: true,
+      nombre: '',
+      estado: 'Disponible',
+      localidad: '',
+      precioReserva: 0,
+      capacidad: 4,
+      imagen: '',
+      visibleToClient: true,
     });
   }
 
   startEdit(row: AdminTable): void {
     this.editingId = row.id;
     this.form.patchValue({
-      capacity: row.capacity,
-      location: row.location,
-      active: row.active,
+      nombre: row.nombre,
+      estado: ESTADOS_MESA.includes(row.estado as (typeof ESTADOS_MESA)[number])
+        ? row.estado
+        : 'Disponible',
+      localidad: row.localidad,
+      precioReserva: row.precioReserva,
+      capacidad: row.capacidad,
+      imagen: row.imagen,
+      visibleToClient: row.visibleToClient,
+    });
+  }
+
+  /** Desde la tienda pública: `/admin/tables?edit=<id>` abre el formulario con esa mesa. */
+  private applyEditQueryParam(): void {
+    const editId = this.route.snapshot.queryParamMap.get('edit');
+    if (!editId) {
+      return;
+    }
+    const row = this.tables.find((t) => t.id === editId);
+    if (row) {
+      this.startEdit(row);
+    } else {
+      this.notify.warning('No se encontró la mesa indicada.');
+    }
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {},
+      replaceUrl: true,
     });
   }
 
@@ -88,49 +129,46 @@ export class AdminTablesComponent implements OnInit, OnDestroy {
       return;
     }
     const v = this.form.getRawValue();
+    const payload = {
+      nombre: v.nombre,
+      estado: v.estado,
+      localidad: v.localidad,
+      precioReserva: v.precioReserva,
+      capacidad: v.capacidad,
+      imagen: v.imagen,
+      visibleToClient: v.visibleToClient,
+    };
     if (this.editingId) {
       this.sub.add(
-        this.tableService
-          .update(this.editingId, {
-            capacity: v.capacity,
-            location: v.location,
-            active: v.active,
-          })
-          .subscribe({
-            next: () => {
-              this.notify.success('Mesa actualizada');
-              this.cancelEdit();
-              this.refresh();
-            },
-            error: (e) => this.notify.error(e.message ?? 'Error'),
-          }),
+        this.tableService.update(this.editingId, payload).subscribe({
+          next: () => {
+            this.notify.success('Mesa actualizada');
+            this.cancelEdit();
+            this.refresh();
+          },
+          error: (e) => this.notify.error(e.message ?? 'Error'),
+        }),
       );
     } else {
       this.sub.add(
-        this.tableService
-          .create({
-            capacity: v.capacity,
-            location: v.location,
-            active: v.active,
-          })
-          .subscribe({
-            next: () => {
-              this.notify.success('Mesa creada');
-              this.cancelEdit();
-              this.refresh();
-            },
-            error: (e) => this.notify.error(e.message ?? 'Error'),
-          }),
+        this.tableService.create(payload).subscribe({
+          next: () => {
+            this.notify.success('Mesa creada');
+            this.cancelEdit();
+            this.refresh();
+          },
+          error: (e) => this.notify.error(e.message ?? 'Error'),
+        }),
       );
     }
   }
 
   onWalkInCycle(t: AdminTable): void {
-    if (!t.active) {
+    if (!t.visibleToClient) {
       return;
     }
     this.sub.add(
-      this.tableService.cycleOperationalStatus(t.id, t.status).subscribe({
+      this.tableService.cycleOperationalStatus(t.id, t).subscribe({
         next: () => {
           this.notify.info('Estado operativo actualizado');
           this.refresh();
@@ -140,17 +178,23 @@ export class AdminTablesComponent implements OnInit, OnDestroy {
     );
   }
 
-  toggleActive(row: AdminTable): void {
+  toggleVisibleToClient(row: AdminTable): void {
     this.sub.add(
       this.tableService
         .update(row.id, {
-          capacity: row.capacity,
-          location: row.location,
-          active: !row.active,
+          nombre: row.nombre,
+          estado: row.estado,
+          localidad: row.localidad,
+          precioReserva: row.precioReserva,
+          capacidad: row.capacidad,
+          imagen: row.imagen,
+          visibleToClient: !row.visibleToClient,
         })
         .subscribe({
           next: () => {
-            this.notify.success(row.active ? 'Mesa deshabilitada' : 'Mesa habilitada');
+            this.notify.success(
+              row.visibleToClient ? 'Mesa oculta del catálogo público' : 'Mesa visible en el catálogo',
+            );
             this.refresh();
           },
           error: (e) => this.notify.error(e.message ?? 'Error'),

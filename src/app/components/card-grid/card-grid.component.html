@@ -14,19 +14,29 @@
             }}</p>
         </div>
         <div class="card-footer text-center">
-          <button
-            class="btn-custom"
-            (click)="agregarAlCarrito($event, item)"
-            [disabled]="isLoading">
-            <ng-container *ngIf="!isLoading">
-              <i class="bi bi-cart me-2"></i>Agregar al carrito
-            </ng-container>
-            <ng-container *ngIf="isLoading">
-              <span class="spinner-border spinner-border-sm" role="status"
-                aria-hidden="true"></span>
-              Procesando...
-            </ng-container>
-          </button>
+          @if (isAdmin) {
+            <button
+              type="button"
+              class="btn-custom"
+              (click)="irAEditarProductoAdmin($event, item)">
+              <i class="bi bi-pencil-square me-2" aria-hidden="true"></i>
+              Editar producto
+            </button>
+          } @else {
+            <button
+              class="btn-custom"
+              (click)="agregarAlCarrito($event, item)"
+              [disabled]="isLoading">
+              <ng-container *ngIf="!isLoading">
+                <i class="bi bi-cart me-2"></i>Agregar al carrito
+              </ng-container>
+              <ng-container *ngIf="isLoading">
+                <span class="spinner-border spinner-border-sm" role="status"
+                  aria-hidden="true"></span>
+                Procesando...
+              </ng-container>
+            </button>
+          }
         </div>
       </div>
     </div>

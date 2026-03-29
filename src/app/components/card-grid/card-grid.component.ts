@@ -27,6 +27,10 @@ export class CardGridComponent {
   cantidadSeleccionada: number = 1;
   producto?: ProductoDTO;
 
+  get isAdmin(): boolean {
+    return this.tokenService.getRol() === 'ADMIN';
+  }
+
   constructor(private router: Router,
     private clienteService: ClienteService,
     private tokenService: TokenService,
@@ -39,6 +43,11 @@ export class CardGridComponent {
    */
   irADetalleProducto(id: string): void {
     this.router.navigate(['/detalle-producto', id]);
+  }
+
+  irAEditarProductoAdmin(event: Event, producto: ItemProductoDTO): void {
+    event.stopPropagation();
+    void this.router.navigate(['/admin', 'products'], { queryParams: { edit: producto.id } });
   }
 
   /**

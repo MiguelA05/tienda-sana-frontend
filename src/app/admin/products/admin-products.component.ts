@@ -1,5 +1,6 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   FormBuilder,
   ReactiveFormsModule,
@@ -21,6 +22,8 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly productService = inject(ProductService);
   private readonly notify = inject(NotificationService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
   products: Product[] = [];
   loading = true;
@@ -51,6 +54,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
         next: (rows) => {
           this.products = rows;
           this.loading = false;
+          this.applyEditQueryParam();
         },
         error: () => {
           this.notify.error('No se pudieron cargar los productos');
@@ -75,6 +79,25 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
       category: row.category,
       price: row.price,
       outOfStock: row.outOfStock,
+    });
+  }
+
+  /** Desde la tienda pública: `/admin/products?edit=<id>` abre el formulario con ese producto. */
+  private applyEditQueryParam(): void {
+    const editId = this.route.snapshot.queryParamMap.get('edit');
+    if (!editId) {
+      return;
+    }
+    const row = this.products.find((p) => p.id === editId);
+    if (row) {
+      this.startEdit(row);
+    } else {
+      this.notify.warning('No se encontró el producto indicado en el catálogo.');
+    }
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {},
+      replaceUrl: true,
     });
   }
 

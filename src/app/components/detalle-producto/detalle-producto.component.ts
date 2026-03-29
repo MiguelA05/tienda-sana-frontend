@@ -28,6 +28,11 @@ export class DetalleProductoComponent implements OnInit {
   precioOriginal: number = 0;
   isLoading: boolean=false;
 
+  /** Sesión administrador: edición en panel en lugar de carrito. */
+  get isAdmin(): boolean {
+    return this.tokenService.getRol() === 'ADMIN';
+  }
+
 
   /**
    * Constructor de la clase DetalleProductoComponent
@@ -94,6 +99,9 @@ export class DetalleProductoComponent implements OnInit {
    * Método para crear el formulario reactivo
    */
   incrementarCantidad(): void {
+    if (this.isAdmin) {
+      return;
+    }
     if (this.producto && this.cantidadSeleccionada < this.producto.cantidad) {
       this.cantidadSeleccionada++;
     }
@@ -103,9 +111,21 @@ export class DetalleProductoComponent implements OnInit {
    * Método para crear el formulario reactivo
    */
   decrementarCantidad(): void {
+    if (this.isAdmin) {
+      return;
+    }
     if (this.cantidadSeleccionada > 1) {
       this.cantidadSeleccionada--;
     }
+  }
+
+  /** Navega al formulario de productos del admin con el producto seleccionado. */
+  irAEditarEnAdmin(): void {
+    const id = this.producto?.id;
+    if (!id) {
+      return;
+    }
+    void this.router.navigate(['/admin', 'products'], { queryParams: { edit: id } });
   }
 
   /**
@@ -143,6 +163,9 @@ export class DetalleProductoComponent implements OnInit {
    * @returns true si el producto está en el carrito, false si no lo está
    */
   agregarAlCarrito(): void {
+    if (this.isAdmin) {
+      return;
+    }
     this.isLoading = true;
 
     if (!this.tokenService.getToken()) {

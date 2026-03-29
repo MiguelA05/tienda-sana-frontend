@@ -21,7 +21,7 @@ export class AdminTableMapComponent {
   }
 
   cardClass(t: AdminTable): string {
-    if (!t.active) {
+    if (!t.visibleToClient) {
       return 'map-card map-card--disabled';
     }
     const e = this.effective(t);
@@ -34,21 +34,15 @@ export class AdminTableMapComponent {
     return 'map-card map-card--free';
   }
 
-  /** Etiqueta en español alineada con el estado efectivo (mismo criterio que el color de la tarjeta). */
+  /** Mismo texto de estado que ve el cliente en el catálogo. */
   statusLabel(t: AdminTable): string {
-    if (!t.active) {
-      return 'Inactiva';
+    if (!t.visibleToClient) {
+      return 'Oculta al público';
     }
-    const e = this.effective(t);
-    const m: Record<TableDisplayStatus, string> = {
-      AVAILABLE: 'Disponible',
-      RESERVED: 'Reservada',
-      OCCUPIED: 'Ocupada',
-    };
-    return m[e] ?? e;
+    return t.estado?.trim() || '—';
   }
 
-  /** Referencia corta para no mostrar el ObjectId completo. */
+  /** Referencia corta para no mostrar el id completo. */
   shortRef(id: string): string {
     if (!id || id.length <= 10) {
       return id;
@@ -57,7 +51,7 @@ export class AdminTableMapComponent {
   }
 
   onCardClick(t: AdminTable): void {
-    if (!t.active) {
+    if (!t.visibleToClient) {
       return;
     }
     this.walkInCycle.emit(t);

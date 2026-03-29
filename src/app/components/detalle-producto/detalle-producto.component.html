@@ -49,60 +49,74 @@
         </dl>
 
         <div class="product-checkout">
-          <h2 class="product-checkout__title">Añadir al carrito</h2>
+          <h2 class="product-checkout__title">
+            {{ isAdmin ? 'Gestión del producto' : 'Añadir al carrito' }}
+          </h2>
           <div class="product-checkout__price-line">
             <span class="text-muted">Precio unitario</span>
             <strong>{{ producto.precioUnitario | currency }}</strong>
           </div>
 
-          <div class="product-qty">
-            <label class="product-qty__label" for="qty-detail">Cantidad</label>
-            <div class="product-qty__controls">
-              <button
-                type="button"
-                class="product-qty__btn"
-                (click)="decrementarCantidad()"
-                [disabled]="cantidadSeleccionada <= 1 || producto.cantidad <= 0">
-                −
-              </button>
-              <input
-                id="qty-detail"
-                type="number"
-                class="product-qty__input"
-                [(ngModel)]="cantidadSeleccionada"
-                min="1"
-                [max]="producto.cantidad"
-                [disabled]="producto.cantidad <= 0" />
-              <button
-                type="button"
-                class="product-qty__btn"
-                (click)="incrementarCantidad()"
-                [disabled]="cantidadSeleccionada >= producto.cantidad || producto.cantidad <= 0">
-                +
-              </button>
+          @if (!isAdmin) {
+            <div class="product-qty">
+              <label class="product-qty__label" for="qty-detail">Cantidad</label>
+              <div class="product-qty__controls">
+                <button
+                  type="button"
+                  class="product-qty__btn"
+                  (click)="decrementarCantidad()"
+                  [disabled]="cantidadSeleccionada <= 1 || producto.cantidad <= 0">
+                  −
+                </button>
+                <input
+                  id="qty-detail"
+                  type="number"
+                  class="product-qty__input"
+                  [(ngModel)]="cantidadSeleccionada"
+                  min="1"
+                  [max]="producto.cantidad"
+                  [disabled]="producto.cantidad <= 0" />
+                <button
+                  type="button"
+                  class="product-qty__btn"
+                  (click)="incrementarCantidad()"
+                  [disabled]="cantidadSeleccionada >= producto.cantidad || producto.cantidad <= 0">
+                  +
+                </button>
+              </div>
             </div>
-          </div>
+          }
 
-          <button
-            type="button"
-            class="product-btn-cart"
-            [disabled]="producto.cantidad <= 0 || isLoading"
-            (click)="agregarAlCarrito()">
-            @if (!isLoading) {
-              <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
-              Agregar al carrito
-            } @else {
-              <span class="spinner-border spinner-border-sm" role="status"></span>
-              Procesando…
-            }
-          </button>
-
-          @if (producto.cantidad > 0) {
-            <p class="product-total">
-              Total: <strong>{{ cantidadSeleccionada * producto.precioUnitario | currency }}</strong>
+          @if (isAdmin) {
+            <button type="button" class="product-btn-cart" (click)="irAEditarEnAdmin()">
+              <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+              Editar producto
+            </button>
+            <p class="product-checkout__admin-hint text-muted small mt-3 mb-0">
+              Se abrirá el panel de administración con los datos de este producto.
             </p>
           } @else {
-            <p class="product-out-stock">Producto agotado. Prueba más tarde.</p>
+            <button
+              type="button"
+              class="product-btn-cart"
+              [disabled]="producto.cantidad <= 0 || isLoading"
+              (click)="agregarAlCarrito()">
+              @if (!isLoading) {
+                <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+                Agregar al carrito
+              } @else {
+                <span class="spinner-border spinner-border-sm" role="status"></span>
+                Procesando…
+              }
+            </button>
+
+            @if (producto.cantidad > 0) {
+              <p class="product-total">
+                Total: <strong>{{ cantidadSeleccionada * producto.precioUnitario | currency }}</strong>
+              </p>
+            } @else {
+              <p class="product-out-stock">Producto agotado. Prueba más tarde.</p>
+            }
           }
         </div>
       </div>

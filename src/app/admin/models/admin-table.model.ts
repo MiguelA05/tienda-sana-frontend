@@ -1,17 +1,20 @@
-/** Estado operativo de la mesa (API: TableStatus). */
-export type TableOperationalStatus = 'AVAILABLE' | 'RESERVED' | 'OCCUPIED';
-
-/** Vista en mapa / badges (misma escala que el backend). */
-export type TableDisplayStatus = TableOperationalStatus;
-
+/**
+ * Mesa en panel admin: mismos campos que el catálogo público (`reservation_tables` / ItemMesaDTO).
+ */
 export interface AdminTable {
   id: string;
-  capacity: number;
-  location: string;
-  /** Si está inactiva, no se usa en sala. */
-  active: boolean;
-  status: TableOperationalStatus;
+  nombre: string;
+  estado: string;
+  localidad: string;
+  precioReserva: number;
+  capacidad: number;
+  imagen: string;
+  /** Si es false, la mesa no se lista para el cliente. */
+  visibleToClient: boolean;
 }
 
-export type AdminTableCreateDto = Pick<AdminTable, 'capacity' | 'location' | 'active'>;
+/** Estado operativo para colores del mapa (derivado de `estado` en español). */
+export type TableDisplayStatus = 'AVAILABLE' | 'RESERVED' | 'OCCUPIED';
+
+export type AdminTableCreateDto = Omit<AdminTable, 'id'>;
 export type AdminTableUpdateDto = Partial<AdminTableCreateDto>;

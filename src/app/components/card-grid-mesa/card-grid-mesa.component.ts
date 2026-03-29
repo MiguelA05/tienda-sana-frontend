@@ -23,6 +23,10 @@ export class CardGridMesaComponent {
   cantidadSeleccionada: number = 1;
   isLoading: boolean = false;
 
+  get isAdmin(): boolean {
+    return this.tokenService.getRol() === 'ADMIN';
+  }
+
   constructor(private router: Router,
               private clienteService: ClienteService,
               private tokenService: TokenService) {
@@ -33,10 +37,17 @@ export class CardGridMesaComponent {
     this.router.navigate(['/mesas', id]);
   }
 
-  reservarMesa(event: Event, mesa: ItemMesaDTO): void {
-    console.log("Programar la funcion de registrar reserva");
+  irAEditarMesaAdmin(event: Event, mesa: ItemMesaDTO): void {
+    event.stopPropagation();
+    void this.router.navigate(['/admin', 'tables'], { queryParams: { edit: mesa.id } });
+  }
 
+  reservarMesa(event: Event, mesa: ItemMesaDTO): void {
     event.stopPropagation(); // Detener propagación del evento
+
+    if (this.isAdmin) {
+      return;
+    }
 
     if (!this.tokenService.getToken()) {
       Swal.fire({
