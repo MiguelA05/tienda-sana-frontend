@@ -132,6 +132,12 @@
     padding: 15px;
 }
 
+.card-footer-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 /* Botón personalizado */
 .btn-custom {
     background: linear-gradient(135deg, #198754 0%, #20c997 100%);
@@ -144,6 +150,18 @@
     box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
     font-size: 1.5rem;
     width: 100%;
+}
+
+.btn-custom--ghost {
+    background: #ffffff;
+    color: #198754;
+    border: 1px solid rgba(25, 135, 84, 0.35);
+    box-shadow: none;
+}
+
+.btn-custom--ghost:hover:not(:disabled) {
+    background: #f4fbf7;
+    box-shadow: 0 6px 14px rgba(25, 135, 84, 0.16);
 }
 
 .btn-custom:disabled {

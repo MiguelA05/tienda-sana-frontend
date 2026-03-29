@@ -9,6 +9,7 @@ import { CrearVentaDTO } from '../dto/crear-venta-dto';
 import { MesaDTO } from '../dto/mesa-dto';
 import { BorrarMesaGestorDTO } from '../dto/borrar-mesa-gestor-dto';
 import { CrearReservaDTO } from '../dto/crear-reserva-dto';
+import { CrearReservaDirectaDTO } from '../dto/crear-reserva-directa-dto';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -110,6 +111,10 @@ export class ClienteService {
 
   public crearReserva(crearReservaDTO: CrearReservaDTO): Observable<MensajeDTO> {
     return this.http.post<MensajeDTO>(`${this.clienteURL}/reserva/create`, crearReservaDTO);
+  }
+
+  public crearReservaDirecta(crearReservaDirectaDTO: CrearReservaDirectaDTO): Observable<MensajeDTO> {
+    return this.http.post<MensajeDTO>(`${this.clienteURL}/reserva/create-direct`, crearReservaDirectaDTO);
   }
 
   /**

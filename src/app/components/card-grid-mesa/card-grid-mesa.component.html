@@ -26,15 +26,19 @@
               Editar mesa
             </button>
           } @else {
-            <button class="btn btn-custom" (click)="reservarMesa($event, mesa)" [disabled]="isLoading">
-              <ng-container *ngIf="!isLoading">
-                <i class="bi bi-calendar-check me-2"></i>Agregar a gestor de reservas
-              </ng-container>
-              <ng-container *ngIf="isLoading">
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                Procesando...
-              </ng-container>
-            </button>
+            <div class="card-footer-actions">
+              <button class="btn btn-custom btn-custom--ghost" (click)="abrirDetalleDesdeBoton($event, mesa)">
+                <i class="bi bi-eye me-2"></i>Ver detalle
+              </button>
+              <button class="btn btn-custom" (click)="agregarAGestorReservas($event, mesa)" [disabled]="isLoading">
+                @if (!isLoading) {
+                  <i class="bi bi-calendar-plus me-2"></i>Agregar al gestor
+                } @else {
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  Procesando...
+                }
+              </button>
+            </div>
           }
         </div>
       </div>

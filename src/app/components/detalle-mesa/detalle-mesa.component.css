@@ -1,0 +1,368 @@
+/* Detalle de mesa: mantiene el mismo fondo visual del detalle de producto para consistencia */
+
+.mesa-detail-page {
+  --detail-bg-top: #eef6f1;
+  --detail-bg-mid: #f7fbf9;
+  --detail-bg-bottom: #ffffff;
+  --detail-glow-a: rgba(25, 135, 84, 0.09);
+  --detail-glow-b: rgba(32, 201, 151, 0.11);
+  --detail-glow-c: rgba(25, 135, 84, 0.06);
+
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding-top: 96px;
+  padding-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  background-color: var(--detail-bg-mid);
+  background-image:
+    radial-gradient(ellipse 120% 80% at 0% 0%, var(--detail-glow-a), transparent 55%),
+    radial-gradient(ellipse 100% 70% at 100% 15%, var(--detail-glow-b), transparent 50%),
+    radial-gradient(ellipse 90% 60% at 50% 100%, var(--detail-glow-c), transparent 52%),
+    repeating-linear-gradient(
+      105deg,
+      transparent 0,
+      transparent 11px,
+      rgba(25, 135, 84, 0.04) 11px,
+      rgba(25, 135, 84, 0.04) 12px
+    ),
+    linear-gradient(
+      180deg,
+      var(--detail-bg-top) 0%,
+      var(--detail-bg-mid) 38%,
+      var(--detail-bg-bottom) 100%
+    );
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, no-repeat;
+}
+
+.mesa-detail-page::before,
+.mesa-detail-page::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 50%;
+  filter: blur(64px);
+  opacity: 0.85;
+}
+
+.mesa-detail-page::before {
+  width: min(420px, 55vw);
+  height: min(420px, 55vw);
+  top: 8%;
+  left: -8%;
+  background: radial-gradient(circle at 30% 30%, rgba(32, 201, 151, 0.35), transparent 70%);
+}
+
+.mesa-detail-page::after {
+  width: min(380px, 50vw);
+  height: min(380px, 50vw);
+  bottom: 5%;
+  right: -6%;
+  background: radial-gradient(circle at 70% 70%, rgba(25, 135, 84, 0.28), transparent 72%);
+}
+
+.mesa-detail-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .mesa-detail-inner {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+.mesa-breadcrumb {
+  font-size: 0.875rem;
+  color: #6c757d;
+  margin-bottom: 1.5rem;
+}
+
+.mesa-breadcrumb a {
+  color: #198754;
+  text-decoration: none;
+}
+
+.mesa-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.mesa-breadcrumb__sep {
+  margin: 0 0.35rem;
+  opacity: 0.6;
+}
+
+.mesa-breadcrumb__current {
+  color: #495057;
+  font-weight: 500;
+}
+
+.mesa-detail__col-gallery {
+  position: relative;
+  min-height: 0;
+}
+
+.mesa-gallery {
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  aspect-ratio: 4 / 3;
+  max-height: min(520px, 70vh);
+}
+
+@media (min-width: 992px) {
+  .mesa-detail__col-gallery {
+    align-self: stretch;
+  }
+
+  .mesa-gallery {
+    position: absolute;
+    inset: 0;
+    width: auto;
+    height: auto;
+    max-height: none;
+    aspect-ratio: auto;
+  }
+}
+
+.mesa-gallery__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.mesa-gallery:hover .mesa-gallery__img {
+  transform: scale(1.02);
+}
+
+.mesa-header {
+  margin-bottom: 1rem;
+}
+
+.mesa-pill {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #0f5132;
+  background: rgba(25, 135, 84, 0.12);
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  margin-bottom: 0.75rem;
+}
+
+.mesa-title {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  color: #212529;
+  line-height: 1.2;
+  margin: 0 0 0.75rem;
+}
+
+.mesa-price-block {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.mesa-price {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #198754;
+}
+
+.mesa-price-caption {
+  font-size: 0.95rem;
+  color: #6c757d;
+}
+
+.mesa-lead {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: #495057;
+  margin: 0 0 1.5rem;
+  max-width: 36rem;
+}
+
+.mesa-meta {
+  margin: 0 0 1.75rem;
+  padding: 1rem 1.15rem;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.mesa-meta__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.mesa-meta__row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.mesa-meta__row:first-child {
+  padding-top: 0;
+}
+
+.mesa-meta dt {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #6c757d;
+}
+
+.mesa-meta dd {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #212529;
+  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.mesa-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.mesa-status-dot--ok {
+  background: #198754;
+  box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.25);
+}
+
+.mesa-status-dot--warn {
+  background: #e8b923;
+  box-shadow: 0 0 0 3px rgba(232, 185, 35, 0.35);
+}
+
+.mesa-status-dot--out {
+  background: #adb5bd;
+  box-shadow: 0 0 0 3px rgba(173, 181, 189, 0.35);
+}
+
+.mesa-checkout {
+  padding: 1.35rem 1.5rem;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 8px 28px rgba(25, 135, 84, 0.08);
+}
+
+.mesa-checkout__title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #212529;
+  margin: 0 0 1rem;
+}
+
+.mesa-checkout__price-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  margin-bottom: 1.125rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed #dee2e6;
+}
+
+.mesa-reserva-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mesa-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
+}
+
+@media (min-width: 576px) {
+  .mesa-form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.mesa-form-field label {
+  display: block;
+  font-size: 0.85rem;
+  color: #495057;
+  margin-bottom: 0.35rem;
+  font-weight: 500;
+}
+
+.mesa-btn-main {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+  box-shadow: 0 10px 22px rgba(25, 135, 84, 0.22);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.mesa-btn-main:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(25, 135, 84, 0.26);
+}
+
+.mesa-btn-main:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.mesa-btn-main:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.mesa-total {
+  margin-top: 0.9rem;
+  font-size: 0.95rem;
+  color: #495057;
+}
+
+.mesa-total strong {
+  color: #198754;
+}
+
+.mesa-out-stock {
+  margin-top: 0.9rem;
+  font-size: 0.92rem;
+  color: #6c757d;
+}

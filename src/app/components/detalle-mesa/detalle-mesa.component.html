@@ -1,1 +1,118 @@
-<p>detalle-mesa works!</p>
+@if (mesa) {
+<section class="mesa-detail-page">
+	<div class="mesa-detail-inner">
+		<nav class="mesa-breadcrumb" aria-label="Migas de pan">
+			<a routerLink="/">Inicio</a>
+			<span class="mesa-breadcrumb__sep" aria-hidden="true">/</span>
+			<a routerLink="/" [queryParams]="{ view: 'mesas' }">Mesas</a>
+			<span class="mesa-breadcrumb__sep" aria-hidden="true">/</span>
+			<span class="mesa-breadcrumb__current">{{ mesa.nombre }}</span>
+		</nav>
+
+		<div class="row g-4 g-xl-5 align-items-start align-items-lg-stretch mesa-detail__row">
+			<div class="col-lg-6 mesa-detail__col-gallery">
+				<div class="mesa-gallery">
+					<img class="mesa-gallery__img" [src]="mesa.imagen" [alt]="'Foto de ' + mesa.nombre" loading="lazy" />
+				</div>
+			</div>
+
+			<div class="col-lg-6">
+				<header class="mesa-header">
+					<span class="mesa-pill">Reserva de mesa</span>
+					<h1 class="mesa-title">{{ mesa.nombre }}</h1>
+					<div class="mesa-price-block">
+						<span class="mesa-price">{{ mesa.precioReserva | currency }}</span>
+						<span class="mesa-price-caption">precio de reserva</span>
+					</div>
+				</header>
+
+				<p class="mesa-lead">
+					Espacio en <strong>{{ mesa.localidad }}</strong>, ideal para una experiencia tranquila y cómoda.
+				</p>
+
+				<dl class="mesa-meta">
+					<div class="mesa-meta__row">
+						<dt>Estado actual</dt>
+						<dd>
+							<span class="mesa-status-dot" [ngClass]="estadoCssClass()"></span>
+							{{ disponibilidadLabel() }}
+						</dd>
+					</div>
+					<div class="mesa-meta__row">
+						<dt>Capacidad máxima</dt>
+						<dd>{{ mesa.capacidad }} personas</dd>
+					</div>
+					<div class="mesa-meta__row">
+						<dt>Zona</dt>
+						<dd>{{ mesa.localidad }}</dd>
+					</div>
+				</dl>
+
+				<div class="mesa-checkout">
+					<h2 class="mesa-checkout__title">
+						{{ isAdmin ? 'Gestión de mesa' : 'Reservar y pagar ahora' }}
+					</h2>
+
+					<div class="mesa-checkout__price-line">
+						<span class="text-muted">Valor de reserva</span>
+						<strong>{{ mesa.precioReserva | currency }}</strong>
+					</div>
+
+					@if (isAdmin) {
+						<button type="button" class="mesa-btn-main" (click)="irAEditarEnAdmin()">
+							<i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+							Editar mesa
+						</button>
+						<p class="text-muted small mt-3 mb-0">Se abrirá el panel de administración para esta mesa.</p>
+					} @else {
+						<form [formGroup]="reservaForm" class="mesa-reserva-form" (ngSubmit)="reservarYPagarDirecto()">
+							<div class="mesa-form-grid">
+								<div class="mesa-form-field">
+									<label for="cantidadPersonas">Personas</label>
+									<input
+										id="cantidadPersonas"
+										type="number"
+										class="form-control"
+										formControlName="cantidadPersonas"
+										min="1"
+										[max]="mesa.capacidad" />
+								</div>
+								<div class="mesa-form-field">
+									<label for="fechaReserva">Fecha y hora</label>
+									<input
+										id="fechaReserva"
+										type="datetime-local"
+										class="form-control"
+										formControlName="fechaReserva"
+										[min]="minDateTimeLocal" />
+								</div>
+							</div>
+
+							<button
+								type="submit"
+								class="mesa-btn-main"
+								[disabled]="isLoading || (mesa.estado | lowercase) !== 'disponible'">
+								@if (!isLoading) {
+									<i class="fa-solid fa-credit-card" aria-hidden="true"></i>
+									Reservar y pagar
+								} @else {
+									<span class="spinner-border spinner-border-sm" role="status"></span>
+									Procesando reserva...
+								}
+							</button>
+						</form>
+
+						@if ((mesa.estado | lowercase) !== 'disponible') {
+							<p class="mesa-out-stock">Esta mesa no está disponible para reserva inmediata.</p>
+						} @else {
+							<p class="mesa-total">
+								Total a pagar: <strong>{{ mesa.precioReserva | currency }}</strong>
+							</p>
+						}
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+}
