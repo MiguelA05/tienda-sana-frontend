@@ -1,5 +1,5 @@
 /**
- * Mesa en panel admin: mismos campos que el catálogo público (`reservation_tables` / ItemMesaDTO).
+ * Mesa en panel admin: mismos campos que el catálogo público (colección tables / ItemMesaDTO).
  */
 export interface AdminTable {
   id: string;
