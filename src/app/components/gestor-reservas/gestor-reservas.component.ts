@@ -31,8 +31,13 @@ export function fechaHoraFuturaValidator(): (control: AbstractControl) => Valida
   styleUrl: './gestor-reservas.component.css'
 })
 export class GestorReservasComponent {
+  private static readonly RESERVA_ANTICIPACION_MINUTOS = 30;
+  private static readonly DURACION_DEFAULT_MINUTOS = 120;
+
   gestorForm!: FormGroup;
   mesasSeleccionadas: MesaDTO[] = [];
+  hourOptions: Array<{ value: string; label: string }> = [];
+  minDateLocal = this.buildMinDateLocal();
   fechaActual: Date = new Date(); 
   isLoading: boolean = false;
   emailUsuario: string = '';
@@ -47,10 +52,12 @@ export class GestorReservasComponent {
 
   ngOnInit(): void {
     this.gestorForm = this.fb.group({
-      cantidadPersonasForm: [1, [Validators.required, Validators.min(1), this.capacidadPersonasValidator()]],
-      fechaReservaForm: ['', [Validators.required, fechaHoraFuturaValidator()]]
+      cantidadPersonasForm: [1, [Validators.required, this.capacidadPersonasValidator()]],
+      fechaReservaDateForm: ['', Validators.required],
+      horaReservaForm: ['', Validators.required]
     });
 
+    this.initDateAndHourDefaults();
     this.isLoading = true;
     this.cargarMesasSeleccionadas();
     // Mover isLoading a false al final de cargarMesasSeleccionadas o en el 'finalize'
@@ -58,8 +65,15 @@ export class GestorReservasComponent {
 
   capacidadPersonasValidator(): (control: AbstractControl) => ValidationErrors | null {
     return (control: AbstractControl): ValidationErrors | null => {
-      const cantidadPersonas = control.value;
+      const cantidadPersonas = Number(control.value);
+      const minimo = this.minimoPersonas();
       const capacidadTotal = this.calcularCapacidadTotal();
+      if (!Number.isFinite(cantidadPersonas)) {
+        return { cantidadInvalida: true };
+      }
+      if (cantidadPersonas < minimo) {
+        return { personasMinimas: { minimoRequerido: minimo } };
+      }
       if (this.mesasSeleccionadas.length > 0 && cantidadPersonas > capacidadTotal) {
         return { capacidadExcedida: { capacidadRequerida: cantidadPersonas, capacidadDisponible: capacidadTotal } };
       }
@@ -76,7 +90,9 @@ export class GestorReservasComponent {
       next: (response) => {
         this.mesasSeleccionadas = response.reply;
         console.log("Items del gestor:", this.mesasSeleccionadas);
+        this.normalizeCantidadPersonasValue();
         this.gestorForm.get('cantidadPersonasForm')?.updateValueAndValidity();
+        this.rebuildHourOptions();
         this.isLoading = false;
       },
       error: (error) => {
@@ -98,7 +114,9 @@ export class GestorReservasComponent {
       next: () => {
         this.mesasSeleccionadas.splice(index, 1);
         // Actualizar la validez del control de cantidad de personas después de eliminar una mesa
+        this.normalizeCantidadPersonasValue();
         this.gestorForm.get('cantidadPersonasForm')?.updateValueAndValidity();
+        this.rebuildHourOptions();
       },
       error: (error) => {
         console.error('Error al eliminar el ítem:', error);
@@ -140,6 +158,16 @@ export class GestorReservasComponent {
     return this.mesasSeleccionadas.reduce((total, mesa) => total + Number(mesa.capacidad), 0);
   }
 
+  minimoPersonas(): number {
+    const mesas = this.mesasSeleccionadas?.length ?? 0;
+    return Math.max(mesas, 1);
+  }
+
+  maximoPersonas(): number {
+    const capacidadTotal = this.calcularCapacidadTotal();
+    return Math.max(capacidadTotal, this.minimoPersonas());
+  }
+
   continuarSeleccion(): void {
     this.router.navigate(['/?view=mesas']);
   }
@@ -152,32 +180,41 @@ export class GestorReservasComponent {
 
     if (this.gestorForm.invalid) {
    
-      if (this.gestorForm.get('fechaReservaForm')?.hasError('fechaPasada')) {
-        Swal.fire('Fecha Inválida', 'La fecha y hora de la reserva deben ser posteriores al momento actual.', 'warning');
-        return; // Detener si la fecha es pasada
-      }
       if (this.gestorForm.get('cantidadPersonasForm')?.hasError('capacidadExcedida')) {
          Swal.fire('Capacidad Excedida', 'La cantidad de personas excede la capacidad de las mesas seleccionadas.', 'warning');
         return;
       }
-       if (this.gestorForm.get('cantidadPersonasForm')?.hasError('required') || this.gestorForm.get('cantidadPersonasForm')?.hasError('min')) {
-        Swal.fire('Cantidad de Personas Inválida', 'Por favor, ingrese una cantidad válida de personas (mínimo 1).', 'warning');
+       if (this.gestorForm.get('cantidadPersonasForm')?.hasError('required') || this.gestorForm.get('cantidadPersonasForm')?.hasError('cantidadInvalida')) {
+        Swal.fire('Cantidad de personas inválida', 'Ingresa una cantidad numérica válida de personas.', 'warning');
         return;
       }
-      if (this.gestorForm.get('fechaReservaForm')?.hasError('required')) {
-        Swal.fire('Fecha Requerida', 'Por favor, seleccione una fecha y hora para la reserva.', 'warning');
+      if (this.gestorForm.get('cantidadPersonasForm')?.hasError('personasMinimas')) {
+        Swal.fire('Cantidad mínima no válida', `Debes reservar al menos ${this.minimoPersonas()} persona(s), una por cada mesa seleccionada.`, 'warning');
+        return;
+      }
+      if (this.gestorForm.get('fechaReservaDateForm')?.hasError('required') || this.gestorForm.get('horaReservaForm')?.hasError('required')) {
+        Swal.fire('Fecha Requerida', 'Por favor, selecciona fecha y hora para la reserva.', 'warning');
         return;
       }
       return;
     }
 
      const emailUsuario = this.tokenService.getEmail();
-    let fecha = this.gestorForm.get('fechaReservaForm')?.value;
+    const fechaRaw = this.gestorForm.get('fechaReservaDateForm')?.value;
+    const horaRaw = this.gestorForm.get('horaReservaForm')?.value;
+    const fechaLocal = this.buildLocalDateTime(fechaRaw, horaRaw);
+    const fecha = new Date(fechaLocal);
+
+    if (Number.isNaN(fecha.getTime()) || fecha <= new Date()) {
+      Swal.fire('Fecha inválida', 'La fecha y hora de la reserva deben ser posteriores al momento actual.', 'warning');
+      return;
+    }
+
     const cantidadPersonasSeleccionada = this.gestorForm.get('cantidadPersonasForm')?.value;
     
     const crearReservaDTO: CrearReservaDTO = { 
         emailUsuario: emailUsuario, 
-        fechaReserva: fecha,
+      fechaReserva: fechaLocal,
         mesas: this.mesasSeleccionadas, 
         cantidadPersonas: cantidadPersonasSeleccionada
     };
@@ -269,6 +306,113 @@ export class GestorReservasComponent {
   // Formateador de fecha para mostrar en la UI
   formatearFecha(fecha: Date): string {
     return new Date(fecha).toLocaleDateString();
+  }
+
+  onFechaReservaChange(): void {
+    this.rebuildHourOptions();
+  }
+
+  getDuracionReservaLabel(): string {
+    const minutos = this.getDuracionReservaMinutosGestor();
+    if (minutos === 30) {
+      return '30 min';
+    }
+    if (minutos === 60) {
+      return '1 hora';
+    }
+    if (minutos === 90) {
+      return '1:30 horas';
+    }
+    if (minutos % 60 === 0) {
+      return `${minutos / 60} horas`;
+    }
+    return `${minutos} min`;
+  }
+
+  private initDateAndHourDefaults(): void {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    this.gestorForm.patchValue({ fechaReservaDateForm: `${yyyy}-${mm}-${dd}` });
+    this.rebuildHourOptions();
+  }
+
+  private rebuildHourOptions(): void {
+    const fechaSeleccionada = this.gestorForm.get('fechaReservaDateForm')?.value;
+    if (!fechaSeleccionada) {
+      this.hourOptions = [];
+      this.gestorForm.patchValue({ horaReservaForm: '' });
+      return;
+    }
+
+    const duracion = this.getDuracionReservaMinutosGestor();
+    const now = new Date();
+    const limiteInferior = new Date(now.getTime() + GestorReservasComponent.RESERVA_ANTICIPACION_MINUTOS * 60 * 1000);
+    const isToday = fechaSeleccionada === this.buildMinDateLocal();
+
+    const options: Array<{ value: string; label: string }> = [];
+    for (let minute = 0; minute < 24 * 60; minute += duracion) {
+      const hh = String(Math.floor(minute / 60)).padStart(2, '0');
+      const mm = String(minute % 60).padStart(2, '0');
+      const value = `${hh}:${mm}`;
+      const candidate = new Date(`${fechaSeleccionada}T${value}:00`);
+      if (isToday && candidate < limiteInferior) {
+        continue;
+      }
+      options.push({ value, label: value });
+    }
+
+    this.hourOptions = options;
+    const horaActual = this.gestorForm.get('horaReservaForm')?.value;
+    const horaActualValida = options.some((opt) => opt.value === horaActual);
+    this.gestorForm.patchValue({ horaReservaForm: horaActualValida ? horaActual : (options[0]?.value ?? '') });
+  }
+
+  private getDuracionReservaMinutosGestor(): number {
+    if (!this.mesasSeleccionadas || this.mesasSeleccionadas.length === 0) {
+      return GestorReservasComponent.DURACION_DEFAULT_MINUTOS;
+    }
+    const maxima = this.mesasSeleccionadas
+      .map((mesa) => Number(mesa.duracionReservaMinutos ?? 0))
+      .filter((valor) => !Number.isNaN(valor) && valor > 0)
+      .reduce((max, valor) => Math.max(max, valor), 0);
+
+    return maxima > 0 ? maxima : GestorReservasComponent.DURACION_DEFAULT_MINUTOS;
+  }
+
+  private buildMinDateLocal(): string {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  private buildLocalDateTime(fecha: string, hora: string): string {
+    return `${fecha}T${hora}:00`;
+  }
+
+  private normalizeCantidadPersonasValue(): void {
+    const control = this.gestorForm.get('cantidadPersonasForm');
+    if (!control) {
+      return;
+    }
+    const minimo = this.minimoPersonas();
+    const maximo = this.maximoPersonas();
+    const actual = Number(control.value);
+
+    if (!Number.isFinite(actual)) {
+      control.setValue(minimo);
+      return;
+    }
+    if (actual < minimo) {
+      control.setValue(minimo);
+      return;
+    }
+    if (actual > maximo) {
+      control.setValue(maximo);
+    }
   }
 
 

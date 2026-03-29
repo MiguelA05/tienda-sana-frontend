@@ -83,6 +83,7 @@ export class CardGridMesaComponent {
           precioReserva: mesa.precioReserva,
           capacidad: mesa.capacidad,
           imagen: mesa.imagen,
+          duracionReservaMinutos: mesa.duracionReservaMinutos,
           idReserva: '-',
           idGestorReserva: String(mensaje.reply),
         };

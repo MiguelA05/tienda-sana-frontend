@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { ItemMesaDTO } from '../../dto/item-mesa-dto';
+import { MesaHorarioReservadoDTO } from '../../dto/mesa-horario-reservado-dto';
 import { MensajeDTO } from '../../dto/mensaje-dto';
 import { CrearReservaDirectaDTO } from '../../dto/crear-reserva-directa-dto';
 import { ClienteService } from '../../services/cliente.service';
@@ -19,15 +20,21 @@ import { TokenService } from '../../services/token.service';
 })
 export class DetalleMesaComponent implements OnInit {
 
+  private static readonly RESERVA_ANTICIPACION_MINUTOS = 30;
+  private static readonly DURACION_DEFAULT_MINUTOS = 120;
+
   private readonly fb = inject(FormBuilder);
 
   mesa?: ItemMesaDTO;
+  horariosReservados: MesaHorarioReservadoDTO[] = [];
+  hourOptions: Array<{ value: string; label: string; disabled: boolean }> = [];
   isLoading = false;
-  minDateTimeLocal = this.buildMinDateTimeLocal();
+  minDateLocal = this.buildMinDateLocal();
 
   readonly reservaForm = this.fb.nonNullable.group({
     cantidadPersonas: [2, [Validators.required, Validators.min(1)]],
-    fechaReserva: ['', Validators.required],
+    fechaReservaDate: ['', Validators.required],
+    horaReserva: ['', Validators.required],
   });
 
   get isAdmin(): boolean {
@@ -58,6 +65,23 @@ export class DetalleMesaComponent implements OnInit {
     return this.mesa.estado;
   }
 
+  duracionReservaLabel(): string {
+    const minutos = this.getDuracionReservaMinutos();
+    if (minutos === 30) {
+      return '30 min';
+    }
+    if (minutos === 60) {
+      return '1 hora';
+    }
+    if (minutos === 90) {
+      return '1:30 horas';
+    }
+    if (minutos % 60 === 0) {
+      return `${minutos / 60} horas`;
+    }
+    return `${minutos} min`;
+  }
+
   estadoCssClass(): string {
     const estado = (this.mesa?.estado ?? '').toLowerCase();
     if (estado === 'disponible') {
@@ -85,10 +109,6 @@ export class DetalleMesaComponent implements OnInit {
       Swal.fire('Formulario incompleto', 'Completa fecha y cantidad de personas para continuar.', 'warning');
       return;
     }
-    if (!this.esMesaDisponible()) {
-      Swal.fire('Mesa no disponible', 'Esta mesa no se encuentra disponible para reservar en este momento.', 'warning');
-      return;
-    }
     if (!this.tokenService.getToken()) {
       Swal.fire({
         title: 'No estás logueado',
@@ -111,17 +131,25 @@ export class DetalleMesaComponent implements OnInit {
       return;
     }
 
-    const fechaRaw = this.reservaForm.controls.fechaReserva.value;
-    const fechaReserva = new Date(fechaRaw);
+    const fechaRaw = this.reservaForm.controls.fechaReservaDate.value;
+    const horaRaw = this.reservaForm.controls.horaReserva.value;
+    const fechaReservaLocal = this.buildLocalDateTime(fechaRaw, horaRaw);
+    const fechaReserva = new Date(fechaReservaLocal);
     if (Number.isNaN(fechaReserva.getTime()) || fechaReserva <= new Date()) {
       Swal.fire('Fecha inválida', 'Selecciona una fecha/hora futura para la reserva.', 'warning');
+      return;
+    }
+
+    if (this.isHoraReservada(fechaReserva, this.getDuracionReservaMinutos())) {
+      Swal.fire('Horario no disponible', 'La hora seleccionada se cruza con una franja ya reservada. Elige otra hora.', 'warning');
+      this.rebuildHourOptions();
       return;
     }
 
     const payload: CrearReservaDirectaDTO = {
       emailUsuario: this.tokenService.getEmail(),
       mesaId: this.mesa.id,
-      fechaReserva,
+      fechaReserva: fechaReservaLocal,
       cantidadPersonas: cantidad,
     };
 
@@ -161,6 +189,8 @@ export class DetalleMesaComponent implements OnInit {
         this.mesa = response.reply as ItemMesaDTO;
         const defaultPeople = Math.min(2, this.mesa.capacidad);
         this.reservaForm.patchValue({ cantidadPersonas: defaultPeople > 0 ? defaultPeople : 1 });
+        this.initDateAndHourDefaults();
+        this.cargarHorariosReservados(this.mesa.id);
       },
       error: () => {
         Swal.fire('No disponible', 'No fue posible cargar el detalle de esta mesa.', 'error').then(() => {
@@ -170,20 +200,114 @@ export class DetalleMesaComponent implements OnInit {
     });
   }
 
-  private esMesaDisponible(): boolean {
-    return (this.mesa?.estado ?? '').toLowerCase() === 'disponible';
+  private cargarHorariosReservados(mesaId: string): void {
+    this.publicoService.obtenerHorariosReservadosMesa(mesaId).subscribe({
+      next: (response: MensajeDTO) => {
+        this.horariosReservados = (response.reply as MesaHorarioReservadoDTO[]) ?? [];
+        this.rebuildHourOptions();
+      },
+      error: () => {
+        this.horariosReservados = [];
+        this.rebuildHourOptions();
+      },
+    });
   }
 
-  private buildMinDateTimeLocal(): string {
+  formatSlotDate(value: string): string {
+    return new Date(value).toLocaleDateString('es-CO', {
+      weekday: 'short',
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+  }
+
+  formatSlotTime(value: string): string {
+    return new Date(value).toLocaleTimeString('es-CO', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
+
+  onFechaReservaChange(): void {
+    this.rebuildHourOptions();
+  }
+
+  private initDateAndHourDefaults(): void {
     const now = new Date();
-    now.setMinutes(now.getMinutes() + 30);
-    now.setSeconds(0, 0);
     const yyyy = now.getFullYear();
     const mm = String(now.getMonth() + 1).padStart(2, '0');
     const dd = String(now.getDate()).padStart(2, '0');
-    const hh = String(now.getHours()).padStart(2, '0');
-    const min = String(now.getMinutes()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+    this.reservaForm.patchValue({ fechaReservaDate: `${yyyy}-${mm}-${dd}` });
+    this.rebuildHourOptions();
+  }
+
+  private rebuildHourOptions(): void {
+    const fechaSeleccionada = this.reservaForm.controls.fechaReservaDate.value;
+    if (!fechaSeleccionada) {
+      this.hourOptions = [];
+      this.reservaForm.patchValue({ horaReserva: '' });
+      return;
+    }
+
+    const duracion = this.getDuracionReservaMinutos();
+    const now = new Date();
+    const limiteInferior = new Date(now.getTime() + DetalleMesaComponent.RESERVA_ANTICIPACION_MINUTOS * 60 * 1000);
+    const isToday = fechaSeleccionada === this.buildMinDateLocal();
+
+    const options: Array<{ value: string; label: string; disabled: boolean }> = [];
+    for (let minute = 0; minute < 24 * 60; minute += duracion) {
+      const hh = String(Math.floor(minute / 60)).padStart(2, '0');
+      const mm = String(minute % 60).padStart(2, '0');
+      const value = `${hh}:${mm}`;
+      const candidate = new Date(`${fechaSeleccionada}T${value}:00`);
+      if (isToday && candidate < limiteInferior) {
+        continue;
+      }
+      options.push({
+        value,
+        label: value,
+        disabled: this.isHoraReservada(candidate, duracion),
+      });
+    }
+
+    this.hourOptions = options;
+    const horaActual = this.reservaForm.controls.horaReserva.value;
+    const horaActualValida = options.some((option) => option.value === horaActual && !option.disabled);
+    const primeraHoraDisponible = options.find((option) => !option.disabled)?.value ?? '';
+    this.reservaForm.patchValue({ horaReserva: horaActualValida ? horaActual : primeraHoraDisponible });
+  }
+
+  private isHoraReservada(inicioReserva: Date, duracionMinutos: number): boolean {
+    const finReserva = new Date(inicioReserva.getTime() + duracionMinutos * 60 * 1000);
+    return this.horariosReservados.some((slot) => {
+      const inicioSlot = new Date(slot.inicio);
+      const finSlot = new Date(slot.fin);
+      if (Number.isNaN(inicioSlot.getTime()) || Number.isNaN(finSlot.getTime())) {
+        return false;
+      }
+      return inicioReserva < finSlot && inicioSlot < finReserva;
+    });
+  }
+
+  private getDuracionReservaMinutos(): number {
+    const raw = this.mesa?.duracionReservaMinutos;
+    if (!raw || raw <= 0) {
+      return DetalleMesaComponent.DURACION_DEFAULT_MINUTOS;
+    }
+    return raw;
+  }
+
+  private buildMinDateLocal(): string {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  private buildLocalDateTime(fecha: string, hora: string): string {
+    return `${fecha}T${hora}:00`;
   }
 
 }

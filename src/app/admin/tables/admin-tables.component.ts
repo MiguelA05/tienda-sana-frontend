@@ -15,6 +15,7 @@ import { CloudinaryUploadService } from '../services/cloudinary-upload.service';
 
 const ESTADOS_MESA = ['Disponible', 'Reservada', 'Ocupada'] as const;
 const LOCALIDADES_MESA = ['Pasillo', 'Centro', 'Patio', 'Salon'] as const;
+const DURACIONES_RESERVA_MINUTOS = [30, 60, 90, 120] as const;
 
 @Component({
   selector: 'app-admin-tables',
@@ -43,6 +44,7 @@ export class AdminTablesComponent implements OnInit, OnDestroy {
 
   readonly estadosMesa = ESTADOS_MESA;
   readonly localidadesMesa = LOCALIDADES_MESA;
+  readonly duracionesReservaMinutos = DURACIONES_RESERVA_MINUTOS;
 
   readonly form = this.fb.nonNullable.group({
     nombre: ['', [Validators.required, Validators.maxLength(200)]],
@@ -50,6 +52,7 @@ export class AdminTablesComponent implements OnInit, OnDestroy {
     localidad: ['', [Validators.required, Validators.maxLength(120)]],
     precioReserva: [0, [Validators.required, Validators.min(0)]],
     capacidad: [4, [Validators.required, Validators.min(1)]],
+    duracionReservaMinutos: [120, Validators.required],
     imagen: [''], // Solo para guardar la URL final de Cloudinary o existente
     visibleToClient: [true],
   });
@@ -92,6 +95,7 @@ export class AdminTablesComponent implements OnInit, OnDestroy {
       localidad: '',
       precioReserva: 0,
       capacidad: 4,
+      duracionReservaMinutos: 120,
       imagen: '',
       visibleToClient: true,
     });
@@ -112,6 +116,7 @@ export class AdminTablesComponent implements OnInit, OnDestroy {
       localidad: row.localidad,
       precioReserva: row.precioReserva,
       capacidad: row.capacidad,
+      duracionReservaMinutos: row.duracionReservaMinutos,
       imagen: row.imagen,
       visibleToClient: row.visibleToClient,
     });
@@ -186,6 +191,7 @@ export class AdminTablesComponent implements OnInit, OnDestroy {
         localidad: v.localidad,
         precioReserva: v.precioReserva,
         capacidad: v.capacidad,
+        duracionReservaMinutos: v.duracionReservaMinutos,
         imagen: imageUrl,
         visibleToClient: v.visibleToClient,
       };
@@ -278,6 +284,7 @@ export class AdminTablesComponent implements OnInit, OnDestroy {
           localidad: row.localidad,
           precioReserva: row.precioReserva,
           capacidad: row.capacidad,
+          duracionReservaMinutos: row.duracionReservaMinutos,
           imagen: row.imagen,
           visibleToClient: !row.visibleToClient,
         })

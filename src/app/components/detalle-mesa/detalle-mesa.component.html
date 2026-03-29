@@ -46,7 +46,27 @@
 						<dt>Zona</dt>
 						<dd>{{ mesa.localidad }}</dd>
 					</div>
+					<div class="mesa-meta__row">
+						<dt>Duración por reserva</dt>
+						<dd>{{ duracionReservaLabel() }}</dd>
+					</div>
 				</dl>
+
+				<section class="mesa-slots" aria-label="Horarios reservados">
+					<h3 class="mesa-slots__title">Horarios ya reservados</h3>
+					@if (horariosReservados.length > 0) {
+						<ul class="mesa-slots__list">
+							@for (slot of horariosReservados; track slot.inicio + slot.fin) {
+								<li class="mesa-slots__item">
+									<span class="mesa-slots__date">{{ formatSlotDate(slot.inicio) }}</span>
+									<span class="mesa-slots__time">{{ formatSlotTime(slot.inicio) }} - {{ formatSlotTime(slot.fin) }}</span>
+								</li>
+							}
+						</ul>
+					} @else {
+						<p class="mesa-slots__empty">No hay horarios reservados para esta mesa.</p>
+					}
+				</section>
 
 				<div class="mesa-checkout">
 					<h2 class="mesa-checkout__title">
@@ -78,20 +98,31 @@
 										[max]="mesa.capacidad" />
 								</div>
 								<div class="mesa-form-field">
-									<label for="fechaReserva">Fecha y hora</label>
+									<label for="fechaReservaDate">Fecha</label>
 									<input
-										id="fechaReserva"
-										type="datetime-local"
+										id="fechaReservaDate"
+										type="date"
 										class="form-control"
-										formControlName="fechaReserva"
-										[min]="minDateTimeLocal" />
+										formControlName="fechaReservaDate"
+										[min]="minDateLocal"
+										(change)="onFechaReservaChange()" />
+								</div>
+								<div class="mesa-form-field">
+									<label for="horaReserva">Hora</label>
+									<select id="horaReserva" class="form-select" formControlName="horaReserva">
+										@for (hora of hourOptions; track hora.value) {
+											<option [value]="hora.value" [disabled]="hora.disabled">
+												{{ hora.label }}{{ hora.disabled ? ' (reservada)' : '' }}
+											</option>
+										}
+									</select>
 								</div>
 							</div>
 
 							<button
 								type="submit"
 								class="mesa-btn-main"
-								[disabled]="isLoading || (mesa.estado | lowercase) !== 'disponible'">
+								[disabled]="isLoading">
 								@if (!isLoading) {
 									<i class="fa-solid fa-credit-card" aria-hidden="true"></i>
 									Reservar y pagar
@@ -102,13 +133,12 @@
 							</button>
 						</form>
 
-						@if ((mesa.estado | lowercase) !== 'disponible') {
-							<p class="mesa-out-stock">Esta mesa no está disponible para reserva inmediata.</p>
-						} @else {
-							<p class="mesa-total">
-								Total a pagar: <strong>{{ mesa.precioReserva | currency }}</strong>
-							</p>
-						}
+						<p class="mesa-total">
+							Depósito de reserva: <strong>{{ mesa.precioReserva | currency }}</strong>
+						</p>
+						<p class="mesa-disclaimer">
+							El valor pagado es una garantía: se descuenta del consumo final y se pierde en caso de no asistir.
+						</p>
 					}
 				</div>
 			</div>

@@ -1,6 +1,6 @@
 export interface CrearReservaDirectaDTO {
   emailUsuario: string;
   mesaId: string;
-  fechaReserva: Date;
+  fechaReserva: string;
   cantidadPersonas: number;
 }

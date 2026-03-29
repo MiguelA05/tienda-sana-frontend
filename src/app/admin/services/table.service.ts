@@ -14,6 +14,7 @@ interface RestaurantTableApi {
   localidad: string;
   precioReserva: number;
   capacidad: number;
+  duracionReservaMinutos: number;
   imagen: string;
   visibleToClient: boolean;
 }
@@ -26,6 +27,7 @@ function fromApi(t: RestaurantTableApi): AdminTable {
     localidad: t.localidad,
     precioReserva: t.precioReserva,
     capacidad: t.capacidad,
+    duracionReservaMinutos: t.duracionReservaMinutos,
     imagen: t.imagen,
     visibleToClient: t.visibleToClient,
   };
@@ -80,6 +82,7 @@ export class TableService {
       localidad: dto.localidad,
       precioReserva: dto.precioReserva,
       capacidad: dto.capacidad,
+      duracionReservaMinutos: dto.duracionReservaMinutos,
       imagen: dto.imagen,
       visibleToClient: dto.visibleToClient,
     };
@@ -95,6 +98,7 @@ export class TableService {
       localidad: dto.localidad,
       precioReserva: dto.precioReserva,
       capacidad: dto.capacidad,
+      duracionReservaMinutos: dto.duracionReservaMinutos,
       imagen: dto.imagen,
       visibleToClient: dto.visibleToClient,
     };

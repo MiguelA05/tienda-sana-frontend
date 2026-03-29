@@ -56,6 +56,24 @@
             <input id="tbl-cap" type="number" class="form-control" formControlName="capacidad" min="1" />
           </div>
           <div>
+            <label class="form-label" for="tbl-duration">Duración máxima de reserva</label>
+            <select id="tbl-duration" class="form-select" formControlName="duracionReservaMinutos">
+              @for (d of duracionesReservaMinutos; track d) {
+                <option [value]="d">
+                  @if (d === 30) {
+                    30 min
+                  } @else if (d === 60) {
+                    1 hora
+                  } @else if (d === 90) {
+                    1:30 horas
+                  } @else {
+                    2 horas
+                  }
+                </option>
+              }
+            </select>
+          </div>
+          <div>
             <label class="form-label" for="tbl-img">Imagen</label>
             <div class="mt-2 d-flex flex-column gap-2">
               <input type="file" class="form-control" accept="image/*" (change)="onImagePick($event)" />
@@ -127,6 +145,7 @@
                   <th>Zona</th>
                   <th class="text-end">Precio</th>
                   <th class="text-center">Cap.</th>
+                  <th class="text-center">Duración</th>
                   <th>Estado</th>
                   <th class="text-end">Acciones</th>
                 </tr>
@@ -138,6 +157,7 @@
                     <td>{{ row.localidad }}</td>
                     <td class="text-end font-monospace small">{{ row.precioReserva | currency }}</td>
                     <td class="text-center">{{ row.capacidad }}</td>
+                    <td class="text-center">{{ row.duracionReservaMinutos }} min</td>
                     <td>
                       @if (!row.visibleToClient) {
                         <span class="badge bg-secondary">Oculta</span>

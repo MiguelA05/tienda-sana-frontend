@@ -5,5 +5,6 @@ export interface ItemMesaDTO {
     localidad: string,
     precioReserva: number,
     capacidad: number,
-    imagen: string
+    imagen: string,
+    duracionReservaMinutos: number
 }

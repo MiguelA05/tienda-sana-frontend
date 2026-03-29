@@ -6,6 +6,7 @@ export interface MesaDTO {
     precioReserva: number,
     capacidad: number,
     imagen: string,
+    duracionReservaMinutos: number,
     idReserva: string,
     idGestorReserva: string
 }

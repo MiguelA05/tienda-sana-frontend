@@ -59,17 +59,50 @@
                 <div class="reserva-body">
                     <div class="info-row">
                         <div class="info-item">
-                            <i class="bi bi-people me-2" style="margin-right: 8px;"></i>
-                            <span>Personas: </span>
+                            <label for="cantidadPersonasForm" class="info-label">
+                                <i class="bi bi-people" aria-hidden="true"></i>
+                                Personas
+                            </label>
                             <input type="number" class="form-control personas-input" id="cantidadPersonasForm"
-                                formControlName="cantidadPersonasForm" min="1" max="50">
+                                formControlName="cantidadPersonasForm"
+                                [min]="minimoPersonas()"
+                                [max]="maximoPersonas()">
+                            <div class="field-feedback-slot" aria-live="polite">
+                                @if (gestorForm.get('cantidadPersonasForm')?.touched && gestorForm.get('cantidadPersonasForm')?.hasError('personasMinimas')) {
+                                    <small class="text-danger mt-1 d-block">
+                                        Debes ingresar mínimo {{ minimoPersonas() }} persona(s).
+                                    </small>
+                                }
+                                @if (gestorForm.get('cantidadPersonasForm')?.touched && gestorForm.get('cantidadPersonasForm')?.hasError('capacidadExcedida')) {
+                                    <small class="text-danger mt-1 d-block">
+                                        El máximo permitido es {{ maximoPersonas() }} persona(s).
+                                    </small>
+                                }
+                            </div>
                         </div>
                         <div class="info-item">
-                            <!-- Icono y etiqueta para el input -->
-                            <i class="bi bi-calendar-plus me-2" style="margin-right: 8px;"></i>
-                            <span>Seleccionar Fecha y Hora: </span>
-                            <input type="datetime-local" class="form-control fecha-input mb-2" id="fechaReservaForm"
-                                formControlName="fechaReservaForm">
+                            <label for="fechaReservaDateForm" class="info-label">
+                                <i class="bi bi-calendar-plus" aria-hidden="true"></i>
+                                Seleccionar fecha
+                            </label>
+                            <input
+                                type="date"
+                                class="form-control fecha-input"
+                                id="fechaReservaDateForm"
+                                formControlName="fechaReservaDateForm"
+                                [min]="minDateLocal"
+                                (change)="onFechaReservaChange()">
+                        </div>
+                        <div class="info-item">
+                            <label for="horaReservaForm" class="info-label">
+                                <i class="bi bi-clock" aria-hidden="true"></i>
+                                Seleccionar hora ({{ getDuracionReservaLabel() }})
+                            </label>
+                                                        <select class="form-control fecha-input" id="horaReservaForm" formControlName="horaReservaForm">
+                                @for (hora of hourOptions; track hora.value) {
+                                  <option [value]="hora.value">{{ hora.label }}</option>
+                                }
+                            </select>
                         </div>
 
                     </div>

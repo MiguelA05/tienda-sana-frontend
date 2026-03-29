@@ -8,6 +8,7 @@ export interface AdminTable {
   localidad: string;
   precioReserva: number;
   capacidad: number;
+  duracionReservaMinutos: number;
   imagen: string;
   /** Si es false, la mesa no se lista para el cliente. */
   visibleToClient: boolean;

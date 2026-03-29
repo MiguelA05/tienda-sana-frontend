@@ -60,6 +60,10 @@ export class PublicoService {
   public obtenerMesa(id: string): Observable<MensajeDTO> {
     return this.http.get<MensajeDTO>(`${this.publicoURL}/mesas/get-info/${id}`);
   }
+
+  public obtenerHorariosReservadosMesa(id: string): Observable<MensajeDTO> {
+    return this.http.get<MensajeDTO>(`${this.publicoURL}/mesas/get-reserved-slots/${id}`);
+  }
   
   /**
    * Metodo para filtrar los productos por un filtro  

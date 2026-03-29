@@ -76,28 +76,31 @@
 }
 
 .info-row {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    align-items: start;
 }
 
 .info-item {
     display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.info-label {
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    flex: 1;
-    min-width: 280px; /* Asegurar que el contenedor del info-item tenga suficiente espacio */
+    gap: 8px;
+    color: #495057;
+    font-weight: 600;
+    line-height: 1.2;
+    font-size: 0.92rem;
 }
 
-.info-item > span {
-    white-space: nowrap; /* Evitar que el texto "Seleccionar Fecha y Hora:" se rompa en dos líneas */
-}
-
-input[type="datetime-local"].fecha-input {
-    min-width: 210px;
-    padding-left: 10px;
-    padding-right: 10px;
+.info-label > i {
+    color: #198754;
 }
 
 .form-control {
@@ -113,8 +116,13 @@ input[type="datetime-local"].fecha-input {
 }
 
 .personas-input, .fecha-input {
-    max-width: 220px; /* Aumentar un poco el ancho si es necesario */
-    padding-right: 30px; /* Añadir padding a la derecha para dejar espacio al icono interno si es posible */
+    width: 100%;
+    max-width: none;
+    min-height: 40px;
+}
+
+.field-feedback-slot {
+    min-height: 1.7rem;
 }
 
 /* Estilos para la lista de mesas */
@@ -355,8 +363,14 @@ input[type="datetime-local"].fecha-input {
 /* Responsive */
 @media (max-width: 768px) {
     .info-row {
-        flex-direction: column;
+        grid-template-columns: 1fr;
         gap: 15px;
+    }
+
+    .reserva-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
     }
     
     .mesa-card {
@@ -382,5 +396,11 @@ input[type="datetime-local"].fecha-input {
     
     .btn-secundario, .btn-custom {
         width: 100%;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1080px) {
+    .info-row {
+        grid-template-columns: repeat(2, minmax(220px, 1fr));
     }
 }
