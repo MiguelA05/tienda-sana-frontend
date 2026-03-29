@@ -1,83 +1,93 @@
-<div class="page-header d-flex flex-wrap justify-content-between align-items-start gap-2">
-  <div>
-    <h1>Lotes e inventario</h1>
-    <p class="text-muted mb-0">Registro de entradas y stock por producto (API admin).</p>
-  </div>
-  <button type="button" class="btn btn-success" (click)="startCreate()">
-    <i class="fa-solid fa-plus me-1"></i> Nuevo lote
-  </button>
+<div class="page-header">
+  <h1>Lotes e inventario</h1>
+  <p class="text-muted mb-0">Anota cada ingreso de mercancía y revisa cuántas unidades hay por producto.</p>
 </div>
 
 <div class="row g-4">
-  <div class="col-xl-4">
-    <div class="card shadow-sm border-0">
-      <div class="card-header bg-white fw-semibold">
-        {{ editingId ? 'Editar lote' : 'Registrar lote' }}
-      </div>
-      <div class="card-body">
-        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-          <div class="mb-3">
-            <label class="form-label" for="lot-prod">Producto</label>
-            <select id="lot-prod" class="form-select" formControlName="productId">
-              <option value="">Seleccione…</option>
-              @for (p of products; track p.id) {
-                <option [value]="p.id">{{ p.name }}</option>
+  <div class="col-xl-4 d-flex align-items-center">
+    <div class="w-100 d-flex flex-column gap-4">
+      <div class="card admin-form-card w-100">
+        <div
+          class="card-header admin-form-card-header admin-form-card-header--with-action d-flex flex-wrap justify-content-between align-items-center gap-2">
+          <span>{{ editingId ? 'Editar lote' : 'Registrar lote' }}</span>
+          <button
+            type="button"
+            class="btn btn-outline-secondary btn-sm"
+            (click)="startCreate()"
+            title="Vaciar campos y volver a modo alta">
+            <i class="fa-solid fa-eraser me-1" aria-hidden="true"></i>
+            Limpiar formulario
+          </button>
+        </div>
+        <div class="card-body admin-form-card-body">
+          <form
+            [formGroup]="form"
+            (ngSubmit)="submit()"
+            novalidate
+            class="admin-form d-flex flex-column gap-4">
+            <div>
+              <label class="form-label" for="lot-prod">Producto</label>
+              <select id="lot-prod" class="form-select" formControlName="productId">
+                <option value="">Seleccione…</option>
+                @for (p of products; track p.id) {
+                  <option [value]="p.id">{{ p.name }}</option>
+                }
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="lot-sup">Proveedor</label>
+              <select id="lot-sup" class="form-select" formControlName="supplierId">
+                <option value="">Seleccione…</option>
+                @for (s of suppliersSelect; track s.id) {
+                  <option [value]="s.id">{{ s.name }}</option>
+                }
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="lot-date">Fecha de ingreso</label>
+              <input id="lot-date" type="date" class="form-control" formControlName="entryDate" />
+            </div>
+            <div>
+              <label class="form-label" for="lot-qty">Cantidad</label>
+              <input id="lot-qty" type="number" class="form-control" formControlName="quantity" min="1" />
+            </div>
+            <div>
+              <label class="form-label" for="lot-val">Valor unitario</label>
+              <input id="lot-val" type="number" class="form-control" formControlName="unitValue" min="0" step="1" />
+            </div>
+            <div class="admin-form-actions d-flex gap-2 flex-wrap">
+              <button type="submit" class="btn btn-success px-4" [disabled]="form.invalid">Guardar</button>
+              @if (editingId) {
+                <button type="button" class="btn btn-outline-secondary px-4" (click)="cancelEdit()">Cancelar</button>
               }
-            </select>
-          </div>
-          <div class="mb-3">
-            <label class="form-label" for="lot-sup">Proveedor</label>
-            <select id="lot-sup" class="form-select" formControlName="supplierId">
-              <option value="">Seleccione…</option>
-              @for (s of suppliersSelect; track s.id) {
-                <option [value]="s.id">{{ s.name }}</option>
-              }
-            </select>
-          </div>
-          <div class="mb-3">
-            <label class="form-label" for="lot-date">Fecha de ingreso</label>
-            <input id="lot-date" type="date" class="form-control" formControlName="entryDate" />
-          </div>
-          <div class="mb-3">
-            <label class="form-label" for="lot-qty">Cantidad</label>
-            <input id="lot-qty" type="number" class="form-control" formControlName="quantity" min="1" />
-          </div>
-          <div class="mb-3">
-            <label class="form-label" for="lot-val">Valor unitario</label>
-            <input id="lot-val" type="number" class="form-control" formControlName="unitValue" min="0" step="1" />
-          </div>
-          <div class="d-flex gap-2 flex-wrap">
-            <button type="submit" class="btn btn-success" [disabled]="form.invalid">Guardar</button>
-            @if (editingId) {
-              <button type="button" class="btn btn-outline-secondary" (click)="cancelEdit()">Cancelar</button>
-            }
-          </div>
-        </form>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
 
-    <div class="card shadow-sm border-0 mt-4">
-      <div class="card-header bg-white fw-semibold">Inventario actual</div>
-      <div class="card-body p-0">
-        @if (loading) {
-          <div class="p-3 text-muted small">Cargando…</div>
-        } @else {
-          <ul class="list-group list-group-flush">
-            @for (line of inventory; track line.productId) {
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                <div class="fw-medium">{{ line.productName }}</div>
-                <span class="badge bg-success rounded-pill">{{ line.totalQuantity }} u.</span>
-              </li>
-            }
-          </ul>
-        }
+      <div class="card admin-panel-card w-100">
+        <div class="card-header admin-form-card-header">Inventario actual</div>
+        <div class="card-body p-0">
+          @if (loading) {
+            <div class="p-3 text-muted small">Cargando…</div>
+          } @else {
+            <ul class="list-group list-group-flush">
+              @for (line of inventory; track line.productId) {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div class="fw-medium">{{ line.productName }}</div>
+                  <span class="badge bg-success rounded-pill">{{ line.totalQuantity }} u.</span>
+                </li>
+              }
+            </ul>
+          }
+        </div>
       </div>
     </div>
   </div>
 
   <div class="col-xl-8">
-    <div class="card shadow-sm border-0">
-      <div class="card-header bg-white fw-semibold">Todos los lotes</div>
+    <div class="card admin-list-card h-100">
+      <div class="card-header admin-form-card-header">Todos los lotes</div>
       <div class="card-body p-0">
         @if (loading) {
           <div class="p-4 text-center text-muted">Cargando…</div>

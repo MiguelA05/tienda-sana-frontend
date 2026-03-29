@@ -17,7 +17,7 @@ import { RolesGuard } from './guardias/roles.service';
 export const routes: Routes = [
    { path: '', component: HomeComponent },
    { path: 'info-usuario', component: InformacionUsuarioComponent, canActivate: [RolesGuard],
-       data: { expectedRole: ['CLIENTE'] } },
+       data: { expectedRole: ['CLIENTE', 'ADMIN'] } },
    { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
    { path: 'register', component: RegisterComponent, canActivate: [LoginGuard] },
    { path: 'cambiar-password', component: CambiarPasswordComponent, canActivate: [LoginGuard] },

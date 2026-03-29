@@ -34,16 +34,26 @@ export class AdminTableMapComponent {
     return 'map-card map-card--free';
   }
 
+  /** Etiqueta en español alineada con el estado efectivo (mismo criterio que el color de la tarjeta). */
   statusLabel(t: AdminTable): string {
     if (!t.active) {
       return 'Inactiva';
     }
-    const m: Record<string, string> = {
+    const e = this.effective(t);
+    const m: Record<TableDisplayStatus, string> = {
       AVAILABLE: 'Disponible',
       RESERVED: 'Reservada',
       OCCUPIED: 'Ocupada',
     };
-    return m[t.status] ?? t.status;
+    return m[e] ?? e;
+  }
+
+  /** Referencia corta para no mostrar el ObjectId completo. */
+  shortRef(id: string): string {
+    if (!id || id.length <= 10) {
+      return id;
+    }
+    return `…${id.slice(-6)}`;
   }
 
   onCardClick(t: AdminTable): void {

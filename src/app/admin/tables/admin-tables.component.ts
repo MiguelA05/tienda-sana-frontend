@@ -16,7 +16,7 @@ import { AdminTableMapComponent } from './table-map/table-map.component';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, AdminTableMapComponent],
   templateUrl: './admin-tables.component.html',
-  styleUrl: './admin-tables.component.css',
+  styleUrls: ['../styles/admin-form-layout.css', './admin-tables.component.css'],
 })
 export class AdminTablesComponent implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);

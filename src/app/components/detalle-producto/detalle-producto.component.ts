@@ -3,7 +3,7 @@ import { ProductoDTO } from '../../dto/producto-dto';
 import { ItemCarritoDTO } from '../../dto/item-carrito-dto';
 import { FormGroup, FormsModule, FormBuilder } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { ClienteService } from '../../services/cliente.service';
 import { PublicoService } from '../../services/publico.service'; // Adjust the path if necessary
 import { TokenService } from '../../services/token.service'; // Adjust the path if necessary
@@ -15,7 +15,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-detalle-producto',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './detalle-producto.component.html',
   styleUrls: ['./detalle-producto.component.css']
 })
@@ -46,7 +46,7 @@ export class DetalleProductoComponent implements OnInit {
     private router: Router,
     private tokenService: TokenService
   ) {
-
+    this.detalleCarrtitoForm = this.formBuilder.group({});
   }
 
   /**
@@ -54,7 +54,6 @@ export class DetalleProductoComponent implements OnInit {
    */
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    console.log("Evento ID:", id);
 
     if (id) {
       this.getProducto(id);
@@ -75,6 +74,20 @@ export class DetalleProductoComponent implements OnInit {
     } else {
       return 'En stock';
     }
+  }
+
+  /** Clases para el punto de color junto a la disponibilidad. */
+  stockDotModifier(): string {
+    if (!this.producto) {
+      return 'product-stock-dot--out';
+    }
+    if (this.producto.cantidad <= 0) {
+      return 'product-stock-dot--out';
+    }
+    if (this.producto.cantidad <= 10) {
+      return 'product-stock-dot--low';
+    }
+    return 'product-stock-dot--ok';
   }
 
   /**
@@ -103,12 +116,9 @@ export class DetalleProductoComponent implements OnInit {
     this.publicoService.obtenerProducto(id).subscribe({
       next: (data) => {
         this.producto = data.reply;
-        console.log(this.producto);
-        this.cargarDatosProducto()
+        this.cargarDatosProducto();
       },
-      error: (error) => {
-        console.error(error);
-      },
+      error: () => {},
     })
   }
 
@@ -175,7 +185,6 @@ export class DetalleProductoComponent implements OnInit {
         const existingItem = items.find(item => item.idProducto === carItem.idProducto);
           this.clienteService.agregarItemCarrito(carItem).subscribe({
             next: () => {
-              console.log("7");
               Swal.fire("Éxito!", "Se ha agregado el item al carrito", "success").then(() => {
                 this.isLoading = false; // Desactivamos después de que se cierre el diálogo
               });
@@ -187,8 +196,7 @@ export class DetalleProductoComponent implements OnInit {
             }
           });
       },
-      error: (error) => {
-        console.error("Error al obtener los items del carrito", error);
+      error: () => {
         Swal.fire("Error!", "Hubo un problema al verificar el carrito", "error").then(() => {
           this.isLoading = false; // Desactivamos después de que se cierre el diálogo
         });

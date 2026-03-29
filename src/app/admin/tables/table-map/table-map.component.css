@@ -1,6 +1,6 @@
 .map-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
   gap: 1rem;
 }
 
@@ -16,65 +16,102 @@
   cursor: not-allowed;
 }
 
+/* Tarjetas tipo “panel” claras, acento verde Tienda Sana (sin degradados fuera de marca) */
 .map-card {
   border-radius: 12px;
-  padding: 0.85rem 1rem;
-  min-height: 130px;
-  border: 2px solid transparent;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  color: #fff;
+  padding: 1rem 1rem 0.85rem;
+  min-height: 132px;
+  border: 1px solid var(--neutral-200, #dee2e6);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+  color: var(--neutral-800, #343a40);
+  background: #fff;
+  box-shadow: var(--shadow-sm, 0 2px 5px rgba(0, 0, 0, 0.05));
 }
 
 .map-card-wrap:not(.map-card-wrap--disabled):hover .map-card {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.08));
 }
 
 .map-card--free {
-  background: linear-gradient(145deg, #198754, #20c997);
+  border-left: 4px solid var(--primary-color, #198754);
+  background: linear-gradient(180deg, #f6fbf8 0%, #fff 100%);
 }
 
 .map-card--reserved {
-  background: linear-gradient(145deg, #fd7e14, #ffc107);
-  color: #212529;
-}
-
-.map-card--reserved .map-card__hint {
-  color: rgba(33, 37, 41, 0.75);
+  border-left: 4px solid #e8b923;
+  background: linear-gradient(180deg, #fffdf6 0%, #fff 100%);
 }
 
 .map-card--occupied {
-  background: linear-gradient(145deg, #6f42c1, #dc3545);
+  border-left: 4px solid #b02a37;
+  background: linear-gradient(180deg, #fff8f8 0%, #fff 100%);
 }
 
 .map-card--disabled {
-  background: #adb5bd;
-  color: #fff;
-  opacity: 0.85;
+  border-left: 4px solid #adb5bd;
+  background: #f8f9fa;
+  color: var(--neutral-600, #6c757d);
+  opacity: 0.95;
 }
 
-.map-card__id {
-  font-weight: 700;
+.map-card__title {
+  font-weight: 600;
   font-size: 1rem;
+  color: var(--neutral-900, #212529);
+  line-height: 1.25;
 }
 
 .map-card__meta {
-  font-size: 0.8rem;
-  opacity: 0.95;
-  margin-top: 0.25rem;
+  font-size: 0.82rem;
+  color: var(--neutral-600, #6c757d);
+  margin-top: 0.35rem;
 }
 
-.map-card__state {
-  margin-top: 0.5rem;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+.map-card__badge {
+  display: inline-block;
+  margin-top: 0.65rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
   font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
-.map-card__hint {
-  margin-top: 0.2rem;
-  opacity: 0.9;
+.map-card--free .map-card__badge {
+  color: #0f5132;
+  background: rgba(25, 135, 84, 0.15);
+}
+
+.map-card--reserved .map-card__badge {
+  color: #664d03;
+  background: rgba(255, 193, 7, 0.22);
+}
+
+.map-card--occupied .map-card__badge {
+  color: #842029;
+  background: rgba(176, 42, 55, 0.12);
+}
+
+.map-card--disabled .map-card__badge {
+  color: #495057;
+  background: rgba(108, 117, 125, 0.15);
+}
+
+.map-card__ref {
+  margin-top: 0.55rem;
+  padding-top: 0.45rem;
+  border-top: 1px dashed var(--neutral-300, #dee2e6);
+  font-size: 0.68rem;
+  font-family: ui-monospace, monospace;
+  color: var(--neutral-500, #adb5bd);
+}
+
+.map-legend {
+  color: var(--neutral-700, #495057);
 }
 
 .dot {
@@ -87,15 +124,15 @@
 }
 
 .dot--free {
-  background: #198754;
+  background: var(--primary-color, #198754);
 }
 
 .dot--reserved {
-  background: #ffc107;
+  background: #e8b923;
 }
 
 .dot--occupied {
-  background: #6f42c1;
+  background: #b02a37;
 }
 
 .dot--disabled {

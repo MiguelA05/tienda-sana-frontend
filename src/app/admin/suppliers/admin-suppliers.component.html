@@ -1,51 +1,61 @@
-<div class="page-header d-flex flex-wrap justify-content-between align-items-start gap-2">
-  <div>
-    <h1>Proveedores</h1>
-    <p class="text-muted mb-0">Alta, edición y baja lógica (API admin).</p>
-  </div>
-  <button type="button" class="btn btn-success" (click)="startCreate()">
-    <i class="fa-solid fa-plus me-1"></i> Nuevo proveedor
-  </button>
+<div class="page-header">
+  <h1>Proveedores</h1>
+  <p class="text-muted mb-0">Administra la red de proveedores: datos de contacto, ciudad y si siguen activos.</p>
 </div>
 
 <div class="row g-4">
-  <div class="col-lg-5">
-    <div class="card shadow-sm border-0">
-      <div class="card-header bg-white fw-semibold">
-        {{ editingId ? 'Editar proveedor' : 'Crear proveedor' }}
+  <div class="col-lg-5 d-flex align-items-center">
+    <div class="card admin-form-card w-100">
+      <div
+        class="card-header admin-form-card-header admin-form-card-header--with-action d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <span>{{ editingId ? 'Editar proveedor' : 'Crear proveedor' }}</span>
+        <button
+          type="button"
+          class="btn btn-outline-secondary btn-sm"
+          (click)="startCreate()"
+          title="Vaciar campos y volver a modo alta">
+          <i class="fa-solid fa-eraser me-1" aria-hidden="true"></i>
+          Limpiar formulario
+        </button>
       </div>
-      <div class="card-body">
-        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-          <div class="mb-3">
+      <div class="card-body admin-form-card-body">
+        <form
+          [formGroup]="form"
+          (ngSubmit)="submit()"
+          novalidate
+          class="admin-form d-flex flex-column gap-4">
+          <div>
             <label class="form-label" for="sup-cat">Categoría</label>
             <input id="sup-cat" class="form-control" formControlName="category" />
           </div>
-          <div class="mb-3">
+          <div>
             <label class="form-label" for="sup-name">Nombre</label>
             <input id="sup-name" class="form-control" formControlName="name" />
           </div>
-          <div class="mb-3">
+          <div>
             <label class="form-label" for="sup-prod">Producto que suministra</label>
             <input id="sup-prod" class="form-control" formControlName="suppliedProduct" />
           </div>
-          <div class="mb-3">
+          <div>
             <label class="form-label" for="sup-contact">Contacto</label>
             <input id="sup-contact" class="form-control" formControlName="contact" />
           </div>
-          <div class="mb-3">
+          <div>
             <label class="form-label" for="sup-addr">Dirección</label>
             <input id="sup-addr" class="form-control" formControlName="address" />
           </div>
-          <div class="mb-3">
+          <div>
             <label class="form-label" for="sup-city">Ciudad</label>
             <input id="sup-city" class="form-control" formControlName="city" />
           </div>
-          <div class="d-flex gap-2 flex-wrap">
-            <button type="submit" class="btn btn-success" [disabled]="form.invalid">
+          <div class="admin-form-actions d-flex gap-2 flex-wrap">
+            <button type="submit" class="btn btn-success px-4" [disabled]="form.invalid">
               {{ editingId ? 'Guardar cambios' : 'Registrar' }}
             </button>
             @if (editingId) {
-              <button type="button" class="btn btn-outline-secondary" (click)="cancelEdit()">Cancelar</button>
+              <button type="button" class="btn btn-outline-secondary px-4" (click)="cancelEdit()">
+                Cancelar
+              </button>
             }
           </div>
         </form>
@@ -54,8 +64,8 @@
   </div>
 
   <div class="col-lg-7">
-    <div class="card shadow-sm border-0">
-      <div class="card-header bg-white fw-semibold">Listado</div>
+    <div class="card admin-list-card h-100">
+      <div class="card-header admin-form-card-header">Listado</div>
       <div class="card-body p-0">
         @if (loading) {
           <div class="p-4 text-center text-muted">Cargando…</div>

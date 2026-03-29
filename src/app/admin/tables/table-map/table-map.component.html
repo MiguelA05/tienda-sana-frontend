@@ -5,7 +5,7 @@
   <span><span class="dot dot--disabled"></span> Inactiva</span>
 </div>
 <p class="text-muted small mb-3">
-  Pulse una mesa activa para avanzar el ciclo de estado: disponible → ocupada → reservada.
+  Pulse una mesa activa para avanzar el ciclo: disponible → ocupada → reservada.
 </p>
 <div class="map-grid" role="list">
   @for (t of tables; track t.id) {
@@ -14,12 +14,12 @@
       class="map-card-wrap"
       [class.map-card-wrap--disabled]="!t.active"
       (click)="onCardClick(t)"
-      [attr.aria-label]="'Mesa ' + t.id + ', capacidad ' + t.capacity">
+      [attr.aria-label]="'Mesa en ' + t.location + ', ' + t.capacity + ' personas, ' + statusLabel(t)">
       <div [class]="cardClass(t)" role="listitem">
-        <div class="map-card__id">Mesa {{ t.id }}</div>
-        <div class="map-card__meta">{{ t.location }} · {{ t.capacity }} pax</div>
-        <div class="map-card__state">{{ effective(t) }}</div>
-        <div class="map-card__hint small">{{ statusLabel(t) }}</div>
+        <div class="map-card__title">{{ t.location }}</div>
+        <div class="map-card__meta">{{ t.capacity }} personas</div>
+        <div class="map-card__badge">{{ statusLabel(t) }}</div>
+        <div class="map-card__ref" [attr.title]="'Id: ' + t.id">Ref. {{ shortRef(t.id) }}</div>
       </div>
     </button>
   }

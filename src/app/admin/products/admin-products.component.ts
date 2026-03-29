@@ -15,7 +15,7 @@ import { Product } from '../models/product.model';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './admin-products.component.html',
-  styleUrl: './admin-products.component.css',
+  styleUrls: ['../styles/admin-form-layout.css', './admin-products.component.css'],
 })
 export class AdminProductsComponent implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);

@@ -18,17 +18,20 @@ import Swal from 'sweetalert2';
 export class HomeComponent implements OnInit {
   carouselItems = [
     {
-      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/unieventos-images-service.appspot.com/o/verduras_402de1696c-compressed-_1_.webp?alt=media&token=e9361056-28d0-407b-8239-6910d88e9418',
+      imageUrl:
+        'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1600&q=80',
       title: 'Bienvenido a Tienda Sana',
       subtitle: 'Descubre productos saludables para tu estilo de vida'
     },
     {
-      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/unieventos-images-service.appspot.com/o/restaurantes-envigado-compressed.webp?alt=media&token=201f2ab0-8c0c-48c9-9884-928deb6463a8',
+      imageUrl:
+        'https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1600&q=80',
       title: 'Ofertas Especiales',
       subtitle: 'Aprovecha descuentos exclusivos en nuestros productos'
     },
     {
-      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/unieventos-images-service.appspot.com/o/hacer-platillos-mas-saludables-compressed.webp?alt=media&token=edf0180c-f2b4-433a-8fcb-b7421530f8b8',
+      imageUrl:
+        'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80',
       title: 'Calidad Garantizada',
       subtitle: 'Productos seleccionados con los más altos estándares'
     }

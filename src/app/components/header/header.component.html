@@ -71,12 +71,14 @@
               <i class="fa-solid fa-user-circle me-2" style="margin-right: 8px;"></i> Ver perfil
             </a>
           </li>
+          @if (!isAdmin) {
           <li class="dropdown-divider"></li>
           <li class="dropdown-item" role="none">
             <a routerLink="/historial" role="menuitem" (click)="closeUserDropdown()">
               <i class="fa-solid fa-history me-2" style="margin-right: 8px;"></i> Historial
             </a>
           </li>
+          }
           <li class="dropdown-divider"></li>
           <li class="dropdown-item" role="none">
             <a href="#" role="menuitem" (click)="logout(); closeUserDropdown(); $event.preventDefault()">
@@ -86,7 +88,7 @@
         </ul>
       </div>
 
-      <!-- Ícono del carrito de compras -->
+      @if (!isAdmin) {
       <div class="cart-container">
         <button type="button" class="cart-button" routerLink="/carrito">
           <i class="fa-solid fa-shopping-cart"></i>
@@ -95,6 +97,7 @@
           <i class="fa-solid fa-calendar-check"></i>
         </button>
       </div>
+      }
       }
     </div>
   </header>

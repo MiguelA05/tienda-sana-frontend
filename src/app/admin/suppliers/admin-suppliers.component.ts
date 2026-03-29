@@ -15,7 +15,7 @@ import { Supplier, SupplierStatus } from '../models/supplier.model';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './admin-suppliers.component.html',
-  styleUrl: './admin-suppliers.component.css',
+  styleUrls: ['../styles/admin-form-layout.css', './admin-suppliers.component.css'],
 })
 export class AdminSuppliersComponent implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);

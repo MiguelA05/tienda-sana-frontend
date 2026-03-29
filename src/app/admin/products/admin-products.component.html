@@ -1,22 +1,30 @@
-<div class="page-header d-flex flex-wrap justify-content-between align-items-start gap-2">
-  <div>
-    <h1>Productos</h1>
-    <p class="text-muted mb-0">Imagen (URL o vista previa local), precio y categoría.</p>
-  </div>
-  <button type="button" class="btn btn-success" (click)="startCreate()">
-    <i class="fa-solid fa-plus me-1"></i> Nuevo producto
-  </button>
+<div class="page-header">
+  <h1>Productos</h1>
+  <p class="text-muted mb-0">Arma el catálogo: foto, nombre, precio, categoría y disponibilidad en sala.</p>
 </div>
 
 <div class="row g-4">
-  <div class="col-lg-5">
-    <div class="card shadow-sm border-0">
-      <div class="card-header bg-white fw-semibold">
-        {{ editingId ? 'Editar producto' : 'Crear producto' }}
+  <div class="col-lg-5 d-flex align-items-center">
+    <div class="card admin-form-card w-100">
+      <div
+        class="card-header admin-form-card-header admin-form-card-header--with-action d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <span>{{ editingId ? 'Editar producto' : 'Crear producto' }}</span>
+        <button
+          type="button"
+          class="btn btn-outline-secondary btn-sm"
+          (click)="startCreate()"
+          title="Vaciar campos y volver a modo alta">
+          <i class="fa-solid fa-eraser me-1" aria-hidden="true"></i>
+          Limpiar formulario
+        </button>
       </div>
-      <div class="card-body">
-        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-          <div class="mb-3">
+      <div class="card-body admin-form-card-body">
+        <form
+          [formGroup]="form"
+          (ngSubmit)="submit()"
+          novalidate
+          class="admin-form d-flex flex-column gap-4">
+          <div>
             <label class="form-label">Imagen</label>
             <input type="file" class="form-control" accept="image/*" (change)="onImagePick($event)" />
             <div class="form-text">Puede pegar URL o elegir archivo (se envía como data URL o URL al guardar).</div>
@@ -26,32 +34,32 @@
               </div>
             }
           </div>
-          <div class="mb-3">
+          <div>
             <label class="form-label" for="p-name">Nombre</label>
             <input id="p-name" class="form-control" formControlName="name" />
           </div>
-          <div class="mb-3">
+          <div>
             <label class="form-label" for="p-desc">Descripción</label>
             <textarea id="p-desc" class="form-control" rows="3" formControlName="description"></textarea>
           </div>
-          <div class="mb-3">
+          <div>
             <label class="form-label" for="p-cat">Categoría</label>
             <input id="p-cat" class="form-control" formControlName="category" />
           </div>
-          <div class="mb-3">
+          <div>
             <label class="form-label" for="p-price">Precio</label>
             <input id="p-price" type="number" class="form-control" formControlName="price" min="0" step="1" />
           </div>
           @if (editingId) {
-            <div class="form-check mb-3">
+            <div class="form-check">
               <input class="form-check-input" type="checkbox" id="p-stock" formControlName="outOfStock" />
               <label class="form-check-label" for="p-stock">Agotado (out of stock)</label>
             </div>
           }
-          <div class="d-flex gap-2 flex-wrap">
-            <button type="submit" class="btn btn-success" [disabled]="form.invalid">Guardar</button>
+          <div class="admin-form-actions d-flex gap-2 flex-wrap">
+            <button type="submit" class="btn btn-success px-4" [disabled]="form.invalid">Guardar</button>
             @if (editingId) {
-              <button type="button" class="btn btn-outline-secondary" (click)="cancelEdit()">Cancelar</button>
+              <button type="button" class="btn btn-outline-secondary px-4" (click)="cancelEdit()">Cancelar</button>
             }
           </div>
         </form>
@@ -60,8 +68,8 @@
   </div>
 
   <div class="col-lg-7">
-    <div class="card shadow-sm border-0">
-      <div class="card-header bg-white fw-semibold">Catálogo</div>
+    <div class="card admin-list-card h-100">
+      <div class="card-header admin-form-card-header">Catálogo</div>
       <div class="card-body p-0">
         @if (loading) {
           <div class="p-4 text-center text-muted">Cargando…</div>

@@ -1,6 +1,6 @@
 <div class="page-header">
   <h1>Panel administrativo</h1>
-  <p class="text-muted mb-0">Resumen operativo desde el API administrativo.</p>
+  <p class="text-muted mb-0">Resumen del negocio: inventario, catálogo, proveedores y estado de las mesas.</p>
 </div>
 
 @if (loading) {
@@ -38,6 +38,50 @@
         <span class="stat-value">{{ tableCount }}</span>
         <span class="stat-hint">{{ occupiedOrReserved }} ocupadas / reservadas</span>
       </a>
+    </div>
+  </div>
+
+  <h2 class="charts-section-title">Métricas visuales</h2>
+  <p class="charts-section-lead text-muted">
+    Distribución de inventario, ocupación de mesas, catálogo por categoría y estado de proveedores.
+  </p>
+
+  <div class="row g-3 charts-grid">
+    <div class="col-lg-6">
+      <div class="chart-card">
+        <h3 class="chart-card-title">Inventario de productos</h3>
+        <p class="chart-card-desc">Referencias con stock frente a agotados en catálogo.</p>
+        <div class="chart-canvas-wrap">
+          <canvas #chartInventory aria-label="Gráfico inventario de productos"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="chart-card">
+        <h3 class="chart-card-title">Estado de mesas</h3>
+        <p class="chart-card-desc">Disponibilidad operativa y mesas inactivas.</p>
+        <div class="chart-canvas-wrap">
+          <canvas #chartTables aria-label="Gráfico estado de mesas"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="chart-card">
+        <h3 class="chart-card-title">Productos por categoría</h3>
+        <p class="chart-card-desc">Hasta 10 categorías con más referencias.</p>
+        <div class="chart-canvas-wrap chart-canvas-wrap--tall">
+          <canvas #chartCategories aria-label="Gráfico productos por categoría"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="chart-card">
+        <h3 class="chart-card-title">Proveedores por estado</h3>
+        <p class="chart-card-desc">Activos frente a inactivos en la red de suministro.</p>
+        <div class="chart-canvas-wrap">
+          <canvas #chartSuppliers aria-label="Gráfico proveedores por estado"></canvas>
+        </div>
+      </div>
     </div>
   </div>
 }
