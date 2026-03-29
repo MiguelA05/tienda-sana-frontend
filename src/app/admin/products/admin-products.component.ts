@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { ProductService } from '../services/product.service';
 import { NotificationService } from '../services/notification.service';
 import { Product } from '../models/product.model';
+import { CloudinaryUploadService } from '../services/cloudinary-upload.service';
 
 @Component({
   selector: 'app-admin-products',
@@ -22,6 +23,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly productService = inject(ProductService);
   private readonly notify = inject(NotificationService);
+  private readonly cloudinaryUpload = inject(CloudinaryUploadService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
@@ -29,6 +31,10 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
   loading = true;
   editingId: string | null = null;
   imagePreview: string | null = null;
+  selectedImageFile: File | null = null;
+  uploadingImage = false;
+  uploadProgress = 0;
+  uploadErrorMessage: string | null = null;
   private sub = new Subscription();
 
   readonly form = this.fb.nonNullable.group({
@@ -67,12 +73,20 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
   startCreate(): void {
     this.editingId = null;
     this.imagePreview = null;
+    this.selectedImageFile = null;
+    this.uploadingImage = false;
+    this.uploadProgress = 0;
+    this.uploadErrorMessage = null;
     this.form.reset({ name: '', description: '', category: '', price: 0, outOfStock: false });
   }
 
   startEdit(row: Product): void {
     this.editingId = row.id;
     this.imagePreview = row.imageUrl;
+    this.selectedImageFile = null;
+    this.uploadingImage = false;
+    this.uploadProgress = 0;
+    this.uploadErrorMessage = null;
     this.form.patchValue({
       name: row.name,
       description: row.description,
@@ -104,6 +118,10 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
   cancelEdit(): void {
     this.editingId = null;
     this.imagePreview = null;
+    this.selectedImageFile = null;
+    this.uploadingImage = false;
+    this.uploadProgress = 0;
+    this.uploadErrorMessage = null;
     this.form.reset({ price: 0, outOfStock: false });
   }
 
@@ -113,10 +131,15 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
     if (!file) {
       return;
     }
-    if (!file.type.startsWith('image/')) {
-      this.notify.warning('Seleccione un archivo de imagen');
+    const validationError = this.cloudinaryUpload.validateImage(file);
+    if (validationError) {
+      this.notify.warning(validationError);
+      input.value = '';
       return;
     }
+    this.selectedImageFile = file;
+    this.uploadErrorMessage = null;
+    this.uploadProgress = 0;
     const reader = new FileReader();
     reader.onload = () => {
       this.imagePreview = reader.result as string;
@@ -131,47 +154,88 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
       return;
     }
     const v = this.form.getRawValue();
+
+    const persist = (imageUrl: string): void => {
+      if (this.editingId) {
+        this.sub.add(
+          this.productService
+            .update(this.editingId, {
+              ...v,
+              imageUrl,
+            })
+            .subscribe({
+              next: () => {
+                this.notify.success('Producto actualizado');
+                this.cancelEdit();
+                this.refresh();
+              },
+              error: (e) => this.notify.error(e.message ?? 'Error al actualizar'),
+            }),
+        );
+      } else {
+        this.sub.add(
+          this.productService
+            .create({
+              name: v.name,
+              description: v.description,
+              category: v.category,
+              price: v.price,
+              outOfStock: v.outOfStock,
+              imageUrl,
+            })
+            .subscribe({
+              next: () => {
+                this.notify.success('Producto creado');
+                this.cancelEdit();
+                this.refresh();
+              },
+              error: (e) => this.notify.error(e.message ?? 'Error al crear'),
+            }),
+        );
+      }
+    };
+
+    if (this.selectedImageFile) {
+      this.startUploadAndPersist(persist);
+      return;
+    }
+
     const imageUrl =
       this.imagePreview ??
       'https://placehold.co/320x200/e9ecef/198754?text=Producto';
+    persist(imageUrl);
+  }
 
-    if (this.editingId) {
-      this.sub.add(
-        this.productService
-          .update(this.editingId, {
-            ...v,
-            imageUrl,
-          })
-          .subscribe({
-            next: () => {
-              this.notify.success('Producto actualizado');
-              this.cancelEdit();
-              this.refresh();
-            },
-            error: (e) => this.notify.error(e.message ?? 'Error al actualizar'),
-          }),
-      );
-    } else {
-      this.sub.add(
-        this.productService
-          .create({
-            name: v.name,
-            description: v.description,
-            category: v.category,
-            price: v.price,
-            outOfStock: v.outOfStock,
-            imageUrl,
-          })
-          .subscribe({
-            next: () => {
-              this.notify.success('Producto creado');
-              this.cancelEdit();
-              this.refresh();
-            },
-            error: (e) => this.notify.error(e.message ?? 'Error al crear'),
-          }),
-      );
+  retryImageUpload(): void {
+    this.submit();
+  }
+
+  private startUploadAndPersist(persist: (imageUrl: string) => void): void {
+    if (!this.selectedImageFile) {
+      return;
     }
+
+    this.uploadingImage = true;
+    this.uploadProgress = 0;
+    this.uploadErrorMessage = null;
+
+    this.sub.add(
+      this.cloudinaryUpload.uploadImage(this.selectedImageFile).subscribe({
+        next: (state) => {
+          this.uploadProgress = state.progress;
+          if (state.secureUrl) {
+            this.uploadingImage = false;
+            this.uploadErrorMessage = null;
+            persist(state.secureUrl);
+          }
+        },
+        error: (e) => {
+          this.uploadingImage = false;
+          this.uploadErrorMessage = e?.message ?? 'No se pudo subir la imagen';
+          this.notify.error(this.uploadErrorMessage ?? 'No se pudo subir la imagen');
+        },
+      }),
+    );
   }
 
   toggleOutOfStock(row: Product): void {

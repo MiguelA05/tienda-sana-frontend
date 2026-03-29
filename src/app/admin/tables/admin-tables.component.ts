@@ -11,8 +11,10 @@ import { TableService, TableOperationalStatus } from '../services/table.service'
 import { NotificationService } from '../services/notification.service';
 import { AdminTable } from '../models/admin-table.model';
 import { AdminTableMapComponent } from './table-map/table-map.component';
+import { CloudinaryUploadService } from '../services/cloudinary-upload.service';
 
 const ESTADOS_MESA = ['Disponible', 'Reservada', 'Ocupada'] as const;
+const LOCALIDADES_MESA = ['Pasillo', 'Centro', 'Patio', 'Salon'] as const;
 
 @Component({
   selector: 'app-admin-tables',
@@ -25,15 +27,22 @@ export class AdminTablesComponent implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly tableService = inject(TableService);
   private readonly notify = inject(NotificationService);
+  private readonly cloudinaryUpload = inject(CloudinaryUploadService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
   tables: AdminTable[] = [];
   loading = true;
   editingId: string | null = null;
+  imagePreview: string | null = null;
+  selectedImageFile: File | null = null;
+  uploadingImage = false;
+  uploadProgress = 0;
+  uploadErrorMessage: string | null = null;
   private sub = new Subscription();
 
   readonly estadosMesa = ESTADOS_MESA;
+  readonly localidadesMesa = LOCALIDADES_MESA;
 
   readonly form = this.fb.nonNullable.group({
     nombre: ['', [Validators.required, Validators.maxLength(200)]],
@@ -41,7 +50,7 @@ export class AdminTablesComponent implements OnInit, OnDestroy {
     localidad: ['', [Validators.required, Validators.maxLength(120)]],
     precioReserva: [0, [Validators.required, Validators.min(0)]],
     capacidad: [4, [Validators.required, Validators.min(1)]],
-    imagen: ['', [Validators.required, Validators.maxLength(2000)]],
+    imagen: [''], // Solo para guardar la URL final de Cloudinary o existente
     visibleToClient: [true],
   });
 
@@ -72,6 +81,11 @@ export class AdminTablesComponent implements OnInit, OnDestroy {
 
   startCreate(): void {
     this.editingId = null;
+    this.imagePreview = null;
+    this.selectedImageFile = null;
+    this.uploadingImage = false;
+    this.uploadProgress = 0;
+    this.uploadErrorMessage = null;
     this.form.reset({
       nombre: '',
       estado: 'Disponible',
@@ -85,6 +99,11 @@ export class AdminTablesComponent implements OnInit, OnDestroy {
 
   startEdit(row: AdminTable): void {
     this.editingId = row.id;
+    this.imagePreview = row.imagen;
+    this.selectedImageFile = null;
+    this.uploadingImage = false;
+    this.uploadProgress = 0;
+    this.uploadErrorMessage = null;
     this.form.patchValue({
       nombre: row.nombre,
       estado: ESTADOS_MESA.includes(row.estado as (typeof ESTADOS_MESA)[number])
@@ -122,45 +141,117 @@ export class AdminTablesComponent implements OnInit, OnDestroy {
     this.startCreate();
   }
 
+  onImagePick(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    const validationError = this.cloudinaryUpload.validateImage(file);
+    if (validationError) {
+      this.notify.warning(validationError);
+      input.value = '';
+      return;
+    }
+
+    this.selectedImageFile = file;
+    this.uploadErrorMessage = null;
+    this.uploadProgress = 0;
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.notify.warning('Revise el formulario');
       return;
     }
-    const v = this.form.getRawValue();
-    const payload = {
-      nombre: v.nombre,
-      estado: v.estado,
-      localidad: v.localidad,
-      precioReserva: v.precioReserva,
-      capacidad: v.capacidad,
-      imagen: v.imagen,
-      visibleToClient: v.visibleToClient,
-    };
-    if (this.editingId) {
-      this.sub.add(
-        this.tableService.update(this.editingId, payload).subscribe({
-          next: () => {
-            this.notify.success('Mesa actualizada');
-            this.cancelEdit();
-            this.refresh();
-          },
-          error: (e) => this.notify.error(e.message ?? 'Error'),
-        }),
-      );
-    } else {
-      this.sub.add(
-        this.tableService.create(payload).subscribe({
-          next: () => {
-            this.notify.success('Mesa creada');
-            this.cancelEdit();
-            this.refresh();
-          },
-          error: (e) => this.notify.error(e.message ?? 'Error'),
-        }),
-      );
+    
+    // Validar que haya imagen: seleccionada o existente
+    if (!this.selectedImageFile && !this.form.get('imagen')?.value) {
+      this.notify.warning('Debe seleccionar una imagen');
+      return;
     }
+    
+    const v = this.form.getRawValue();
+    const persist = (imageUrl: string): void => {
+      const payload = {
+        nombre: v.nombre,
+        estado: v.estado,
+        localidad: v.localidad,
+        precioReserva: v.precioReserva,
+        capacidad: v.capacidad,
+        imagen: imageUrl,
+        visibleToClient: v.visibleToClient,
+      };
+      if (this.editingId) {
+        this.sub.add(
+          this.tableService.update(this.editingId, payload).subscribe({
+            next: () => {
+              this.notify.success('Mesa actualizada');
+              this.cancelEdit();
+              this.refresh();
+            },
+            error: (e) => this.notify.error(e.message ?? 'Error'),
+          }),
+        );
+      } else {
+        this.sub.add(
+          this.tableService.create(payload).subscribe({
+            next: () => {
+              this.notify.success('Mesa creada');
+              this.cancelEdit();
+              this.refresh();
+            },
+            error: (e) => this.notify.error(e.message ?? 'Error'),
+          }),
+        );
+      }
+    };
+
+    if (this.selectedImageFile) {
+      this.startUploadAndPersist(persist);
+      return;
+    }
+
+    persist(v.imagen);
+  }
+
+  retryImageUpload(): void {
+    this.submit();
+  }
+
+  private startUploadAndPersist(persist: (imageUrl: string) => void): void {
+    if (!this.selectedImageFile) {
+      return;
+    }
+
+    this.uploadingImage = true;
+    this.uploadProgress = 0;
+    this.uploadErrorMessage = null;
+
+    this.sub.add(
+      this.cloudinaryUpload.uploadImage(this.selectedImageFile).subscribe({
+        next: (state) => {
+          this.uploadProgress = state.progress;
+          if (state.secureUrl) {
+            this.uploadingImage = false;
+            this.uploadErrorMessage = null;
+            persist(state.secureUrl);
+          }
+        },
+        error: (e) => {
+          this.uploadingImage = false;
+          this.uploadErrorMessage = e?.message ?? 'No se pudo subir la imagen';
+          this.notify.error(this.uploadErrorMessage ?? 'No se pudo subir la imagen');
+        },
+      }),
+    );
   }
 
   onWalkInCycle(t: AdminTable): void {

@@ -27,7 +27,26 @@
           <div>
             <label class="form-label">Imagen</label>
             <input type="file" class="form-control" accept="image/*" (change)="onImagePick($event)" />
-            <div class="form-text">Puede pegar URL o elegir archivo (se envía como data URL o URL al guardar).</div>
+            <div class="form-text">Solo imágenes hasta 5MB.</div>
+            @if (uploadingImage) {
+              <div class="mt-2">
+                <div class="d-flex justify-content-between small text-muted mb-1">
+                  <span>Subiendo imagen...</span>
+                  <span>{{ uploadProgress }}%</span>
+                </div>
+                <div class="progress" role="progressbar" aria-label="Progreso de subida" [attr.aria-valuenow]="uploadProgress" aria-valuemin="0" aria-valuemax="100">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated" [style.width.%]="uploadProgress"></div>
+                </div>
+              </div>
+            }
+            @if (uploadErrorMessage) {
+              <div class="alert alert-warning py-2 px-3 mt-2 mb-0 small d-flex justify-content-between align-items-center gap-2">
+                <span>{{ uploadErrorMessage }}</span>
+                <button type="button" class="btn btn-sm btn-outline-warning" (click)="retryImageUpload()" [disabled]="uploadingImage">
+                  Reintentar
+                </button>
+              </div>
+            }
             @if (imagePreview) {
               <div class="mt-2 thumb-wrap">
                 <img [src]="imagePreview" alt="Vista previa" class="img-thumbnail thumb" />
@@ -57,7 +76,9 @@
             </div>
           }
           <div class="admin-form-actions d-flex gap-2 flex-wrap">
-            <button type="submit" class="btn btn-success px-4" [disabled]="form.invalid">Guardar</button>
+            <button type="submit" class="btn btn-success px-4" [disabled]="form.invalid || uploadingImage">
+              {{ uploadingImage ? 'Subiendo imagen...' : 'Guardar' }}
+            </button>
             @if (editingId) {
               <button type="button" class="btn btn-outline-secondary px-4" (click)="cancelEdit()">Cancelar</button>
             }
