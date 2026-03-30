@@ -1,6 +1,11 @@
 <!-- HTML del header mejorado -->
 <div class="header-container" [class.header-transparent]="useTransparentHeader">
   <header class="main-header" [class.scrolled]="hasScrolled" [class.home-overlay]="useTransparentHeader">
+    <!-- Botón de menú para pantallas pequeñas (izquierda) -->
+    <button class="menu-toggle" (click)="toggleMenu()" aria-label="Toggle menu" [attr.aria-expanded]="isMenuOpen">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
     <!-- Logo y título -->
     <div class="brand">
       <a class="brand-link" (click)="goHome($event)">
@@ -9,13 +14,8 @@
       </a>
     </div>
 
-    <!-- Botón de menú para pantallas pequeñas -->
-    <button class="menu-toggle" (click)="toggleMenu()">
-      <i class="fa-solid fa-bars"></i>
-    </button>
-
-    <!-- Navegación -->
-    <nav class="main-nav" [ngClass]="{ 'open': isMenuOpen }">
+    <!-- Navegación desktop -->
+    <nav class="main-nav main-nav-desktop">
       <ul class="nav-list">
         <li class="nav-item">
           <a class="nav-link"
@@ -40,8 +40,8 @@
       </ul>
     </nav>
 
-    <!-- Usuario / Login-Registro -->
-    <div class="auth-container">
+    <!-- Usuario / Login-Registro (desktop) -->
+    <div class="auth-container auth-container-desktop">
       @if(!isLogged) {
       <button type="button" routerLink="/login" class="btn-outline">
         <i class="fa-solid fa-sign-in-alt me-2" style="margin-right: 8px;"></i>Login
@@ -105,5 +105,116 @@
       }
       }
     </div>
+
+    <!-- Carrito y Gestor de Reservas (mobile) -->
+    <div class="cart-container cart-container-mobile">
+      @if (isLogged && !isAdmin) {
+        <button type="button" class="cart-button cart-button-cart" routerLink="/carrito" aria-label="Ir al carrito">
+          <i class="fa-solid fa-shopping-cart"></i>
+        </button>
+        <button type="button" class="cart-button cart-button-reservas" routerLink="/gestor-reservas" aria-label="Ir al gestor de reservas">
+          <i class="fa-solid fa-calendar-check"></i>
+        </button>
+      }
+    </div>
   </header>
+
+  <!-- Menú lateral mobile/tablet (unificado) -->
+  <nav class="mobile-sidebar" [ngClass]="{ 'open': isMenuOpen }">
+    <!-- Encabezado del menú -->
+    <div class="sidebar-header">
+      <span class="sidebar-title">Menú</span>
+      <button class="sidebar-close" (click)="closeMenu()" aria-label="Close menu">
+        <i class="fa-solid fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Navegación principal en móvil -->
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item">
+        <a class="sidebar-nav-link" (click)="irAInicio(); onNavigate()">
+          <i class="fa-solid fa-home"></i>
+          <span>Inicio</span>
+        </a>
+      </li>
+      <li class="sidebar-nav-item">
+        <a class="sidebar-nav-link" (click)="mostrarProductos(); onNavigate()">
+          <i class="fa-solid fa-leaf"></i>
+          <span>Productos</span>
+        </a>
+      </li>
+      <li class="sidebar-nav-item">
+        <a class="sidebar-nav-link" (click)="mostrarReservas(); onNavigate()">
+          <i class="fa-solid fa-calendar"></i>
+          <span>Reservas</span>
+        </a>
+      </li>
+      @if (isLogged && isAdmin) {
+        <li class="sidebar-nav-item">
+          <a class="sidebar-nav-link" routerLink="/admin" (click)="onNavigate()">
+            <i class="fa-solid fa-cog"></i>
+            <span>Administración</span>
+          </a>
+        </li>
+      }
+    </ul>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- Sección de usuario logueado en móvil -->
+    @if(isLogged) {
+      <div class="sidebar-user-section">
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-avatar">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <div class="sidebar-user-name">{{ nombreUsuario }}</div>
+        </div>
+      </div>
+
+      <ul class="sidebar-user-menu">
+        <li class="sidebar-user-item">
+          <a routerLink="/info-usuario" (click)="onNavigate()">
+            <i class="fa-solid fa-user-circle"></i>
+            <span>Ver perfil</span>
+          </a>
+        </li>
+        @if (!isAdmin) {
+          <li class="sidebar-user-item">
+            <a routerLink="/historial" (click)="onNavigate()">
+              <i class="fa-solid fa-history"></i>
+              <span>Historial</span>
+            </a>
+          </li>
+        }
+      </ul>
+
+      <!-- Divider y Logout en la parte inferior -->
+      <div class="sidebar-divider"></div>
+
+      <ul class="sidebar-logout-menu">
+        <li class="sidebar-user-item sidebar-user-logout">
+          <a href="#" (click)="logout(); onNavigate(); $event.preventDefault()">
+            <i class="fa-solid fa-sign-out-alt"></i>
+            <span>Cerrar sesión</span>
+          </a>
+        </li>
+      </ul>
+    } @else {
+      <!-- Opciones de login/registro si no está logueado -->
+      <div class="sidebar-auth">
+        <button type="button" routerLink="/login" class="btn-sidebar-auth" (click)="onNavigate()">
+          <i class="fa-solid fa-sign-in-alt"></i>
+          <span>Iniciar sesión</span>
+        </button>
+        <button type="button" routerLink="/register" class="btn-sidebar-auth btn-sidebar-auth-primary" (click)="onNavigate()">
+          <i class="fa-solid fa-user-plus"></i>
+          <span>Registrarse</span>
+        </button>
+      </div>
+    }
+  </nav>
+
+  <!-- Overlay para cerrar menú al hacer click fuera -->
+  <div class="mobile-sidebar-overlay" [class.open]="isMenuOpen" (click)="closeMenu()"></div>
 </div>

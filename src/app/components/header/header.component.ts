@@ -93,6 +93,10 @@ export class HeaderComponent {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
+  closeMenu(): void {
+    this.isMenuOpen = false;
+  }
+
   toggleUserDropdown(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
@@ -103,15 +107,23 @@ export class HeaderComponent {
     this.isUserDropdownOpen = false;
   }
 
-  @HostListener('document:click')
-  onDocumentClick(): void {
-    this.isUserDropdownOpen = false;
+  /**
+   * Cierra el menú después de navegar (mobile)
+   */
+  onNavigate(): void {
+    this.closeMenu();
   }
 
-  goHome(event: Event) {
+  goHome(event: Event): void {
     event.preventDefault();
     this.router.navigate(['/'], { queryParams: { reset: true }, fragment: 'inicio' });
     this.activeNav = 'inicio';
+    this.onNavigate();
+  }
+
+  @HostListener('document:click')
+  onDocumentClick(): void {
+    this.isUserDropdownOpen = false;
   }
 
   private updateRouteState(url: string): void {
