@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700&display=swap');
+
 /* Estilos globales */
 :root {
   /* Colores primarios */
@@ -38,6 +40,11 @@
   --border-radius-lg: 12px;
   --border-radius-xl: 20px;
   --border-radius-circle: 50%;
+
+  /* Tipografia global */
+  --font-sans: "Manrope", "Segoe UI", "Helvetica Neue", sans-serif;
+  --font-display: "Fraunces", Georgia, serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 }
 
 /* Reinicio y bases */
@@ -52,7 +59,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: Poppins, "Helvetica Neue", sans-serif;
+  font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.5;
   color: var(--neutral-700);
@@ -60,8 +67,82 @@ body {
   transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
+app-shopping-car,
+app-gestor-reservas,
+app-historial,
+app-informacion-usuario {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(42, 164, 120, 0.18) 0, rgba(42, 164, 120, 0) 40%),
+    radial-gradient(circle at 86% 80%, rgba(25, 135, 84, 0.14) 0, rgba(25, 135, 84, 0) 34%),
+    linear-gradient(120deg, #f3f6f6 0%, #e7ecee 100%);
+}
+
+app-shopping-car::before,
+app-gestor-reservas::before,
+app-historial::before,
+app-informacion-usuario::before,
+app-shopping-car::after,
+app-gestor-reservas::after,
+app-historial::after,
+app-informacion-usuario::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+
+app-shopping-car::before,
+app-gestor-reservas::before,
+app-historial::before,
+app-informacion-usuario::before {
+  width: 420px;
+  height: 420px;
+  left: -180px;
+  top: 14%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 45% 45%, rgba(164, 220, 176, 0.42) 0%, rgba(115, 182, 131, 0.22) 40%, rgba(25, 135, 84, 0) 72%);
+  filter: blur(2px);
+}
+
+app-shopping-car::after,
+app-gestor-reservas::after,
+app-historial::after,
+app-informacion-usuario::after {
+  width: 360px;
+  height: 360px;
+  right: -130px;
+  bottom: -100px;
+  border-radius: 42% 58% 63% 37% / 42% 35% 65% 58%;
+  background: linear-gradient(140deg, rgba(255, 191, 102, 0.22), rgba(248, 153, 76, 0.1));
+  filter: blur(2px);
+  animation: sharedBgBlobDrift 12s ease-in-out infinite alternate;
+}
+
+app-shopping-car > *,
+app-gestor-reservas > *,
+app-historial > *,
+app-informacion-usuario > * {
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes sharedBgBlobDrift {
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(-16px);
+  }
+}
+
 /* Tipografía */
 h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
   margin-top: 0;
   margin-bottom: 0.5rem;
   font-weight: 500;

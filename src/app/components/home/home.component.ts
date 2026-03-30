@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { CardGridComponent } from "../card-grid/card-grid.component";
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { CardGridComponent } from '../card-grid/card-grid.component';
 import { PublicoService } from '../../services/publico.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { FiltroProductoDTO } from '../../dto/filtro-producto-dto';
-import { FiltroMesaDTO } from '../../dto/filtro-mesa-dto'; // Ensure this path is correct
+import { FiltroMesaDTO } from '../../dto/filtro-mesa-dto';
 import { CommonModule } from '@angular/common';
 import { CardGridMesaComponent } from '../card-grid-mesa/card-grid-mesa.component';
 import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -15,25 +16,24 @@ import Swal from 'sweetalert2';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
-  carouselItems = [
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
+  private revealObserver?: IntersectionObserver;
+
+  valorItems = [
     {
-      imageUrl:
-        'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1600&q=80',
-      title: 'Bienvenido a Tienda Sana',
-      subtitle: 'Descubre productos saludables para tu estilo de vida'
+      icon: 'fa-solid fa-leaf',
+      title: '100% natural',
+      description: 'Ingredientes frescos de origen confiable, sin conservantes innecesarios.'
     },
     {
-      imageUrl:
-        'https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1600&q=80',
-      title: 'Ofertas Especiales',
-      subtitle: 'Aprovecha descuentos exclusivos en nuestros productos'
+      icon: 'fa-solid fa-bolt',
+      title: 'Entrega rapida',
+      description: 'Tus productos y reservas confirmados en minutos con un flujo simple.'
     },
     {
-      imageUrl:
-        'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80',
-      title: 'Calidad Garantizada',
-      subtitle: 'Productos seleccionados con los más altos estándares'
+      icon: 'fa-solid fa-heart-pulse',
+      title: 'Bienestar diario',
+      description: 'Comer saludable con sabor real para convertirlo en un habito sostenible.'
     }
   ];
 
@@ -46,10 +46,7 @@ export class HomeComponent implements OnInit {
   pages: number[] = [];
   filterUsed: boolean = false;
   categoria: string[] = [];
-  activeSlideIndex: number = 0;
-  slideInterval: any; // Variable para almacenar el temporizador
 
-  // Nuevas variables para mesas
   mesaFilterForm!: FormGroup;
   mesas: any[] = [];
   mesasDisponibles: boolean = true;
@@ -58,19 +55,15 @@ export class HomeComponent implements OnInit {
   ubicaciones: string[] = [];
   mesasCurrentPage: number = 0;
 
-  // Controlar la vista activa
-  activeView: string = 'productos'; // 'productos' o 'mesas'
+  activeView: string = 'productos';
+  productosLoaded: boolean = false;
+  mesasLoaded: boolean = false;
 
-  /**
-   * Constructor de la clase HomeComponent
-   * @param publicoService publicoService para manejar la lógica de negocio relacionada con el cliente
-   * @param formBuilder formBuilder para construir formularios reactivos
-   */
   constructor(private publicoService: PublicoService, private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router) {
     this.productos = [];
     this.mesas = [];
     this.obtenerProductos(this.currentPage);
-    this.obtenerMesas(this.mesasCurrentPage); // Inicializa la lista de mesas
+    this.obtenerMesas(this.mesasCurrentPage);
     this.obtenerCategorias();
     this.obtenerLocalidades();
     this.createForm();
@@ -80,13 +73,10 @@ export class HomeComponent implements OnInit {
     this.mesaFilterUsed = false;
   }
 
-  /**
-   * Método para inicializar el componente
-   */
   ngOnInit(): void {
     this.createForm();
     this.createMesaForm();
-    this.startSlideInterval(); // Inicia el cambio automático de subtítulos
+
     this.route.queryParams.subscribe(params => {
       if (params['reset']) {
         this.resetForm();
@@ -98,71 +88,81 @@ export class HomeComponent implements OnInit {
         this.mesasCurrentPage = 0;
         this.obtenerMesas(this.mesasCurrentPage);
         this.activeView = 'productos';
-        // Limpia el parámetro 'reset' de la URL
         this.router.navigate([], {
           queryParams: { reset: null },
-          queryParamsHandling: 'merge',
           replaceUrl: true
         });
-        // Notifica al HeaderComponent (opcional, si usas un servicio compartido)
       }
-      if (params['view']) {
-        this.activeView = params['view'];
+    });
+
+    this.route.fragment.subscribe((fragment) => {
+      if (!fragment) {
+        return;
       }
+      if (fragment === 'reservas') {
+        this.activeView = 'mesas';
+        if (!this.mesasLoaded && !this.mesaFilterUsed) {
+          this.obtenerMesas(this.mesasCurrentPage);
+        }
+      }
+      if (fragment === 'productos') {
+        this.activeView = 'productos';
+        if (!this.productosLoaded && !this.filterUsed) {
+          this.obtenerProductos(this.currentPage);
+        }
+      }
+      setTimeout(() => this.scrollToSection(fragment), 60);
     });
   }
 
-  /**
-   * Método para inicializar el formulario reactivo
-   */
+  ngAfterViewInit(): void {
+    this.inicializarAnimacionesScroll();
+  }
+
   ngOnDestroy(): void {
-    this.stopSlideInterval(); // Detiene el temporizador al destruir el componente
+    this.revealObserver?.disconnect();
   }
 
-  /**
-   * Método para iniciar el intervalo de cambio automático de subtítulos
-   */
-  startSlideInterval(): void {
-    this.slideInterval = setInterval(() => {
-      this.nextSlide();
-    }, 5000); // Cambia cada 5 segundos
-  }
-
-  /**
-   * Método para detener el intervalo de cambio automático de subtítulos
-   */
-  stopSlideInterval(): void {
-    if (this.slideInterval) {
-      clearInterval(this.slideInterval);
-    }
-  }
-
-  /**
-   * Método para cambiar al siguiente subtítulo del carrusel
-   */
-  nextSlide() {
-    this.activeSlideIndex = (this.activeSlideIndex + 1) % this.carouselItems.length;
-  }
-
-  /**
-   * Método para cambiar al subtítulo anterior del carrusel
-   */
-  prevSlide() {
-    this.activeSlideIndex = (this.activeSlideIndex - 1 + this.carouselItems.length) % this.carouselItems.length;
-  }
-
-  /**
-   * Método para cambiar entre la vista de productos y mesas
-   * @param view Vista a activar ('productos' o 'mesas')
-   */
   changeView(view: string) {
     this.activeView = view;
   }
 
-  /**
-   * Método para obtener el producto por ID
-   * @param id ID del producto
-   */
+  irAProductosDesdeHero(): void {
+    this.activeView = 'productos';
+    if (!this.productosLoaded && !this.filterUsed) {
+      this.obtenerProductos(this.currentPage);
+    }
+
+    const currentFragment = this.router.parseUrl(this.router.url).fragment;
+    if (currentFragment === 'productos') {
+      setTimeout(() => this.scrollToSection('productos'), 0);
+      return;
+    }
+
+    this.router.navigate([], {
+      fragment: 'productos',
+      queryParamsHandling: 'replace'
+    });
+  }
+
+  irAMesasDesdeHero(): void {
+    this.activeView = 'mesas';
+    if (!this.mesasLoaded && !this.mesaFilterUsed) {
+      this.obtenerMesas(this.mesasCurrentPage);
+    }
+
+    const currentFragment = this.router.parseUrl(this.router.url).fragment;
+    if (currentFragment === 'reservas') {
+      setTimeout(() => this.scrollToSection('reservas'), 0);
+      return;
+    }
+
+    this.router.navigate([], {
+      fragment: 'reservas',
+      queryParamsHandling: 'replace'
+    });
+  }
+
   public obtenerProductos(page: number) {
     this.publicoService.listarProductos(page).subscribe({
       next: (data) => {
@@ -170,6 +170,7 @@ export class HomeComponent implements OnInit {
         this.productos = data.reply.productos;
         this.currentPage = page;
         this.actualizarProductosDisponibles();
+        this.productosLoaded = true;
       },
       error: (error) => {
         console.error(error);
@@ -177,10 +178,6 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  /**
-   * Método para obtener las mesas paginadas
-   * @param page Número de página
-   */
   public obtenerMesas(page: number) {
     this.publicoService.listarMesas(page).subscribe({
       next: (data) => {
@@ -188,6 +185,7 @@ export class HomeComponent implements OnInit {
         this.mesas = data.reply.mesas;
         this.mesasCurrentPage = page;
         this.actualizarMesasDisponibles();
+        this.mesasLoaded = true;
       },
       error: (error) => {
         console.error(error);
@@ -195,9 +193,6 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  /**
-   * Método para crear el formulario reactivo
-   */
   createForm() {
     this.filterForm = this.formBuilder.group({
       nombre: [''],
@@ -230,9 +225,6 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  /**
-   * Método para crear el formulario reactivo de mesas
-   */
   createMesaForm() {
     this.mesaFilterForm = this.formBuilder.group({
       nombre: [''],
@@ -241,25 +233,20 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  /**
-   * Método para aplicar el filtro a los productos
-   * @param pagina Página actual
-   */
   public filtrarProductos(pagina: number) {
     if (this.isProductoFilterEmpty()) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Por favor, complete al menos uno de los campos con datos válidos'
+        text: 'Por favor, completa al menos un filtro valido.'
       });
       return;
     }
 
-    this.isLoading = true; 
-    this.filterUsed= true;
+    this.isLoading = true;
+    this.filterUsed = true;
     const filtroProductoDTO = this.filterForm.value as FiltroProductoDTO;
     filtroProductoDTO.pagina = pagina;
-    console.log(filtroProductoDTO.pagina);
 
     this.publicoService.filtrarProductos(filtroProductoDTO).subscribe({
       next: (data) => {
@@ -284,33 +271,27 @@ export class HomeComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'Ocurrió un problema al filtrar los productos. Intente nuevamente más tarde.'
+          text: 'Ocurrio un problema al filtrar productos.'
         });
       }
     });
   }
 
   private isProductoFilterEmpty(): boolean {
-  const { nombre, cantidad, categoria } = this.filterForm.value;
-  return (
-    (!nombre || nombre.trim() === '') &&
-    (!cantidad || isNaN(Number(cantidad)) || Number(cantidad) <= 0) &&
-    (!categoria || categoria.trim() === '')
-  );
-}
+    const { nombre, cantidad, categoria } = this.filterForm.value;
+    return (
+      (!nombre || nombre.trim() === '') &&
+      (!cantidad || isNaN(Number(cantidad)) || Number(cantidad) <= 0) &&
+      (!categoria || categoria.trim() === '')
+    );
+  }
 
-
-
-  /**
-   * Método para aplicar el filtro a las mesas
-   * @param page Página actual
-   */
   public filterMesas(pagina: number) {
     if (this.isMesaFilterEmpty()) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Por favor, complete al menos uno de los campos con datos válidos'
+        text: 'Por favor, completa al menos un filtro valido.'
       });
       return;
     }
@@ -343,26 +324,21 @@ export class HomeComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'Ocurrió un problema al filtrar las mesas. Intente nuevamente más tarde.'
+          text: 'Ocurrio un problema al filtrar mesas.'
         });
       }
     });
   }
 
   private isMesaFilterEmpty(): boolean {
-  const { nombre, capacidad, localidad } = this.mesaFilterForm.value;
-  return (
-    (!nombre || nombre.trim() === '') &&
-    (!capacidad || isNaN(Number(capacidad)) || Number(capacidad) < 0) &&
-    (!localidad || localidad.trim() === '')
-  );
-}
+    const { nombre, capacidad, localidad } = this.mesaFilterForm.value;
+    return (
+      (!nombre || nombre.trim() === '') &&
+      (!capacidad || isNaN(Number(capacidad)) || Number(capacidad) < 0) &&
+      (!localidad || localidad.trim() === '')
+    );
+  }
 
-
-  /**
-   * Método para agregar un producto a la lista de seleccionados
-   * @param producto Producto a agregar
-   */
   public nextPage() {
     this.currentPage++;
     if (this.filterUsed) {
@@ -373,9 +349,6 @@ export class HomeComponent implements OnInit {
     this.actualizarProductosDisponibles();
   }
 
-  /**
-   * Método para ir a la página anterior
-   */
   public previousPage() {
     this.currentPage--;
     if (this.filterUsed) {
@@ -385,9 +358,6 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  /**
-   * Método para ir a la siguiente página de mesas
-   */
   public nextPageMesas() {
     this.mesasCurrentPage++;
     if (this.mesaFilterUsed) {
@@ -398,9 +368,6 @@ export class HomeComponent implements OnInit {
     this.actualizarMesasDisponibles();
   }
 
-  /**
-   * Método para ir a la página anterior de mesas
-   */
   public previousPageMesas() {
     this.mesasCurrentPage--;
     if (this.mesaFilterUsed) {
@@ -410,43 +377,55 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  /**
-   * Metodo para actualizar la disponibilidad de productos
-   */
   public actualizarProductosDisponibles() {
     this.productosDisponibles = this.currentPage < this.pages.length - 1;
   }
 
-  /**
-   * Método para actualizar la disponibilidad de mesas
-   */
   public actualizarMesasDisponibles() {
     this.mesasDisponibles = this.mesasCurrentPage < this.mesasPages.length - 1;
   }
 
-  /**
-   * Metodo para reiniciar el formulario de filtro
-   */
   public resetForm() {
     this.filterForm.reset();
   }
 
-  /**
-   * Método para reiniciar el formulario de filtro de mesas
-   */
   public resetMesaForm() {
     this.mesaFilterForm.reset();
   }
 
+  private scrollToSection(sectionId: string): void {
+    const targetId = (sectionId === 'productos' || sectionId === 'reservas') ? 'catalogo' : sectionId;
+    const section = document.getElementById(targetId);
+    if (!section) {
+      return;
+    }
 
-  /**
-   * Método para navegar al detalle de una mesa
-   * @param id ID de la mesa
-   */
-  public irADetalleMesa(id: number) {
-    // Implementación de navegación al detalle de la mesa
+    const header = document.querySelector('.header-container') as HTMLElement | null;
+    const headerOffset = header?.offsetHeight ?? 88;
+    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+
+    // Keep catalog navigation visually centered while respecting fixed header height.
+    const centerOffset = Math.max((window.innerHeight - section.getBoundingClientRect().height) / 2, 0);
+    const targetY = Math.max(sectionTop - headerOffset - centerOffset + 36, 0);
+
+    window.scrollTo({ top: targetY, behavior: 'smooth' });
   }
 
+  private inicializarAnimacionesScroll(): void {
+    const elements = Array.from(document.querySelectorAll('.reveal-on-scroll'));
+    if (elements.length === 0) {
+      return;
+    }
 
+    this.revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          this.revealObserver?.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.16 });
 
+    elements.forEach((el) => this.revealObserver?.observe(el));
+  }
 }

@@ -1,6 +1,6 @@
 <!-- HTML del header mejorado -->
-<div class="header-container">
-  <header class="main-header">
+<div class="header-container" [class.header-transparent]="useTransparentHeader">
+  <header class="main-header" [class.scrolled]="hasScrolled" [class.home-overlay]="useTransparentHeader">
     <!-- Logo y título -->
     <div class="brand">
       <a class="brand-link" (click)="goHome($event)">
@@ -19,13 +19,18 @@
       <ul class="nav-list">
         <li class="nav-item">
           <a class="nav-link"
+            [ngClass]="{ 'active': activeNav === 'inicio' }"
+            (click)="irAInicio()">Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link"
             [ngClass]="{ 'active': activeNav === 'productos' }"
             (click)="mostrarProductos()">Productos</a>
         </li>
         <li class="nav-item">
           <a class="nav-link"
-            [ngClass]="{ 'active': activeNav === 'mesas' }"
-            (click)="mostrarMesas()">Mesas</a>
+            [ngClass]="{ 'active': activeNav === 'reservas' }"
+            (click)="mostrarReservas()">Reservas</a>
         </li>
         @if (isLogged && isAdmin) {
           <li class="nav-item">
@@ -90,10 +95,10 @@
 
       @if (!isAdmin) {
       <div class="cart-container">
-        <button type="button" class="cart-button" routerLink="/carrito">
+        <button type="button" class="cart-button cart-button-cart" routerLink="/carrito" aria-label="Ir al carrito">
           <i class="fa-solid fa-shopping-cart"></i>
         </button>
-        <button type="button" class="cart-button" routerLink="/gestor-reservas">
+        <button type="button" class="cart-button cart-button-reservas" routerLink="/gestor-reservas" aria-label="Ir al gestor de reservas">
           <i class="fa-solid fa-calendar-check"></i>
         </button>
       </div>

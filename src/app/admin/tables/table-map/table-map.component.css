@@ -106,7 +106,7 @@
   padding-top: 0.45rem;
   border-top: 1px dashed var(--neutral-300, #dee2e6);
   font-size: 0.68rem;
-  font-family: ui-monospace, monospace;
+  font-family: var(--font-mono);
   color: var(--neutral-500, #adb5bd);
 }
 

@@ -1,197 +1,205 @@
-<div class="home-page container-fluid px-3 px-md-4 px-xl-5">
-<!-- Carrusel -->
-<div class="elegant-carousel-container">
-  <div id="carouselId" class="elegant-carousel">
-    <div class="carousel-inner">
-      @for (item of carouselItems; track item.imageUrl) {
-      <div
-        class="carousel-item"
-        [class.active]="carouselItems.indexOf(item) === activeSlideIndex">
-        <img [src]="item.imageUrl" class="d-block w-100"
-          [alt]="'Slide ' + (carouselItems.indexOf(item) + 1)" />
-        <div class="carousel-caption elegant-caption">
-          <h3>{{ item.title }}</h3>
-          <p>{{ item.subtitle }}</p>
-        </div>
+<div class="home-shell" id="inicio">
+  <section class="home-hero reveal-on-scroll is-visible">
+    <div class="hero-media" aria-hidden="true"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content reveal-on-scroll">
+      <p class="hero-kicker">Tienda Sana</p>
+      <h1>Alimenta tu bienestar</h1>
+      <p class="hero-subtitle">
+        Sabores frescos, experiencias memorables y una forma elegante de vivir saludable cada dia.
+      </p>
+      <div class="hero-actions">
+        <button type="button" class="hero-btn hero-btn-primary" (click)="irAProductosDesdeHero()">
+          <i class="fa-solid fa-basket-shopping" style="margin-right: 8px;"></i>Ver productos
+        </button>
+        <button type="button" class="hero-btn hero-btn-secondary" (click)="irAMesasDesdeHero()">
+          <i class="fa-solid fa-calendar-check" style="margin-right: 8px;"></i>Reservar mesa
+        </button>
       </div>
-      }
+    </div>
+  </section>
+
+  <section class="value-section reveal-on-scroll">
+    <div class="section-intro">
+      <h2>Natural, premium y pensado para ti</h2>
+      <p>
+        Combinamos ingredientes organicos, servicio eficiente y una experiencia visual cuidada para que cada pedido sea un momento de bienestar.
+      </p>
     </div>
 
-    <button
-      class="carousel-control-prev elegant-control"
-      type="button"
-      (click)="prevSlide()"
-      aria-label="Previous Slide">
-      <span class="carousel-control-prev-icon"></span>
-    </button>
-    <button
-      class="carousel-control-next elegant-control"
-      type="button"
-      (click)="nextSlide()"
-      aria-label="Next Slide">
-      <span class="carousel-control-next-icon"></span>
-    </button>
-  </div>
-</div>
+    <div class="value-grid">
+      @for (item of valorItems; track item.title) {
+      <article class="value-card reveal-on-scroll">
+        <div class="value-icon"><i [class]="item.icon"></i></div>
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.description }}</p>
+      </article>
+      }
+    </div>
+  </section>
 
-<!-- Vista de Productos -->
-<div *ngIf="activeView === 'productos'">
-  <!-- Filtro de productos -->
-  <div class="filter-container">
-    <form class="elegant-filter-bar" [formGroup]="filterForm"
-      (ngSubmit)="filtrarProductos(0)">
+  <section class="story-section reveal-on-scroll">
+    <div class="story-image"></div>
+    <div class="story-content">
+      <span class="story-label">Nuestra filosofia</span>
+      <h2>La cocina saludable tambien puede ser emocionante</h2>
+      <p>
+        Diseñamos cada plato y cada producto con equilibrio real: ingredientes puros, preparaciones limpias y una experiencia que invita a volver.
+      </p>
+      <button type="button" class="story-link" (click)="irAProductosDesdeHero()">Explorar productos</button>
+    </div>
+  </section>
 
-      <h4 class="filter-title">Encuentra los productos que buscas</h4>
-      <div class="filter-row">
-        <div class="filter-field">
-          <div class="floating-field">
-            <input type="text" id="nombre" class="form-control"
-              formControlName="nombre" placeholder=" " />
-            <label for="nombre">Nombre</label>
+  <section class="catalog-section" id="catalogo">
+    <div class="catalog-header reveal-on-scroll">
+      <h2>Explora lo mejor de Tienda Sana</h2>
+      <div class="catalog-switch">
+        <button
+          type="button"
+          [class.active]="activeView === 'productos'"
+          (click)="irAProductosDesdeHero()">
+          Productos
+        </button>
+        <button
+          type="button"
+          [class.active]="activeView === 'mesas'"
+          (click)="irAMesasDesdeHero()">
+          Reservas
+        </button>
+      </div>
+    </div>
+
+    <div id="productos" *ngIf="activeView === 'productos'" class="catalog-block">
+      <form class="elegant-filter-bar" [formGroup]="filterForm" (ngSubmit)="filtrarProductos(0)">
+        <h4 class="filter-title">Encuentra tus productos saludables</h4>
+        <div class="filter-row">
+          <div class="filter-field">
+            <div class="floating-field">
+              <input type="text" id="nombreProducto" class="form-control" formControlName="nombre" placeholder=" " />
+              <label for="nombreProducto">Nombre</label>
+            </div>
           </div>
-        </div>
-        <div class="filter-field">
-          <div class="floating-field">
-            <input type="text" id="cantidad" class="form-control"
-              formControlName="cantidad" placeholder=" " />
-            <label for="cantidad">Cantidad</label>
+          <div class="filter-field">
+            <div class="floating-field">
+              <input type="text" id="cantidadProducto" class="form-control" formControlName="cantidad" placeholder=" " />
+              <label for="cantidadProducto">Cantidad</label>
+            </div>
           </div>
-        </div>
-        <div class="filter-field">
-          <div class="floating-field">
-            <select id="categoria" class="form-control"
-              formControlName="categoria">
-
-              @for (item of categoria; track item) {
-              <option [value]="item">{{ item }}</option>
+          <div class="filter-field">
+            <div class="floating-field">
+              <select id="categoriaProducto" class="form-control" formControlName="categoria">
+                <option value=""></option>
+                @for (item of categoria; track item) {
+                <option [value]="item">{{ item }}</option>
+                }
+              </select>
+              <label for="categoriaProducto">Categoria</label>
+            </div>
+          </div>
+          <div class="filter-button">
+            <button class="btn-filter" type="submit" [disabled]="isLoading">
+              @if (isLoading) {
+              <i class="fas fa-circle-notch fa-spin fa-lg"></i>
+              } @else {
+              <i class="fas fa-search" style="margin-right: 8px;"></i>Filtrar
               }
-            </select>
-            <label for="categoria">Categoria</label>
+            </button>
           </div>
         </div>
-        <div class="filter-button">
-          <!-- Botón de filtrado  -->
-          <button class="btn-filter" type="submit" [disabled]="isLoading">
-            @if (isLoading) {
-            <i class="fas fa-circle-notch fa-spin fa-lg"></i>
-            } @else {
-            <i class="fas fa-search" style="margin-right: 8px;"></i> Filtrar
-            }
-          </button>
-        </div>
+      </form>
+
+      <div *ngIf="filterUsed" class="reset-filters-hint">
+        <i class="fa-solid fa-info-circle"></i>
+        Para reiniciar filtros, usa el logo de Tienda Sana en la barra superior.
       </div>
-    </form>
-    <div *ngIf="filterUsed" class="reset-filters-hint">
-      <i class="fa-solid fa-info-circle"></i>
-      Para reiniciar los filtros, presiona el icono de <b>Tienda Sana</b> en la
-      parte superior izquierda.
+
+      <app-card-grid [products]="productos"></app-card-grid>
+
+      <nav class="elegant-pagination">
+        <ul class="pagination-list">
+          <li class="pagination-item" [class.disabled]="currentPage === 0">
+            <a class="pagination-link" (click)="previousPage()">Anterior</a>
+          </li>
+          @for (item of pages; track item) {
+          <li class="pagination-item" [class.active]="currentPage === pages.indexOf(item)">
+            <a class="pagination-link"
+              (click)="filterUsed ? filtrarProductos(pages.indexOf(item)) : obtenerProductos(pages.indexOf(item))">
+              {{ pages.indexOf(item) + 1 }}
+            </a>
+          </li>
+          }
+          <li class="pagination-item" [class.disabled]="!productosDisponibles">
+            <a class="pagination-link" (click)="nextPage()">Siguiente</a>
+          </li>
+        </ul>
+      </nav>
     </div>
-  </div>
-  <!-- Grid de Productos -->
-  <app-card-grid [products]="productos"></app-card-grid>
 
-  <!-- Paginación de productos -->
-  <nav class="elegant-pagination">
-    <ul class="pagination-list">
-      <li class="pagination-item" [class.disabled]="currentPage === 0">
-        <a class="pagination-link" (click)="previousPage()">Anterior</a>
-      </li>
-      @for (item of pages; track item) {
-      <li class="pagination-item"
-        [class.active]="currentPage === pages.indexOf(item)">
-        <a class="pagination-link"
-          (click)="filterUsed ? filtrarProductos(pages.indexOf(item)) : obtenerProductos(pages.indexOf(item))">
-          {{ pages.indexOf(item) + 1 }}
-        </a>
-      </li>
-      }
-      <li class="pagination-item" [class.disabled]="!productosDisponibles">
-        <a class="pagination-link" (click)="nextPage()">Siguiente</a>
-      </li>
-    </ul>
-  </nav>
-</div>
-
-<!-- Vista de Mesas Reservables -->
-<div *ngIf="activeView === 'mesas'">
-  <div *ngIf="mesaFilterUsed" class="reset-filters-hint">
-    <i class="fa-solid fa-info-circle"></i>
-    Para reiniciar los filtros, presiona el icono de <b>Tienda Sana</b> en la
-    parte superior izquierda.
-  </div>
-  <!-- Filtro de mesas -->
-  <div class="filter-container">
-    <form class="elegant-filter-bar" [formGroup]="mesaFilterForm"
-      (ngSubmit)="filterMesas(0)">
-      <h4 class="filter-title">Encuentra la mesa perfecta para tu reserva</h4>
-      <div class="filter-row">
-        <div class="filter-field">
-          <div class="floating-field">
-            <input type="text" id="nombre" class="form-control"
-              formControlName="nombre" placeholder=" " />
-            <label for="nombre">Nombre</label>
+    <div id="reservas" *ngIf="activeView === 'mesas'" class="catalog-block">
+      <form class="elegant-filter-bar" [formGroup]="mesaFilterForm" (ngSubmit)="filterMesas(0)">
+        <h4 class="filter-title">Reserva la mesa ideal para tu momento</h4>
+        <div class="filter-row">
+          <div class="filter-field">
+            <div class="floating-field">
+              <input type="text" id="nombreMesa" class="form-control" formControlName="nombre" placeholder=" " />
+              <label for="nombreMesa">Nombre</label>
+            </div>
           </div>
-        </div>
-        <div class="filter-field">
-          <div class="floating-field">
-            <input type="number" id="capacidad" class="form-control"
-              formControlName="capacidad" placeholder=" " min="0" />
-            <label for="capacidad">Capacidad</label>
+          <div class="filter-field">
+            <div class="floating-field">
+              <input type="number" id="capacidadMesa" class="form-control" formControlName="capacidad" placeholder=" " min="0" />
+              <label for="capacidadMesa">Capacidad</label>
+            </div>
           </div>
-        </div>
-        <div class="filter-field">
-          <div class="floating-field">
-            <select id="localidad" class="form-control"
-              formControlName="localidad">
-              @for (ubicacion of ubicaciones; track ubicacion) {
-              <option [value]="ubicacion">{{ ubicacion }}</option>
+          <div class="filter-field">
+            <div class="floating-field">
+              <select id="localidadMesa" class="form-control" formControlName="localidad">
+                <option value=""></option>
+                @for (ubicacion of ubicaciones; track ubicacion) {
+                <option [value]="ubicacion">{{ ubicacion }}</option>
+                }
+              </select>
+              <label for="localidadMesa">Localidad</label>
+            </div>
+          </div>
+          <div class="filter-button">
+            <button class="btn-filter" type="submit" [disabled]="isLoading">
+              @if (isLoading) {
+              <i class="fas fa-circle-notch fa-spin fa-lg"></i>
+              } @else {
+              <i class="fas fa-search" style="margin-right: 8px;"></i>Filtrar
               }
-            </select>
-            <label for="ubicacion">Localidad</label>
+            </button>
           </div>
         </div>
-        <div class="filter-button">
-          <!-- Botón de filtrado actualizado -->
-          <!-- Alternativa opcional con único icono giratorio Font Awesome -->
-          <button class="btn-filter" type="submit" [disabled]="isLoading">
-            @if (isLoading) {
-            <i class="fas fa-circle-notch fa-spin fa-lg"></i>
-            } @else {
-            <i class="fas fa-search" style="margin-right: 8px;"></i> Filtrar
-            }
-          </button>
-        </div>
+      </form>
+
+      <div *ngIf="mesaFilterUsed" class="reset-filters-hint">
+        <i class="fa-solid fa-info-circle"></i>
+        Para reiniciar filtros, usa el logo de Tienda Sana en la barra superior.
       </div>
-    </form>
-    <div *ngIf="mesaFilterUsed" class="reset-filters-hint">
-      <i class="fa-solid fa-info-circle"></i>
-      Para reiniciar los filtros, presiona el icono de <b>Tienda Sana</b> en la
-      parte superior izquierda.
+
+      <app-mesas-grid [mesas]="mesas"></app-mesas-grid>
+
+      <nav class="elegant-pagination">
+        <ul class="pagination-list">
+          <li class="pagination-item" [class.disabled]="mesasCurrentPage === 0">
+            <a class="pagination-link" (click)="previousPageMesas()">Anterior</a>
+          </li>
+          @for (item of mesasPages; track item) {
+          <li class="pagination-item" [class.active]="mesasCurrentPage === mesasPages.indexOf(item)">
+            <a class="pagination-link"
+              (click)="mesaFilterUsed ? filterMesas(mesasPages.indexOf(item)) : obtenerMesas(mesasPages.indexOf(item))">
+              {{ mesasPages.indexOf(item) + 1 }}
+            </a>
+          </li>
+          }
+          <li class="pagination-item" [class.disabled]="!mesasDisponibles">
+            <a class="pagination-link" (click)="nextPageMesas()">Siguiente</a>
+          </li>
+        </ul>
+      </nav>
     </div>
-  </div>
+  </section>
 
-  <!-- Grid de Mesas -->
-  <app-mesas-grid [mesas]="mesas"></app-mesas-grid>
-
-  <!-- Paginación de mesas -->
-  <nav class="elegant-pagination">
-    <ul class="pagination-list">
-      <li class="pagination-item" [class.disabled]="mesasCurrentPage === 0">
-        <a class="pagination-link" (click)="previousPageMesas()">Anterior</a>
-      </li>
-      @for (item of mesasPages; track item) {
-      <li class="pagination-item"
-        [class.active]="mesasCurrentPage === mesasPages.indexOf(item)">
-        <a class="pagination-link"
-          (click)="mesaFilterUsed ? filterMesas(mesasPages.indexOf(item)) : obtenerMesas(mesasPages.indexOf(item))">
-          {{ mesasPages.indexOf(item) + 1 }}
-        </a>
-      </li>
-      }
-      <li class="pagination-item" [class.disabled]="!mesasDisponibles">
-        <a class="pagination-link" (click)="nextPageMesas()">Siguiente</a>
-      </li>
-    </ul>
-  </nav>
-</div>
 </div>

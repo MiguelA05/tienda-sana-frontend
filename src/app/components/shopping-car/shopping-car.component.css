@@ -1,21 +1,30 @@
 /* Contenedor principal del carrito */
 .shopping-cart-container {
     padding: 25px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background-color: #ffffff;
     border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-    transition: background 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
-    margin-top: 100px;
+    margin-top: 132px;
+}
+
+@media (max-width: 768px) {
+    .shopping-cart-container {
+        margin-top: 112px;
+    }
 }
 
 /* Título principal */
 .shopping-cart-container h2 {
-    font-weight: 600;
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 4.6vw, 3.6rem);
+    line-height: 1.05;
+    font-weight: 700;
     color: #198754;
     letter-spacing: 0.5px;
-    margin-bottom: 30px;
-    margin-top: 30px;
+    margin-bottom: 20px;
+    margin-top: 12px;
     position: relative;
 }
 
