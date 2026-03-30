@@ -26,6 +26,7 @@ export class HistorialComponent implements OnInit {
   modalTipo: 'compra' | 'reserva' | null = null;
   compraSeleccionada: ItemVentaDTO | null = null;
   reservaSeleccionada: ItemReservaDTO | null = null;
+  refundInProgressId: string | null = null;
 
   constructor(
     private clienteService: ClienteService,
@@ -127,20 +128,99 @@ export class HistorialComponent implements OnInit {
    * @returns Clase CSS correspondiente al estado
    */
   getEstadoClass(estado: string): string {
-    switch (estado.toLowerCase()) {
+    switch (this.normalizarEstado(estado)) {
       case 'completado':
       case 'pagado':
       case 'confirmado':
+      case 'approved':
+      case 'accredited':
         return 'text-success';
       case 'pendiente':
       case 'en proceso':
+      case 'pending':
+      case 'in_process':
         return 'text-warning';
       case 'cancelado':
       case 'rechazado':
+      case 'failed':
+      case 'rejected':
         return 'text-danger';
+      case 'refunded':
+      case 'reembolsado':
+        return 'text-info';
       default:
         return '';
     }
+  }
+
+  getEstadoLabel(estado: string): string {
+    switch (this.normalizarEstado(estado)) {
+      case 'approved':
+      case 'accredited':
+      case 'pagado':
+      case 'confirmado':
+      case 'completado':
+        return 'APROBADO';
+      case 'pending':
+      case 'in_process':
+      case 'pendiente':
+      case 'en proceso':
+        return 'PENDIENTE';
+      case 'refunded':
+      case 'reembolsado':
+        return 'REEMBOLSADO';
+      case 'failed':
+      case 'rejected':
+      case 'rechazado':
+      case 'cancelado':
+        return 'RECHAZADO';
+      default:
+        return (estado || 'PENDIENTE').toUpperCase();
+    }
+  }
+
+  puedeReembolsarCompra(compra: ItemVentaDTO): boolean {
+    const estado = this.normalizarEstado(compra.estado);
+    return estado === 'approved' || estado === 'accredited';
+  }
+
+  compraYaReembolsada(compra: ItemVentaDTO): boolean {
+    const estado = this.normalizarEstado(compra.estado);
+    return estado === 'refunded' || estado === 'reembolsado';
+  }
+
+  solicitarReembolsoCompra(compra: ItemVentaDTO): void {
+    if (!compra.id || this.refundInProgressId === compra.id || !this.puedeReembolsarCompra(compra)) {
+      return;
+    }
+
+    Swal.fire({
+      title: 'Solicitar reembolso',
+      text: 'Se intentará reembolsar la compra y reponer el stock. Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, reembolsar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (!result.isConfirmed) {
+        return;
+      }
+
+      this.refundInProgressId = compra.id;
+      this.clienteService.solicitarReembolsoVenta(compra.id).subscribe({
+        next: () => {
+          Swal.fire('Reembolso aplicado', 'La compra fue reembolsada correctamente.', 'success');
+          this.cargarHistorialCompras();
+          this.refundInProgressId = null;
+        },
+        error: (error) => {
+          console.error('Error al solicitar reembolso', error);
+          const mensaje = error?.error?.reply || error?.error?.message || 'No se pudo completar el reembolso.';
+          Swal.fire('Error', mensaje, 'error');
+          this.refundInProgressId = null;
+        }
+      });
+    });
   }
 
   /**
@@ -237,6 +317,10 @@ export class HistorialComponent implements OnInit {
   private toNumber(value: unknown): number {
     const parsed = Number(value);
     return Number.isFinite(parsed) ? parsed : 0;
+  }
+
+  private normalizarEstado(estado: string | null | undefined): string {
+    return String(estado ?? '').trim().toLowerCase();
   }
 
   private parseDate(value: unknown): Date | null {

@@ -62,7 +62,7 @@
                     </div>
                     <div class="estado-badge"
                         [ngClass]="getEstadoClass(compra.estado)">
-                        {{ compra.estado || 'PENDIENTE' }}
+                        {{ getEstadoLabel(compra.estado) }}
                     </div>
                 </div>
 
@@ -87,6 +87,13 @@
                 </div>
 
                 <div class="historial-footer">
+                    <button class="btn-reembolso"
+                        *ngIf="puedeReembolsarCompra(compra)"
+                        [disabled]="refundInProgressId === compra.id"
+                        (click)="solicitarReembolsoCompra(compra)">
+                        <i class="bi bi-arrow-counterclockwise me-2" style="margin-right: 8px;"></i>
+                        {{ refundInProgressId === compra.id ? 'Reembolsando...' : 'Reembolsar' }}
+                    </button>
                     <button class="btn-secundario"
                         (click)="verDetalleCompra(compra)">
                         <i class="bi bi-eye me-2" style="margin-right: 8px;"></i>Ver detalles
@@ -185,7 +192,7 @@
         <div class="historial-modal__body">
             <div class="detail-grid">
                 <div><strong>ID:</strong> {{ compraSeleccionada.id || 'Sin ID' }}</div>
-                <div><strong>Estado:</strong> {{ compraSeleccionada.estado || 'PENDIENTE' }}</div>
+                <div><strong>Estado:</strong> {{ getEstadoLabel(compraSeleccionada.estado) }}</div>
                 <div><strong>Fecha:</strong> {{ formatearFecha(compraSeleccionada.fecha) }}</div>
                 <div><strong>Pago:</strong> {{ compraSeleccionada.tipoPago || 'Sin confirmar' }}</div>
                 <div><strong>Fecha pago:</strong> {{ formatearFecha(compraSeleccionada.fechaPago) }}</div>

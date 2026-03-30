@@ -148,6 +148,10 @@ export class ClienteService {
     return this.http.delete<MensajeDTO>(`${this.clienteURL}/venta/cancel/${orderId}`);
   }
 
+  public solicitarReembolsoVenta(orderId: string): Observable<MensajeDTO> {
+    return this.http.post<MensajeDTO>(`${this.clienteURL}/venta/refund/${orderId}`, {});
+  }
+
   public agregarMesaGestorReservas(mesaDTO: MesaDTO): Observable<MensajeDTO> {
     return this.http.put<MensajeDTO>(`${this.clienteURL}/gestor-reservas/add-item`,mesaDTO);
   }
