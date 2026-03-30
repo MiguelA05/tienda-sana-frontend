@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" [class.modal-open]="!!modalTipo">
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
         rel="stylesheet">
@@ -58,11 +58,11 @@
                 <div class="historial-header">
                     <div class="historial-id">
                         <i class="bi bi-receipt me-2" style="margin-right: 8px;"></i>
-                        Orden #{{ compra.id }}
+                        Orden #{{ compra.id || 'Sin ID' }}
                     </div>
                     <div class="estado-badge"
                         [ngClass]="getEstadoClass(compra.estado)">
-                        {{ compra.estado }}
+                        {{ compra.estado || 'PENDIENTE' }}
                     </div>
                 </div>
 
@@ -71,16 +71,16 @@
                         <span><i class="bi bi-calendar2 me-2" style="margin-right: 8px;"></i>Fecha: {{
                             formatearFecha(compra.fecha) }}</span>
                         <span><i class="bi bi-credit-card me-2" style="margin-right: 8px;"></i>Pago: {{
-                            compra.tipoPago }}</span>
+                            compra.tipoPago || 'Sin confirmar' }}</span>
                     </div>
 
                     <div class="productos-info">
                         <div class="productos-count">
                             <i class="bi bi-box me-2" style="margin-right: 8px;"></i>
-                            {{ getTotalProductos(compra) }} producto(s)
+                            {{ getTotalProductos(compra) || 0 }} producto(s)
                         </div>
                         <div class="total-price">
-                            <strong>Total:</strong> {{ compra.total | currency
+                            <strong>Total:</strong> {{ getCompraTotal(compra) | currency
                             }}
                         </div>
                     </div>
@@ -88,7 +88,7 @@
 
                 <div class="historial-footer">
                     <button class="btn-secundario"
-                        (click)="verDetalleCompra(compra.id)">
+                        (click)="verDetalleCompra(compra)">
                         <i class="bi bi-eye me-2" style="margin-right: 8px;"></i>Ver detalles
                     </button>
                 </div>
@@ -159,11 +159,81 @@
 
                 <div class="historial-footer">
                     <button class="btn-secundario"
-                        (click)="verDetalleReserva(reserva.idReserva)">
+                        (click)="verDetalleReserva(reserva)">
                         <i class="bi bi-eye me-2" style="margin-right: 8px;"></i>Ver detalles
                     </button>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
+
+@if (modalTipo) {
+<div class="historial-modal-backdrop" (click)="cerrarDetalle()">
+    <div class="historial-modal" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+        <div class="historial-modal__header">
+            <h4>
+                @if (modalTipo === 'compra') { Detalle de compra } @else { Detalle de reserva }
+            </h4>
+            <button class="historial-modal__close" type="button" (click)="cerrarDetalle()" aria-label="Cerrar">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        @if (modalTipo === 'compra' && compraSeleccionada) {
+        <div class="historial-modal__body">
+            <div class="detail-grid">
+                <div><strong>ID:</strong> {{ compraSeleccionada.id || 'Sin ID' }}</div>
+                <div><strong>Estado:</strong> {{ compraSeleccionada.estado || 'PENDIENTE' }}</div>
+                <div><strong>Fecha:</strong> {{ formatearFecha(compraSeleccionada.fecha) }}</div>
+                <div><strong>Pago:</strong> {{ compraSeleccionada.tipoPago || 'Sin confirmar' }}</div>
+                <div><strong>Fecha pago:</strong> {{ formatearFecha(compraSeleccionada.fechaPago) }}</div>
+                <div><strong>Transacción:</strong> {{ compraSeleccionada.valorTransaccion || 0 | currency }}</div>
+            </div>
+
+            <div class="detail-items">
+                <h5>Productos</h5>
+                @if (compraSeleccionada.productos && compraSeleccionada.productos.length > 0) {
+                <div class="detail-item" *ngFor="let p of compraSeleccionada.productos">
+                    <div class="detail-item__main">{{ p.productoId }}</div>
+                    <div class="detail-item__meta">{{ p.cantidad }} x {{ p.valor | currency }} = {{ getDetalleSubtotal(p.valor, p.cantidad) | currency }}</div>
+                </div>
+                } @else {
+                <p class="detail-empty">No hay detalle de productos para esta compra.</p>
+                }
+            </div>
+
+            <div class="detail-total">
+                Total final: <strong>{{ getCompraTotal(compraSeleccionada) | currency }}</strong>
+            </div>
+        </div>
+        }
+
+        @if (modalTipo === 'reserva' && reservaSeleccionada) {
+        <div class="historial-modal__body">
+            <div class="detail-grid">
+                <div><strong>ID:</strong> {{ reservaSeleccionada.idReserva || 'Sin ID' }}</div>
+                <div><strong>Estado:</strong> {{ reservaSeleccionada.estadoReserva || 'PENDIENTE' }}</div>
+                <div><strong>Inicio:</strong> {{ formatearFecha(reservaSeleccionada.fechaReserva) }}</div>
+                <div><strong>Fin:</strong> {{ formatearFecha(reservaSeleccionada.fechaFinReserva || null) }}</div>
+                <div><strong>Personas:</strong> {{ reservaSeleccionada.cantidadPersonas || 0 }}</div>
+                <div><strong>Pago:</strong> {{ reservaSeleccionada.paymentType || 'Sin confirmar' }}</div>
+            </div>
+
+            <div class="detail-items">
+                <h5>Mesas reservadas</h5>
+                @if (reservaSeleccionada.mesas && reservaSeleccionada.mesas.length > 0) {
+                <div class="detail-item" *ngFor="let mesa of reservaSeleccionada.mesas">
+                    <div class="detail-item__main">{{ mesa.nombre }}</div>
+                    <div class="detail-item__meta">Capacidad: {{ mesa.capacidad }} | Zona: {{ mesa.localidad }} | Valor: {{ mesa.precioReserva | currency }}</div>
+                </div>
+                } @else {
+                <p class="detail-empty">No hay mesas asociadas a esta reserva.</p>
+                }
+            </div>
+        </div>
+        }
+    </div>
+</div>
+}

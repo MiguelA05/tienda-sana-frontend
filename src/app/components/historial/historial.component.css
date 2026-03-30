@@ -14,6 +14,11 @@
     box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
 }
 
+.container.modal-open,
+.container.modal-open:hover {
+    transform: none;
+}
+
 /* Centrar contenido dentro del container */
 .row {
     display: flex;
@@ -189,6 +194,110 @@
     justify-content: flex-end;
 }
 
+.historial-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(9, 22, 18, 0.52);
+    backdrop-filter: blur(2px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1100;
+    padding: 20px;
+}
+
+.historial-modal {
+    width: min(760px, 100%);
+    max-height: 88vh;
+    overflow: auto;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #f7fbf9 0%, #ffffff 100%);
+    box-shadow: 0 24px 45px rgba(0, 0, 0, 0.22);
+}
+
+.historial-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    border-bottom: 1px solid #ddebe4;
+}
+
+.historial-modal__header h4 {
+    margin: 0;
+    color: #126d47;
+    font-weight: 700;
+}
+
+.historial-modal__close {
+    border: 1px solid #d5e7de;
+    background: #ffffff;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    color: #495057;
+}
+
+.historial-modal__body {
+    padding: 20px 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 14px;
+    background: #f2f8f5;
+    border: 1px solid #d9e9e1;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.detail-grid strong {
+    color: #0f5f3e;
+}
+
+.detail-items h5 {
+    margin: 0 0 8px;
+    font-weight: 700;
+    color: #146f49;
+}
+
+.detail-item {
+    border: 1px solid #e3ece8;
+    border-radius: 10px;
+    padding: 10px 12px;
+    background: #ffffff;
+    margin-bottom: 8px;
+}
+
+.detail-item__main {
+    font-weight: 600;
+    color: #37424a;
+}
+
+.detail-item__meta {
+    color: #5b666f;
+    margin-top: 4px;
+    font-size: 0.92rem;
+}
+
+.detail-total {
+    border-top: 1px dashed #cde2d8;
+    padding-top: 10px;
+    text-align: right;
+    color: #198754;
+    font-size: 1.05rem;
+}
+
+.detail-empty {
+    margin: 0;
+    color: #6b7680;
+    font-size: 0.95rem;
+}
+
 /* Botones */
 .btn-custom {
     background: linear-gradient(135deg, #198754 0%, #20c997 100%);
@@ -299,5 +408,9 @@
         flex-direction: column;
         gap: 10px;
         text-align: center;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
     }
 }

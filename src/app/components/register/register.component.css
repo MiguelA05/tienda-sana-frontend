@@ -15,21 +15,51 @@ body {
     max-width: 100%;
     min-height: 100vh;
     box-sizing: border-box;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background:
+        radial-gradient(circle at 12% 18%, rgba(42, 164, 120, 0.18) 0, rgba(42, 164, 120, 0) 40%),
+        radial-gradient(circle at 86% 80%, rgba(25, 135, 84, 0.14) 0, rgba(25, 135, 84, 0) 34%),
+        linear-gradient(120deg, #f3f6f6 0%, #e7ecee 100%);
     padding: 20px;
-    transition: background 0.3s ease;
     margin-top: 100px;
+}
+
+.register-page::before,
+.register-page::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.register-page::before {
+    width: 420px;
+    height: 420px;
+    left: -180px;
+    top: 14%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 45% 45%, rgba(164, 220, 176, 0.42) 0%, rgba(115, 182, 131, 0.22) 40%, rgba(25, 135, 84, 0) 72%);
+    filter: blur(2px);
+}
+
+.register-page::after {
+    width: 360px;
+    height: 360px;
+    right: -130px;
+    bottom: -100px;
+    border-radius: 42% 58% 63% 37% / 42% 35% 65% 58%;
+    background: linear-gradient(140deg, rgba(255, 191, 102, 0.22), rgba(248, 153, 76, 0.1));
+    filter: blur(2px);
+    animation: loginBlobDrift 12s ease-in-out infinite alternate;
 }
 
 .register-page-inner {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     width: 100%;
     max-width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-sizing: border-box;
 }
 
 /* Alerta de contraseñas no coincidentes */
@@ -83,6 +113,7 @@ body {
     transform: translateY(0);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
+    z-index: 2;
     will-change: transform, box-shadow;
     
 }
@@ -393,7 +424,7 @@ body {
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
+    z-index: 1;
   overflow: hidden;
   pointer-events: none;
 }
@@ -405,12 +436,36 @@ body {
 }
 
 .circle-one {
-  width: 300px;
-  height: 300px;
-  background: linear-gradient(135deg, rgba(25, 135, 84, 0.2) 0%, rgba(32, 201, 151, 0.2) 100%);
-  top: -100px;
-  right: -100px;
-  animation: float 8s ease-in-out infinite;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle at 35% 28%, #ffd0a4 0%, #ff9c55 38%, #eb7a2f 100%);
+    top: 40px;
+    right: 90px;
+    box-shadow: inset -8px -14px 0 rgba(200, 95, 29, 0.25);
+    animation: loginFloat 10s ease-in-out infinite;
+}
+
+.circle-one::before {
+    content: '';
+    position: absolute;
+    width: 42px;
+    height: 22px;
+    top: -10px;
+    left: 68px;
+    background: linear-gradient(140deg, #72c98d, #2e8d58);
+    border-radius: 80% 20% 70% 30%;
+    transform: rotate(-20deg);
+}
+
+.circle-one::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 18px;
+    top: -12px;
+    left: 86px;
+    background: #2f6f49;
+    border-radius: 6px;
 }
 
 .floating-field{
@@ -419,19 +474,59 @@ body {
 }
 
 .circle-two {
-  width: 200px;
-  height: 200px;
-  background: linear-gradient(135deg, rgba(25, 135, 84, 0.15) 0%, rgba(32, 201, 151, 0.15) 100%);
-  bottom: -50px;
-  left: -50px;
-  animation: float 6s ease-in-out infinite alternate;
+    width: 150px;
+    height: 150px;
+    bottom: 90px;
+    left: 140px;
+    background: conic-gradient(from 0deg, #f6d765 0 12.5%, #ffe79e 12.5% 25%, #f6d765 25% 37.5%, #ffe79e 37.5% 50%, #f6d765 50% 62.5%, #ffe79e 62.5% 75%, #f6d765 75% 87.5%, #ffe79e 87.5% 100%);
+    border: 8px solid #f2c951;
+    animation: loginFloat 7s ease-in-out infinite alternate;
+}
+
+.circle-two::before {
+    content: '';
+    position: absolute;
+    inset: 24px;
+    border-radius: 50%;
+    background: rgba(255, 243, 208, 0.88);
 }
 
 .line {
   position: absolute;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(25, 135, 84, 0.2), transparent);
-  top: 50%;
-  animation: slide 15s linear infinite;
+    width: 120%;
+    height: 96px;
+    left: -10%;
+    border-top: 2px solid rgba(25, 135, 84, 0.2);
+    border-radius: 50%;
+    top: 62%;
+    transform: rotate(-9deg);
+    animation: loginWaveMove 11s ease-in-out infinite;
+}
+
+@keyframes loginFloat {
+    0% {
+        transform: translateY(0) translateX(0);
+    }
+    100% {
+        transform: translateY(-18px) translateX(10px);
+    }
+}
+
+@keyframes loginWaveMove {
+    0%,
+    100% {
+        transform: rotate(-9deg) translateY(0);
+    }
+    50% {
+        transform: rotate(-6deg) translateY(10px);
+    }
+}
+
+@keyframes loginBlobDrift {
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    100% {
+        transform: translateX(-20px) translateY(18px);
+    }
 }
