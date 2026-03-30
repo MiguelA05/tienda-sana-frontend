@@ -1,8 +1,14 @@
 <div class="card-grid-container w-100">
   <div class="cards-grid">
     @for (mesa of mesas; track mesa.id) {
-    <div class="custom-card">
+    <div class="custom-card" [class.custom-card--in-gestor]="estaMesaEnGestor(mesa.id)">
       <div class="card h-100" (click)="irADetalleMesa(mesa.id)">
+        @if (!isAdmin && estaMesaEnGestor(mesa.id)) {
+          <div class="mesa-gestor-badge">
+            <i class="bi bi-check2-circle"></i>
+            Ya agregada
+          </div>
+        }
         <img class="custom-card-image" [src]="mesa.imagen" alt="Imagen de la mesa" />
         <div class="card-body">
           <h5 class="card-title">{{ mesa.nombre }}</h5>
@@ -30,9 +36,13 @@
               <button class="btn btn-custom btn-custom--ghost" (click)="abrirDetalleDesdeBoton($event, mesa)">
                 <i class="bi bi-eye me-2"></i>Ver detalle
               </button>
-              <button class="btn btn-custom" (click)="agregarAGestorReservas($event, mesa)" [disabled]="isLoading">
+              <button class="btn btn-custom" (click)="agregarAGestorReservas($event, mesa)" [disabled]="isLoading || estaMesaEnGestor(mesa.id)">
                 @if (!isLoading) {
-                  <i class="bi bi-calendar-plus me-2"></i>Agregar al gestor
+                  @if (estaMesaEnGestor(mesa.id)) {
+                    <i class="bi bi-check2 me-2"></i>Ya agregada
+                  } @else {
+                    <i class="bi bi-calendar-plus me-2"></i>Agregar al gestor
+                  }
                 } @else {
                   <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                   Procesando...

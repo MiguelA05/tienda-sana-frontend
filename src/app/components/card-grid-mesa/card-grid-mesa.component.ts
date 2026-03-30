@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ItemMesaDTO } from '../../dto/item-mesa-dto';
@@ -15,9 +15,10 @@ import {MensajeDTO} from '../../dto/mensaje-dto';
   templateUrl: './card-grid-mesa.component.html',
   styleUrl: './card-grid-mesa.component.css'
 })
-export class CardGridMesaComponent {
+export class CardGridMesaComponent implements OnInit {
   @Input() mesas: ItemMesaDTO[] = [];
   isLoading = false;
+  mesasEnGestor = new Set<string>();
 
   get isAdmin(): boolean {
     return this.tokenService.getRol() === 'ADMIN';
@@ -27,6 +28,10 @@ export class CardGridMesaComponent {
               private clienteService: ClienteService,
               private tokenService: TokenService) {
 
+  }
+
+  ngOnInit(): void {
+    this.cargarMesasEnGestor();
   }
 
   irADetalleMesa(id: string): void {
@@ -47,6 +52,11 @@ export class CardGridMesaComponent {
     event.stopPropagation();
 
     if (this.isAdmin) {
+      return;
+    }
+
+    if (this.estaMesaEnGestor(mesa.id)) {
+      Swal.fire('Información', 'Esta mesa ya fue agregada al gestor de reservas.', 'info');
       return;
     }
 
@@ -91,17 +101,48 @@ export class CardGridMesaComponent {
         this.clienteService.agregarMesaGestorReservas(mesaGestor).subscribe({
           next: () => {
             this.isLoading = false;
+            this.mesasEnGestor.add(mesa.id);
             Swal.fire('Listo', 'Mesa agregada al gestor de reservas.', 'success');
           },
           error: (error) => {
             this.isLoading = false;
-            Swal.fire('Error', error?.error?.reply || 'No se pudo agregar la mesa al gestor.', 'error');
+            const message = error?.error?.reply || 'No se pudo agregar la mesa al gestor.';
+            const isMesaDuplicada = error?.status === 409 ||
+              String(message).toLowerCase().includes('ya fue agregada');
+
+            if (isMesaDuplicada) {
+              this.mesasEnGestor.add(mesa.id);
+              Swal.fire('Información', 'Esta mesa ya fue agregada al gestor de reservas.', 'info');
+              return;
+            }
+
+            Swal.fire('Error', message, 'error');
           }
         });
       },
       error: (error) => {
         this.isLoading = false;
         Swal.fire('Error', error?.error?.reply || 'No se pudo preparar el gestor de reservas.', 'error');
+      }
+    });
+  }
+
+  estaMesaEnGestor(mesaId: string): boolean {
+    return this.mesasEnGestor.has(mesaId);
+  }
+
+  private cargarMesasEnGestor(): void {
+    if (this.isAdmin || !this.tokenService.getToken()) {
+      return;
+    }
+
+    this.clienteService.listarMesasGestorReservas(this.tokenService.getEmail()).subscribe({
+      next: (mensaje: MensajeDTO) => {
+        const mesasGestor = Array.isArray(mensaje.reply) ? mensaje.reply as Array<{ id?: string }> : [];
+        this.mesasEnGestor = new Set(mesasGestor.map(m => String(m.id ?? '')).filter(id => id.length > 0));
+      },
+      error: () => {
+        this.mesasEnGestor.clear();
       }
     });
   }
