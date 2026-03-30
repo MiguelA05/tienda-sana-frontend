@@ -13,15 +13,15 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "19.2.9",
-    "@angular/common": "19.2.9",
-    "@angular/compiler": "19.2.9",
-    "@angular/core": "19.2.9",
-    "@angular/forms": "19.2.9",
+    "@angular/animations": "^19.2.20",
+    "@angular/common": "^19.2.20",
+    "@angular/compiler": "^19.2.20",
+    "@angular/core": "^19.2.20",
+    "@angular/forms": "^19.2.20",
     "@angular/material": "19.2.9",
-    "@angular/platform-browser": "^19.2.9",
-    "@angular/platform-browser-dynamic": "19.2.9",
-    "@angular/router": "19.2.9",
+    "@angular/platform-browser": "^19.2.20",
+    "@angular/platform-browser-dynamic": "^19.2.20",
+    "@angular/router": "^19.2.20",
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@vercel/analytics": "^1.5.0",
     "bootstrap": "^5.3.3",
@@ -33,9 +33,9 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "19.2.9",
-    "@angular/cli": "19.2.9",
-    "@angular/compiler-cli": "19.2.9",
+    "@angular-devkit/build-angular": "^19.2.23",
+    "@angular/cli": "^19.2.23",
+    "@angular/compiler-cli": "^19.2.20",
     "@types/bootstrap": "^5.2.10",
     "@types/jasmine": "~5.1.0",
     "jasmine-core": "~5.5.0",
@@ -44,6 +44,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "tar": "^7.5.13",
     "typescript": "~5.7.2"
   }
 }
