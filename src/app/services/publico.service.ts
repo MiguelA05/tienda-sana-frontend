@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { MensajeDTO } from '../dto/mensaje-dto';
 import { FiltroProductoDTO } from '../dto/filtro-producto-dto';
 import { FiltroMesaDTO } from '../dto/filtro-mesa-dto';
+import { AiRecommendationRequestDTO } from '../dto/ai-recommendation-request-dto';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -76,6 +77,10 @@ export class PublicoService {
 
   public filtrarMesas(filtroMesaDTO: FiltroMesaDTO): Observable<MensajeDTO>{
     return this.http.post<MensajeDTO>(`${this.publicoURL}/mesas/filter-tables`, filtroMesaDTO);
+  }
+
+  public recomendarCombosIA(request: AiRecommendationRequestDTO): Observable<MensajeDTO> {
+    return this.http.post<MensajeDTO>(`${this.publicoURL}/ai/recommendations`, request);
   }
 
 

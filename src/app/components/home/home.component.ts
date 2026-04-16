@@ -7,6 +7,13 @@ import { FiltroProductoDTO } from '../../dto/filtro-producto-dto';
 import { FiltroMesaDTO } from '../../dto/filtro-mesa-dto';
 import { CommonModule } from '@angular/common';
 import { CardGridMesaComponent } from '../card-grid-mesa/card-grid-mesa.component';
+import { ClienteService } from '../../services/cliente.service';
+import { TokenService } from '../../services/token.service';
+import { AiRecommendationRequestDTO } from '../../dto/ai-recommendation-request-dto';
+import { AiRecommendationResponseDTO } from '../../dto/ai-recommendation-response-dto';
+import { AiComboRecommendationDTO } from '../../dto/ai-combo-recommendation-dto';
+import { ItemCarritoDTO } from '../../dto/item-carrito-dto';
+import { forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -59,7 +66,30 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   productosLoaded: boolean = false;
   mesasLoaded: boolean = false;
 
-  constructor(private publicoService: PublicoService, private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router) {
+  aiLoading: boolean = false;
+  aiAddingCombo: boolean = false;
+  aiRecommendations: AiComboRecommendationDTO[] = [];
+  aiDisclaimer: string = '';
+  aiSource: string = '';
+  aiRequest: AiRecommendationRequestDTO = {
+    objetivo: '',
+    restriccion: '',
+    presupuestoMax: null,
+    momentoDia: ''
+  };
+
+  get isLogged(): boolean {
+    return this.tokenService.isLogged();
+  }
+
+  constructor(
+    private publicoService: PublicoService,
+    private clienteService: ClienteService,
+    private tokenService: TokenService,
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
     this.productos = [];
     this.mesas = [];
     this.obtenerProductos(this.currentPage);
@@ -71,6 +101,115 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.seleccionados = [];
     this.filterUsed = false;
     this.mesaFilterUsed = false;
+  }
+
+  solicitarRecomendacionIA(): void {
+    const payload: AiRecommendationRequestDTO = {
+      objetivo: (this.aiRequest.objetivo || '').trim(),
+      restriccion: (this.aiRequest.restriccion || '').trim(),
+      presupuestoMax: this.aiRequest.presupuestoMax ?? null,
+      momentoDia: (this.aiRequest.momentoDia || '').trim()
+    };
+
+    const sinCriterios = !payload.objetivo && !payload.restriccion && !payload.momentoDia && !payload.presupuestoMax;
+    if (sinCriterios) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Faltan criterios',
+        text: 'Escribe al menos un objetivo o un presupuesto para generar recomendaciones.'
+      });
+      return;
+    }
+
+    this.aiLoading = true;
+    this.publicoService.recomendarCombosIA(payload).subscribe({
+      next: (data) => {
+        this.aiLoading = false;
+        const reply = data.reply as AiRecommendationResponseDTO;
+        this.aiRecommendations = reply?.recomendaciones ?? [];
+        this.aiDisclaimer = reply?.aviso ?? '';
+        this.aiSource = reply?.origen ?? '';
+
+        if (this.aiRecommendations.length === 0) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Sin recomendaciones',
+            text: 'No fue posible generar opciones con los criterios actuales.'
+          });
+        }
+      },
+      error: (error) => {
+        this.aiLoading = false;
+        console.error(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error IA',
+          text: 'No fue posible generar recomendaciones en este momento.'
+        });
+      }
+    });
+  }
+
+  limpiarAsistenteIA(): void {
+    this.aiRequest = {
+      objetivo: '',
+      restriccion: '',
+      presupuestoMax: null,
+      momentoDia: ''
+    };
+    this.aiRecommendations = [];
+    this.aiDisclaimer = '';
+    this.aiSource = '';
+  }
+
+  agregarComboIAAlCarrito(combo: AiComboRecommendationDTO): void {
+    if (!this.tokenService.getToken()) {
+      Swal.fire({
+        title: 'No estas logueado',
+        text: 'Inicia sesion para agregar el combo al carrito.',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Iniciar sesion',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.router.navigate(['/login']);
+        }
+      });
+      return;
+    }
+
+    if (!combo.productos || combo.productos.length === 0) {
+      Swal.fire('Error', 'El combo no tiene productos para agregar.', 'error');
+      return;
+    }
+
+    this.aiAddingCombo = true;
+    const userId = this.tokenService.getIDCuenta();
+    const requests = combo.productos.map((producto) => {
+      const item: ItemCarritoDTO = {
+        idUsuario: userId,
+        idProducto: producto.id,
+        nombreProducto: producto.nombre,
+        categoria: producto.categoria,
+        precio: producto.precioUnitario,
+        cantidad: 1,
+        total: producto.precioUnitario
+      };
+      return this.clienteService.agregarItemCarrito(item);
+    });
+
+    forkJoin(requests).subscribe({
+      next: () => {
+        this.aiAddingCombo = false;
+        Swal.fire('Exito', 'Combo agregado al carrito correctamente.', 'success');
+      },
+      error: (error) => {
+        this.aiAddingCombo = false;
+        console.error(error);
+        Swal.fire('Error', 'No fue posible agregar todos los productos del combo.', 'error');
+      }
+    });
   }
 
   ngOnInit(): void {

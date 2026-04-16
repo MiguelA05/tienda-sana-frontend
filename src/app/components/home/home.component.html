@@ -50,6 +50,110 @@
     </div>
   </section>
 
+  <section class="ai-assistant-section reveal-on-scroll" id="asistente-ia">
+    <div class="ai-header">
+      <span class="ai-label">Asistente IA</span>
+      <h2>Elige tu combo ideal en segundos</h2>
+      <p>
+        Describe tu objetivo y te sugerimos combinaciones listas para agregar al carrito.
+      </p>
+    </div>
+
+    <div class="ai-form-grid">
+      <div class="floating-field">
+        <input
+          id="aiObjetivo"
+          type="text"
+          class="form-control"
+          name="aiObjetivo"
+          [(ngModel)]="aiRequest.objetivo"
+          placeholder=" " />
+        <label for="aiObjetivo">Objetivo (ej. alto en proteina)</label>
+      </div>
+
+      <div class="floating-field">
+        <input
+          id="aiRestriccion"
+          type="text"
+          class="form-control"
+          name="aiRestriccion"
+          [(ngModel)]="aiRequest.restriccion"
+          placeholder=" " />
+        <label for="aiRestriccion">Restriccion (ej. sin lactosa)</label>
+      </div>
+
+      <div class="floating-field">
+        <input
+          id="aiPresupuesto"
+          type="number"
+          class="form-control"
+          name="aiPresupuesto"
+          [(ngModel)]="aiRequest.presupuestoMax"
+          min="0"
+          placeholder=" " />
+        <label for="aiPresupuesto">Presupuesto maximo</label>
+      </div>
+
+      <div class="floating-field">
+        <input
+          id="aiMomento"
+          type="text"
+          class="form-control"
+          name="aiMomento"
+          [(ngModel)]="aiRequest.momentoDia"
+          placeholder=" " />
+        <label for="aiMomento">Momento del dia (ej. cena)</label>
+      </div>
+
+      <div class="ai-actions">
+        <button class="hero-btn hero-btn-primary" type="button" (click)="solicitarRecomendacionIA()" [disabled]="aiLoading">
+          @if (aiLoading) {
+            <i class="fas fa-circle-notch fa-spin" style="margin-right: 8px;"></i>Generando...
+          } @else {
+            <i class="fa-solid fa-wand-magic-sparkles" style="margin-right: 8px;"></i>Generar combo IA
+          }
+        </button>
+        <button class="hero-btn hero-btn-secondary ai-clear" type="button" (click)="limpiarAsistenteIA()" [disabled]="aiLoading">
+          Limpiar
+        </button>
+      </div>
+    </div>
+
+    <div class="ai-feedback" *ngIf="aiDisclaimer">
+      <strong>Nota:</strong> {{ aiDisclaimer }}
+      <span class="ai-source" *ngIf="aiSource">Origen: {{ aiSource }}</span>
+    </div>
+
+    <div class="ai-results" *ngIf="aiRecommendations.length > 0">
+      @for (combo of aiRecommendations; track combo.titulo + $index) {
+      <article class="ai-card">
+        <div class="ai-card-head">
+          <h3>{{ combo.titulo }}</h3>
+          <span class="ai-price">${{ combo.precioEstimado | number:'1.0-0' }}</span>
+        </div>
+        <p class="ai-reason">{{ combo.razon }}</p>
+
+        <ul class="ai-products">
+          @for (producto of combo.productos; track producto.id) {
+          <li>
+            <img [src]="producto.imagen" [alt]="producto.nombre" loading="lazy" />
+            <div>
+              <p class="ai-product-name">{{ producto.nombre }}</p>
+              <p class="ai-product-meta">{{ producto.categoria }} · ${{ producto.precioUnitario | number:'1.0-0' }}</p>
+            </div>
+          </li>
+          }
+        </ul>
+
+        <button class="hero-btn hero-btn-primary ai-add" type="button" (click)="agregarComboIAAlCarrito(combo)" [disabled]="aiAddingCombo">
+          <i class="fa-solid fa-cart-plus" style="margin-right: 8px;"></i>
+          Agregar combo al carrito
+        </button>
+      </article>
+      }
+    </div>
+  </section>
+
   <section class="catalog-section" id="catalogo">
     <div class="catalog-header reveal-on-scroll">
       <h2>Explora lo mejor de Tienda Sana</h2>
