@@ -439,7 +439,7 @@
   position: fixed;
   top: 0;
   right: 0;
-  width: min(300px, 90vw);
+  width: clamp(400px, 28vw, 420px);
   height: 100vh;
   z-index: 1200;
   background: linear-gradient(180deg, #fcf9f2 0%, #f2f7ef 100%);

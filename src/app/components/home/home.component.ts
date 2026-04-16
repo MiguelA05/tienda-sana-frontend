@@ -13,7 +13,7 @@ import { AiRecommendationRequestDTO } from '../../dto/ai-recommendation-request-
 import { AiRecommendationResponseDTO } from '../../dto/ai-recommendation-response-dto';
 import { AiComboRecommendationDTO } from '../../dto/ai-combo-recommendation-dto';
 import { ItemCarritoDTO } from '../../dto/item-carrito-dto';
-import { forkJoin } from 'rxjs';
+import { concatMap, from, toArray } from 'rxjs';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -410,20 +410,21 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.aiAddingCombo = true;
     const userId = this.tokenService.getIDCuenta();
-    const requests = combo.productos.map((producto) => {
-      const item: ItemCarritoDTO = {
-        idUsuario: userId,
-        idProducto: producto.id,
-        nombreProducto: producto.nombre,
-        categoria: producto.categoria,
-        precio: producto.precioUnitario,
-        cantidad: 1,
-        total: producto.precioUnitario
-      };
-      return this.clienteService.agregarItemCarrito(item);
-    });
-
-    forkJoin(requests).subscribe({
+    from(combo.productos).pipe(
+      concatMap((producto) => {
+        const item: ItemCarritoDTO = {
+          idUsuario: userId,
+          idProducto: producto.id,
+          nombreProducto: producto.nombre,
+          categoria: producto.categoria,
+          precio: producto.precioUnitario,
+          cantidad: 1,
+          total: producto.precioUnitario
+        };
+        return this.clienteService.agregarItemCarrito(item);
+      }),
+      toArray()
+    ).subscribe({
       next: () => {
         this.aiAddingCombo = false;
         Swal.fire('Exito', 'Combo agregado al carrito correctamente.', 'success');
