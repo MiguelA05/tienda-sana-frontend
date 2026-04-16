@@ -154,12 +154,6 @@
   }
 }
 
-@media (min-width: 1400px) {
-  .cards-grid {
-    grid-template-columns: repeat(5, 1fr);
-  }
-}
-
 /* Responsive */
 @media (max-width: 576px) {
   .card-grid-container {
