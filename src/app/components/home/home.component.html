@@ -1,4 +1,5 @@
 <div class="home-shell" id="inicio">
+  <div class="home-content-wrapper" [class.home-content-wrapper--dimmed]="assistantOpen">
   <section class="home-hero reveal-on-scroll is-visible">
     <div class="hero-media" aria-hidden="true"></div>
     <div class="hero-overlay"></div>
@@ -47,110 +48,6 @@
         Diseñamos cada plato y cada producto con equilibrio real: ingredientes puros, preparaciones limpias y una experiencia que invita a volver.
       </p>
       <button type="button" class="story-link" (click)="irAProductosDesdeHero()">Explorar productos</button>
-    </div>
-  </section>
-
-  <section class="ai-assistant-section reveal-on-scroll" id="asistente-ia">
-    <div class="ai-header">
-      <span class="ai-label">Asistente IA</span>
-      <h2>Elige tu combo ideal en segundos</h2>
-      <p>
-        Describe tu objetivo y te sugerimos combinaciones listas para agregar al carrito.
-      </p>
-    </div>
-
-    <div class="ai-form-grid">
-      <div class="floating-field">
-        <input
-          id="aiObjetivo"
-          type="text"
-          class="form-control"
-          name="aiObjetivo"
-          [(ngModel)]="aiRequest.objetivo"
-          placeholder=" " />
-        <label for="aiObjetivo">Objetivo (ej. alto en proteina)</label>
-      </div>
-
-      <div class="floating-field">
-        <input
-          id="aiRestriccion"
-          type="text"
-          class="form-control"
-          name="aiRestriccion"
-          [(ngModel)]="aiRequest.restriccion"
-          placeholder=" " />
-        <label for="aiRestriccion">Restriccion (ej. sin lactosa)</label>
-      </div>
-
-      <div class="floating-field">
-        <input
-          id="aiPresupuesto"
-          type="number"
-          class="form-control"
-          name="aiPresupuesto"
-          [(ngModel)]="aiRequest.presupuestoMax"
-          min="0"
-          placeholder=" " />
-        <label for="aiPresupuesto">Presupuesto maximo</label>
-      </div>
-
-      <div class="floating-field">
-        <input
-          id="aiMomento"
-          type="text"
-          class="form-control"
-          name="aiMomento"
-          [(ngModel)]="aiRequest.momentoDia"
-          placeholder=" " />
-        <label for="aiMomento">Momento del dia (ej. cena)</label>
-      </div>
-
-      <div class="ai-actions">
-        <button class="hero-btn hero-btn-primary" type="button" (click)="solicitarRecomendacionIA()" [disabled]="aiLoading">
-          @if (aiLoading) {
-            <i class="fas fa-circle-notch fa-spin" style="margin-right: 8px;"></i>Generando...
-          } @else {
-            <i class="fa-solid fa-wand-magic-sparkles" style="margin-right: 8px;"></i>Generar combo IA
-          }
-        </button>
-        <button class="hero-btn hero-btn-secondary ai-clear" type="button" (click)="limpiarAsistenteIA()" [disabled]="aiLoading">
-          Limpiar
-        </button>
-      </div>
-    </div>
-
-    <div class="ai-feedback" *ngIf="aiDisclaimer">
-      <strong>Nota:</strong> {{ aiDisclaimer }}
-      <span class="ai-source" *ngIf="aiSource">Origen: {{ aiSource }}</span>
-    </div>
-
-    <div class="ai-results" *ngIf="aiRecommendations.length > 0">
-      @for (combo of aiRecommendations; track combo.titulo + $index) {
-      <article class="ai-card">
-        <div class="ai-card-head">
-          <h3>{{ combo.titulo }}</h3>
-          <span class="ai-price">${{ combo.precioEstimado | number:'1.0-0' }}</span>
-        </div>
-        <p class="ai-reason">{{ combo.razon }}</p>
-
-        <ul class="ai-products">
-          @for (producto of combo.productos; track producto.id) {
-          <li>
-            <img [src]="producto.imagen" [alt]="producto.nombre" loading="lazy" />
-            <div>
-              <p class="ai-product-name">{{ producto.nombre }}</p>
-              <p class="ai-product-meta">{{ producto.categoria }} · ${{ producto.precioUnitario | number:'1.0-0' }}</p>
-            </div>
-          </li>
-          }
-        </ul>
-
-        <button class="hero-btn hero-btn-primary ai-add" type="button" (click)="agregarComboIAAlCarrito(combo)" [disabled]="aiAddingCombo">
-          <i class="fa-solid fa-cart-plus" style="margin-right: 8px;"></i>
-          Agregar combo al carrito
-        </button>
-      </article>
-      }
     </div>
   </section>
 
@@ -305,5 +202,218 @@
       </nav>
     </div>
   </section>
+  </div>
+
+  <button
+    type="button"
+    class="ai-fab"
+    [class.ai-fab--active]="assistantOpen"
+    (click)="toggleAiAssistant()"
+    aria-label="Abrir asistente de IA">
+    <i class="fa-solid fa-robot" aria-hidden="true"></i>
+    <span>Asistente IA</span>
+  </button>
+
+  <div class="ai-overlay" *ngIf="assistantOpen" (click)="closeAiAssistant()"></div>
+
+  <aside class="ai-drawer" [class.ai-drawer--open]="assistantOpen" role="dialog" aria-modal="true" aria-label="Asistente IA">
+    <div class="ai-sheet-handle"
+      (touchstart)="onAiSheetTouchStart($event)"
+      (touchmove)="onAiSheetTouchMove($event)"
+      (touchend)="onAiSheetTouchEnd()">
+      <span></span>
+    </div>
+
+    <header class="ai-drawer-header">
+      <div>
+        <p class="ai-drawer-kicker">Asistente IA</p>
+        <h3>Tu compra inteligente</h3>
+      </div>
+      <div class="ai-header-actions">
+        @if (aiSource) {
+          <button type="button" class="ai-source-badge" [title]="'Modelo: ' + aiSource" aria-label="Origen del modelo">
+            <i class="fa-solid fa-circle-info"></i>
+          </button>
+        }
+        <button type="button" class="ai-close" (click)="closeAiAssistant()" aria-label="Cerrar asistente">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </header>
+
+    <div class="ai-drawer-body">
+      <section class="ai-chip-group">
+        <p>Objetivo</p>
+        <div class="chip-row">
+          @for (item of aiObjetivoOptions; track item) {
+            <button type="button" class="chip" [class.chip--active]="isObjetivoOptionActive(item)" (click)="seleccionarObjetivo(item)">
+              {{ item }}
+            </button>
+          }
+        </div>
+        @if (isCustomObjetivo) {
+          <div class="ai-custom-input-wrap">
+            <div class="floating-field ai-custom-input">
+              <input
+                id="aiObjetivoCustom"
+                type="text"
+                class="form-control"
+                [ngModel]="customObjetivo"
+                (ngModelChange)="onCustomObjetivoChange($event)"
+                placeholder="Escribe un objetivo personalizado" />
+            </div>
+          </div>
+        }
+      </section>
+
+      <section class="ai-chip-group">
+        <p>Restricciones</p>
+        <div class="chip-row">
+          @for (item of aiRestriccionOptions; track item) {
+            <button type="button" class="chip" [class.chip--active]="isRestriccionOptionActive(item)" (click)="seleccionarRestriccion(item)">
+              {{ item }}
+            </button>
+          }
+        </div>
+        @if (isCustomRestriccion) {
+          <div class="ai-custom-input-wrap">
+            <div class="floating-field ai-custom-input">
+              <input
+                id="aiRestriccionCustom"
+                type="text"
+                class="form-control"
+                [ngModel]="customRestriccion"
+                (ngModelChange)="onCustomRestriccionChange($event)"
+                placeholder="Escribe una restriccion personalizada" />
+            </div>
+          </div>
+        }
+      </section>
+
+      <section class="ai-chip-group">
+        <p>Momento del dia</p>
+        <div class="chip-row chip-row--toggle">
+          @for (item of aiMomentoOptions; track item) {
+            <button type="button" class="chip chip--toggle" [class.chip--active]="isMomentoOptionActive(item)" (click)="seleccionarMomento(item)">
+              {{ item }}
+            </button>
+          }
+        </div>
+        @if (isCustomMomento) {
+          <div class="ai-custom-input-wrap">
+            <div class="floating-field ai-custom-input">
+              <input
+                id="aiMomentoCustom"
+                type="text"
+                class="form-control"
+                [ngModel]="customMomentoDia"
+                (ngModelChange)="onCustomMomentoChange($event)"
+                placeholder="Escribe un momento personalizado" />
+            </div>
+          </div>
+        }
+      </section>
+
+      <section class="ai-chip-group">
+        <p>Presupuesto</p>
+        <div class="chip-row">
+          @for (item of aiPresupuestoOptions; track item.label) {
+            <button
+              type="button"
+              class="chip"
+              [class.chip--active]="isPresupuestoOptionActive(item.value)"
+              (click)="seleccionarPresupuesto(item.value)">
+              {{ item.label }}
+            </button>
+          }
+        </div>
+        @if (isCustomPresupuesto) {
+          <div class="ai-custom-input-wrap">
+            <div class="floating-field ai-custom-input">
+              <input
+                id="aiPresupuestoCustom"
+                type="number"
+                class="form-control"
+                [ngModel]="customPresupuesto"
+                (ngModelChange)="onCustomPresupuestoChange($event === '' ? null : $event)"
+                min="0"
+                placeholder="Escribe un presupuesto personalizado" />
+            </div>
+          </div>
+        }
+      </section>
+
+      <div class="ai-actions">
+        <button class="hero-btn hero-btn-primary" type="button" (click)="solicitarRecomendacionIA()" [disabled]="aiLoading">
+          @if (aiLoading) {
+            <i class="fas fa-circle-notch fa-spin" style="margin-right: 8px;"></i>Generando...
+          } @else {
+            <i class="fa-solid fa-wand-magic-sparkles" style="margin-right: 8px;"></i>Generar sugerencias
+          }
+        </button>
+        <button class="hero-btn hero-btn-secondary ai-clear" type="button" (click)="limpiarAsistenteIA()" [disabled]="aiLoading">
+          Limpiar filtros
+        </button>
+      </div>
+
+      <div class="ai-feedback" *ngIf="aiDisclaimer">
+        <strong>Nota:</strong> {{ aiDisclaimer }}
+      </div>
+
+      @if (aiLoading) {
+        <div class="ai-skeleton-grid">
+          @for (item of aiSkeletonCards; track item) {
+            <article class="ai-skeleton-card" aria-hidden="true">
+              <div class="ai-skeleton-title"></div>
+              <div class="ai-skeleton-line"></div>
+              <div class="ai-skeleton-line ai-skeleton-line--short"></div>
+              <div class="ai-skeleton-tags">
+                <span></span><span></span>
+              </div>
+              <div class="ai-skeleton-button"></div>
+            </article>
+          }
+        </div>
+      }
+
+      <div class="ai-results" *ngIf="!aiLoading && aiRecommendations.length > 0">
+        @for (combo of aiRecommendations; track combo.titulo + $index) {
+          <article class="ai-card">
+            <div class="ai-card-head">
+              <h4>{{ combo.titulo }}</h4>
+              <span class="ai-price">${{ combo.precioEstimado | number:'1.0-0' }}</span>
+            </div>
+            <p class="ai-reason">{{ combo.razon }}</p>
+
+            <ul class="ai-products">
+              @for (producto of combo.productos; track producto.id) {
+                <li>
+                  <img [src]="producto.imagen" [alt]="producto.nombre" loading="lazy" />
+                  <div>
+                    <p class="ai-product-name">{{ producto.nombre }}</p>
+                    <p class="ai-product-meta">${{ producto.precioUnitario | number:'1.0-0' }}</p>
+                    <div class="ai-product-tags">
+                      @for (tag of obtenerTagsProductoIA(producto); track tag) {
+                        <span>{{ tag }}</span>
+                      }
+                    </div>
+                  </div>
+                </li>
+              }
+            </ul>
+
+            <button class="hero-btn hero-btn-primary ai-add" type="button" (click)="agregarComboIAAlCarrito(combo)" [disabled]="aiAddingCombo">
+              <i class="fa-solid fa-cart-plus" style="margin-right: 8px;"></i>
+              Agregar combo
+            </button>
+          </article>
+        }
+      </div>
+
+      <div class="ai-empty" *ngIf="!aiLoading && aiRecommendations.length === 0">
+        Selecciona tus preferencias y genera sugerencias para ver combos recomendados aqui.
+      </div>
+    </div>
+  </aside>
 
 </div>

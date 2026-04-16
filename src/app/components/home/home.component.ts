@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { CardGridComponent } from '../card-grid/card-grid.component';
 import { PublicoService } from '../../services/publico.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -25,6 +25,8 @@ import Swal from 'sweetalert2';
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private revealObserver?: IntersectionObserver;
+  private sheetTouchStartY: number | null = null;
+  private sheetTouchDeltaY: number = 0;
 
   valorItems = [
     {
@@ -68,9 +70,29 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   aiLoading: boolean = false;
   aiAddingCombo: boolean = false;
+  assistantOpen: boolean = false;
   aiRecommendations: AiComboRecommendationDTO[] = [];
   aiDisclaimer: string = '';
   aiSource: string = '';
+  aiSkeletonCards: number[] = [1, 2];
+  readonly aiObjetivoOptions: string[] = ['Alto en proteina', 'Ligero', 'Energizante', 'Balanceado', 'Otro'];
+  readonly aiRestriccionOptions: string[] = ['Sin lactosa', 'Sin gluten', 'Vegano', 'Bajo azucar', 'Sin restriccion', 'Otro'];
+  readonly aiMomentoOptions: string[] = ['Desayuno', 'Almuerzo', 'Cena', 'Post entrenamiento', 'Otro'];
+  readonly aiPresupuestoOptions: Array<{ label: string; value: number | null | 'other' }> = [
+    { label: 'Sin limite', value: null },
+    { label: 'Hasta $15k', value: 15000 },
+    { label: 'Hasta $25k', value: 25000 },
+    { label: 'Hasta $35k', value: 35000 },
+    { label: 'Otro', value: 'other' }
+  ];
+  isCustomObjetivo: boolean = false;
+  isCustomRestriccion: boolean = false;
+  isCustomMomento: boolean = false;
+  isCustomPresupuesto: boolean = false;
+  customObjetivo: string = '';
+  customRestriccion: string = '';
+  customMomentoDia: string = '';
+  customPresupuesto: number | null = null;
   aiRequest: AiRecommendationRequestDTO = {
     objetivo: '',
     restriccion: '',
@@ -101,6 +123,187 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.seleccionados = [];
     this.filterUsed = false;
     this.mesaFilterUsed = false;
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapePressed(): void {
+    if (this.assistantOpen) {
+      this.closeAiAssistant();
+    }
+  }
+
+  openAiAssistant(): void {
+    this.assistantOpen = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeAiAssistant(): void {
+    this.assistantOpen = false;
+    this.sheetTouchStartY = null;
+    this.sheetTouchDeltaY = 0;
+    document.body.style.overflow = '';
+  }
+
+  toggleAiAssistant(): void {
+    if (this.assistantOpen) {
+      this.closeAiAssistant();
+      return;
+    }
+    this.openAiAssistant();
+  }
+
+  seleccionarObjetivo(value: string): void {
+    if (value === 'Otro') {
+      this.isCustomObjetivo = !this.isCustomObjetivo;
+      if (!this.isCustomObjetivo) {
+        this.customObjetivo = '';
+        this.aiRequest.objetivo = '';
+      } else {
+        this.aiRequest.objetivo = this.customObjetivo.trim();
+      }
+      return;
+    }
+    this.isCustomObjetivo = false;
+    this.customObjetivo = '';
+    this.aiRequest.objetivo = this.aiRequest.objetivo === value ? '' : value;
+  }
+
+  seleccionarRestriccion(value: string): void {
+    if (value === 'Otro') {
+      this.isCustomRestriccion = !this.isCustomRestriccion;
+      if (!this.isCustomRestriccion) {
+        this.customRestriccion = '';
+        this.aiRequest.restriccion = '';
+      } else {
+        this.aiRequest.restriccion = this.customRestriccion.trim();
+      }
+      return;
+    }
+    this.isCustomRestriccion = false;
+    this.customRestriccion = '';
+    this.aiRequest.restriccion = this.aiRequest.restriccion === value ? '' : value;
+  }
+
+  seleccionarMomento(value: string): void {
+    if (value === 'Otro') {
+      this.isCustomMomento = !this.isCustomMomento;
+      if (!this.isCustomMomento) {
+        this.customMomentoDia = '';
+        this.aiRequest.momentoDia = '';
+      } else {
+        this.aiRequest.momentoDia = this.customMomentoDia.trim();
+      }
+      return;
+    }
+    this.isCustomMomento = false;
+    this.customMomentoDia = '';
+    this.aiRequest.momentoDia = this.aiRequest.momentoDia === value ? '' : value;
+  }
+
+  seleccionarPresupuesto(value: number | null | 'other'): void {
+    if (value === 'other') {
+      this.isCustomPresupuesto = !this.isCustomPresupuesto;
+      if (!this.isCustomPresupuesto) {
+        this.customPresupuesto = null;
+        this.aiRequest.presupuestoMax = null;
+      } else {
+        this.aiRequest.presupuestoMax = this.customPresupuesto;
+      }
+      return;
+    }
+    this.isCustomPresupuesto = false;
+    this.customPresupuesto = null;
+    this.aiRequest.presupuestoMax = this.aiRequest.presupuestoMax === value ? null : value;
+  }
+
+  onCustomObjetivoChange(value: string): void {
+    this.customObjetivo = value;
+    this.aiRequest.objetivo = value.trim();
+  }
+
+  onCustomRestriccionChange(value: string): void {
+    this.customRestriccion = value;
+    this.aiRequest.restriccion = value.trim();
+  }
+
+  onCustomMomentoChange(value: string): void {
+    this.customMomentoDia = value;
+    this.aiRequest.momentoDia = value.trim();
+  }
+
+  onCustomPresupuestoChange(value: number | null): void {
+    this.customPresupuesto = value;
+    this.aiRequest.presupuestoMax = value;
+  }
+
+  isObjetivoOptionActive(option: string): boolean {
+    return option === 'Otro' ? this.isCustomObjetivo : !this.isCustomObjetivo && this.aiRequest.objetivo === option;
+  }
+
+  isRestriccionOptionActive(option: string): boolean {
+    return option === 'Otro' ? this.isCustomRestriccion : !this.isCustomRestriccion && this.aiRequest.restriccion === option;
+  }
+
+  isMomentoOptionActive(option: string): boolean {
+    return option === 'Otro' ? this.isCustomMomento : !this.isCustomMomento && this.aiRequest.momentoDia === option;
+  }
+
+  isPresupuestoOptionActive(value: number | null | 'other'): boolean {
+    return value === 'other'
+      ? this.isCustomPresupuesto
+      : !this.isCustomPresupuesto && this.aiRequest.presupuestoMax === value;
+  }
+
+  onAiSheetTouchStart(event: TouchEvent): void {
+    if (window.innerWidth > 760) {
+      return;
+    }
+    this.sheetTouchStartY = event.touches[0]?.clientY ?? null;
+    this.sheetTouchDeltaY = 0;
+  }
+
+  onAiSheetTouchMove(event: TouchEvent): void {
+    if (window.innerWidth > 760 || this.sheetTouchStartY === null) {
+      return;
+    }
+    const currentY = event.touches[0]?.clientY ?? this.sheetTouchStartY;
+    this.sheetTouchDeltaY = currentY - this.sheetTouchStartY;
+  }
+
+  onAiSheetTouchEnd(): void {
+    if (window.innerWidth <= 760 && this.sheetTouchDeltaY > 90) {
+      this.closeAiAssistant();
+    }
+    this.sheetTouchStartY = null;
+    this.sheetTouchDeltaY = 0;
+  }
+
+  obtenerTagsProductoIA(producto: { nombre: string; categoria: string }): string[] {
+    const tags = new Set<string>();
+    const categoria = (producto.categoria || '').toLowerCase();
+    const nombre = (producto.nombre || '').toLowerCase();
+
+    if (categoria.includes('ensalada')) {
+      tags.add('Fresh');
+    }
+    if (categoria.includes('bebidas')) {
+      tags.add('Hidratante');
+    }
+    if (categoria.includes('platos fuertes') || nombre.includes('pollo') || nombre.includes('hummus')) {
+      tags.add('Proteina');
+    }
+    if (categoria.includes('postres')) {
+      tags.add('Sweet');
+    }
+    if (categoria.includes('desayunos')) {
+      tags.add('Morning');
+    }
+
+    if (tags.size === 0) {
+      tags.add('Recomendado');
+    }
+
+    return Array.from(tags).slice(0, 2);
   }
 
   solicitarRecomendacionIA(): void {
@@ -160,6 +363,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.aiRecommendations = [];
     this.aiDisclaimer = '';
     this.aiSource = '';
+    this.isCustomObjetivo = false;
+    this.isCustomRestriccion = false;
+    this.isCustomMomento = false;
+    this.isCustomPresupuesto = false;
+    this.customObjetivo = '';
+    this.customRestriccion = '';
+    this.customMomentoDia = '';
+    this.customPresupuesto = null;
   }
 
   agregarComboIAAlCarrito(combo: AiComboRecommendationDTO): void {
@@ -260,6 +471,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.revealObserver?.disconnect();
+    document.body.style.overflow = '';
   }
 
   changeView(view: string) {
