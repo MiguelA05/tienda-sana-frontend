@@ -104,6 +104,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.tokenService.isLogged();
   }
 
+  get isCliente(): boolean {
+    return this.tokenService.getRol() === 'CLIENTE';
+  }
+
   constructor(
     private publicoService: PublicoService,
     private clienteService: ClienteService,
@@ -390,6 +394,15 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
+    if (!this.isCliente) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Accion no permitida',
+        text: 'Solo las cuentas con rol CLIENTE pueden agregar productos al carrito.'
+      });
+      return;
+    }
+
     if (!combo.productos || combo.productos.length === 0) {
       Swal.fire('Error', 'El combo no tiene productos para agregar.', 'error');
       return;
@@ -418,7 +431,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       error: (error) => {
         this.aiAddingCombo = false;
         console.error(error);
-        Swal.fire('Error', 'No fue posible agregar todos los productos del combo.', 'error');
+        const backendMessage = error?.error?.reply || error?.error?.respuesta || 'No fue posible agregar todos los productos del combo.';
+        Swal.fire('Error', backendMessage, 'error');
       }
     });
   }

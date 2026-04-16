@@ -402,10 +402,12 @@
               }
             </ul>
 
-            <button class="hero-btn hero-btn-primary ai-add" type="button" (click)="agregarComboIAAlCarrito(combo)" [disabled]="aiAddingCombo">
-              <i class="fa-solid fa-cart-plus" style="margin-right: 8px;"></i>
-              Agregar combo
-            </button>
+            @if (isCliente) {
+              <button class="hero-btn hero-btn-primary ai-add" type="button" (click)="agregarComboIAAlCarrito(combo)" [disabled]="aiAddingCombo">
+                <i class="fa-solid fa-cart-plus" style="margin-right: 8px;"></i>
+                Agregar combo
+              </button>
+            }
           </article>
         }
       </div>
