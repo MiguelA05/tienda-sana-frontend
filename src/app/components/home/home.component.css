@@ -742,6 +742,31 @@
   padding: 0.7rem 0.9rem;
 }
 
+.ai-add.btn-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.ai-add.btn-loading i {
+  opacity: 0;
+}
+
+.ai-add.btn-loading::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  top: 50%;
+  left: 50%;
+  margin-left: -9px;
+  margin-top: -9px;
+  border: 3px solid var(--white-rgba-30);
+  border-radius: 50%;
+  border-top-color: var(--surface-white);
+  animation: spinner 1s linear infinite;
+}
+
 .ai-empty {
   margin-top: 0.9rem;
   color: var(--auto-color-147);

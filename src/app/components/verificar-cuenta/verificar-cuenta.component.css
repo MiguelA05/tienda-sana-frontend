@@ -3,11 +3,47 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    max-width: 100%;
     min-height: 100vh;
-    background: linear-gradient(135deg, var(--surface-light) 0%, var(--surface-muted) 100%);
+    box-sizing: border-box;
+    background:
+        radial-gradient(circle at 12% 18%, var(--auto-color-167) 0, var(--auto-color-168) 40%),
+        radial-gradient(circle at 86% 80%, var(--primary-rgba-14) 0, var(--auto-color-169) 34%),
+        linear-gradient(120deg, var(--auto-color-170) 0%, var(--auto-color-171) 100%);
     padding: 20px;
     text-align: center;
     position: relative;
+    overflow: hidden;
+}
+
+.main-container::before,
+.main-container::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.main-container::before {
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    left: -180px;
+    top: 14%;
+    background: radial-gradient(circle at 45% 45%, var(--auto-color-172) 0%, var(--auto-color-173) 40%, var(--auto-color-169) 72%);
+    filter: blur(3px);
+}
+
+.main-container::after {
+    width: 360px;
+    height: 360px;
+    border-radius: 42% 58% 63% 37% / 42% 35% 65% 58%;
+    right: -130px;
+    bottom: -100px;
+    background: linear-gradient(140deg, var(--auto-color-174), var(--auto-color-175));
+    filter: blur(2px);
+    animation: loginBlobDrift 12s ease-in-out infinite alternate;
 }
 
 /* Elementos decorativos */
@@ -320,6 +356,15 @@
     }
     100% {
         transform: translateX(100%);
+    }
+}
+
+@keyframes loginBlobDrift {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    100% {
+        transform: translateY(-18px) rotate(7deg);
     }
 }
 

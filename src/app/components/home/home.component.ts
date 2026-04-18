@@ -378,6 +378,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   agregarComboIAAlCarrito(combo: AiComboRecommendationDTO): void {
+    if (this.aiAddingCombo) {
+      return;
+    }
+
     if (!this.tokenService.getToken()) {
       Swal.fire({
         title: 'No estas logueado',

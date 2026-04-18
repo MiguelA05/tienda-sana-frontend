@@ -403,7 +403,12 @@
             </ul>
 
             @if (isCliente) {
-              <button class="hero-btn hero-btn-primary ai-add" type="button" (click)="agregarComboIAAlCarrito(combo)" [disabled]="aiAddingCombo">
+              <button
+                class="hero-btn hero-btn-primary ai-add"
+                type="button"
+                (click)="agregarComboIAAlCarrito(combo)"
+                [disabled]="aiAddingCombo"
+                [ngClass]="{ 'btn-loading': aiAddingCombo }">
                 <i class="fa-solid fa-cart-plus" style="margin-right: 8px;"></i>
                 Agregar combo
               </button>
