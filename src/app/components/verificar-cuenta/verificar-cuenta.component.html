@@ -23,7 +23,7 @@
           <div class="form-group">
             <input
               type="email"
-              class="form-control"
+              class="form-control readonly-email-field"
               id="email"
               formControlName="email"
               placeholder=" "
@@ -31,6 +31,7 @@
               [ngClass]="{'is-invalid': verificarCuentaForm.get('email')?.invalid && verificarCuentaForm.get('email')?.touched}" />
             <label for="email" class="form-label">Correo Electrónico</label>
             <i class="fa-solid fa-envelope input-icon"></i>
+            <i class="fa-solid fa-lock input-lock-icon" aria-hidden="true"></i>
             @if (verificarCuentaForm.get('email')?.invalid && verificarCuentaForm.get('email')?.touched) {
               <div class="error-message">Por favor ingrese un correo electrónico válido.</div>
             }

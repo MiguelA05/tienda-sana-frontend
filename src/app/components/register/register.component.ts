@@ -85,6 +85,10 @@ export class RegisterComponent {
    * Método para registrar un nuevo usuario en la plataforma
   */
   registrar(): void {
+    if (this.isLoading) {
+      return;
+    }
+
     // Marcar todos los campos como touched para mostrar errores si existen
      this.markFormGroupTouched(this.registroForm);
 
@@ -99,6 +103,7 @@ export class RegisterComponent {
     }
 
     if (this.registroForm.valid) {
+      this.isLoading = true;
       const crearCuentaDTO = this.registroForm.value as CrearCuentaDTO;
       console.log(crearCuentaDTO);
       this.authService.crearCuenta(crearCuentaDTO).subscribe({
@@ -111,8 +116,9 @@ export class RegisterComponent {
             icon: 'success',
             confirmButtonText: 'Aceptar'
           })
-          this.dataService.setData(this.registroForm.get('email')?.value);
-          this.router.navigate(['/verificar-cuenta']);
+          const email = this.registroForm.get('email')?.value;
+          this.dataService.setData(email);
+          this.router.navigate(['/verificar-cuenta'], { queryParams: { email } });
         },
         error: (error) => {
           this.isLoading = false;

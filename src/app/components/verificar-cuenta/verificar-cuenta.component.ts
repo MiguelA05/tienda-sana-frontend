@@ -34,10 +34,13 @@ export class VerificarCuentaComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      const email = params['email'] || '';
-      this.verificarCuentaForm = this.formbuilder.group({
-        email: [{ value: email, disabled: true }, [Validators.required, Validators.email]],
-        codigoVerificacionRegistro: ['', Validators.required]
+      const emailFromQuery = params['email'];
+      const emailFromService = this.dataService.getData();
+      const resolvedEmail = emailFromQuery || emailFromService || this.email || '';
+
+      this.email = resolvedEmail;
+      this.verificarCuentaForm.patchValue({
+        email: resolvedEmail
       });
     });
   }

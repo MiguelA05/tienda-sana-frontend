@@ -212,7 +212,7 @@
         <!-- Botón de registro -->
         <div class="button-container">
           <button type="submit" class="btn-primary auth-submit-btn"
-            [disabled]="registroForm.invalid || isLoading">
+            [disabled]="isLoading">
             @if(isLoading) {
             <span class="spinner-border spinner-border-sm me-2" role="status"
               aria-hidden="true"></span>
