@@ -95,8 +95,16 @@
 
       @if (!isAdmin) {
       <div class="cart-container">
-        <button type="button" class="cart-button cart-button-cart" routerLink="/carrito" aria-label="Ir al carrito">
+        <button
+          type="button"
+          class="cart-button cart-button-cart"
+          [class.cart-button--has-items]="hasCartItems"
+          routerLink="/carrito"
+          [attr.aria-label]="hasCartItems ? 'Ir al carrito, ' + cartItemCount + ' productos' : 'Ir al carrito vacio'">
           <i class="fa-solid fa-shopping-cart"></i>
+          @if (hasCartItems) {
+            <span class="cart-badge">{{ cartItemCount }}</span>
+          }
         </button>
         <button type="button" class="cart-button cart-button-reservas" routerLink="/gestor-reservas" aria-label="Ir al gestor de reservas">
           <i class="fa-solid fa-calendar-check"></i>
@@ -109,8 +117,16 @@
     <!-- Carrito y Gestor de Reservas (mobile) -->
     <div class="cart-container cart-container-mobile">
       @if (isLogged && !isAdmin) {
-        <button type="button" class="cart-button cart-button-cart" routerLink="/carrito" aria-label="Ir al carrito">
+        <button
+          type="button"
+          class="cart-button cart-button-cart"
+          [class.cart-button--has-items]="hasCartItems"
+          routerLink="/carrito"
+          [attr.aria-label]="hasCartItems ? 'Ir al carrito, ' + cartItemCount + ' productos' : 'Ir al carrito vacio'">
           <i class="fa-solid fa-shopping-cart"></i>
+          @if (hasCartItems) {
+            <span class="cart-badge">{{ cartItemCount }}</span>
+          }
         </button>
         <button type="button" class="cart-button cart-button-reservas" routerLink="/gestor-reservas" aria-label="Ir al gestor de reservas">
           <i class="fa-solid fa-calendar-check"></i>

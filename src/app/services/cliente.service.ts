@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject, tap } from 'rxjs';
 import { MensajeDTO } from '../dto/mensaje-dto';
 import { ItemCarritoDTO } from '../dto/item-carrito-dto';
 import { BorrarDetalleCarritoDTO } from '../dto/borrar-detalle-carrito-dto';
@@ -23,7 +23,17 @@ import { environment } from '../../environments/environment';
 export class ClienteService {
 
   private clienteURL = environment.clienteServiceUrl;
+  private carritoActualizadoSubject = new Subject<void>();
+
   constructor(private http: HttpClient) { }
+
+  public get carritoActualizado$(): Observable<void> {
+    return this.carritoActualizadoSubject.asObservable();
+  }
+
+  public notificarCarritoActualizado(): void {
+    this.carritoActualizadoSubject.next();
+  }
 
   /**
    * Metodo para listar los productos de un cliente
@@ -62,7 +72,9 @@ export class ClienteService {
    * @returns respuesta del servidor
    */
   public agregarItemCarrito(carItemDTO: ItemCarritoDTO): Observable<MensajeDTO> {
-    return this.http.put<MensajeDTO>(`${this.clienteURL}/carrito/add-item`, carItemDTO);
+    return this.http
+      .put<MensajeDTO>(`${this.clienteURL}/carrito/add-item`, carItemDTO)
+      .pipe(tap(() => this.notificarCarritoActualizado()));
   }
 
   /**
@@ -84,7 +96,9 @@ export class ClienteService {
    * @returns respuesta del servidor
    */
   public eliminarItemCarrito(deleteCarDetailDTO: BorrarDetalleCarritoDTO): Observable<MensajeDTO> {
-    return this.http.delete<MensajeDTO>(`${this.clienteURL}/carrito/delete-item`, { body: deleteCarDetailDTO });
+    return this.http
+      .delete<MensajeDTO>(`${this.clienteURL}/carrito/delete-item`, { body: deleteCarDetailDTO })
+      .pipe(tap(() => this.notificarCarritoActualizado()));
   }
 
   public eliminarMesaGestorReservas(borrarMesaGestorDTO: BorrarMesaGestorDTO): Observable<MensajeDTO> {
@@ -97,7 +111,9 @@ export class ClienteService {
    * @returns respuesta del servidor
    */
   public actualizarItemCarrito(updateCarItemDTO: ActualizarItemCarritoDTO): Observable<MensajeDTO> {
-    return this.http.put<MensajeDTO>(`${this.clienteURL}/carrito/edit-item`, updateCarItemDTO);
+    return this.http
+      .put<MensajeDTO>(`${this.clienteURL}/carrito/edit-item`, updateCarItemDTO)
+      .pipe(tap(() => this.notificarCarritoActualizado()));
   }
 
   /**
@@ -106,7 +122,9 @@ export class ClienteService {
    * @returns respuesta del servidor
    */
   public crearVenta(createOrderDTO: CrearVentaDTO): Observable<MensajeDTO> {
-    return this.http.post<MensajeDTO>(`${this.clienteURL}/venta/create`, createOrderDTO);
+    return this.http
+      .post<MensajeDTO>(`${this.clienteURL}/venta/create`, createOrderDTO)
+      .pipe(tap(() => this.notificarCarritoActualizado()));
   }
 
   public crearReserva(crearReservaDTO: CrearReservaDTO): Observable<MensajeDTO> {

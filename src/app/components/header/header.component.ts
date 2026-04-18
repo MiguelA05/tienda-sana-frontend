@@ -1,9 +1,11 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import { TokenService } from '../../services/token.service';
 import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { ClienteService } from '../../services/cliente.service';
 
 @Component({
   selector: 'app-header',
@@ -12,7 +14,9 @@ import { filter } from 'rxjs/operators';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnDestroy {
+  private readonly subscriptions = new Subscription();
+
   isMenuOpen: boolean = false;
   /** Menú de usuario: control explícito (Bootstrap JS no siempre enlaza bien en Angular). */
   isUserDropdownOpen = false;
@@ -24,13 +28,19 @@ export class HeaderComponent {
   isAdmin = false;
   isHomeRoute = false;
   hasScrolled = false;
+  cartItemCount = 0;
 
   /**
    * Constructor de la clase HeaderComponent
    * @param tokenService tokenService para gestionar el token de autenticación
    * @param router router para navegar entre rutas
    */
-  constructor(private tokenService: TokenService, private router: Router, private location: Location) {
+  constructor(
+    private tokenService: TokenService,
+    private router: Router,
+    private location: Location,
+    private clienteService: ClienteService
+  ) {
     this.title = 'Tienda Sana';
     this.isLogged = this.tokenService.isLogged();
     if (this.isLogged) {
@@ -39,14 +49,26 @@ export class HeaderComponent {
       this.isAdmin = this.tokenService.getRol() === 'ADMIN';
     }
 
-    this.router.events.pipe(
+    const navigationSub = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
       this.updateRouteState(event.urlAfterRedirects);
+      this.refreshCartState();
     });
+    this.subscriptions.add(navigationSub);
+
+    const cartUpdatesSub = this.clienteService.carritoActualizado$.subscribe(() => {
+      this.refreshCartState();
+    });
+    this.subscriptions.add(cartUpdatesSub);
 
     this.updateRouteState(this.router.url);
+    this.refreshCartState();
     this.onWindowScroll();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   /**
@@ -67,6 +89,10 @@ export class HeaderComponent {
 
   get useTransparentHeader(): boolean {
     return this.isHomeRoute && !this.hasScrolled;
+  }
+
+  get hasCartItems(): boolean {
+    return this.cartItemCount > 0;
   }
 
   irAInicio(): void {
@@ -231,6 +257,31 @@ export class HeaderComponent {
     }));
 
     this.location.replaceState(nextUrl);
+  }
+
+  private refreshCartState(): void {
+    this.isLogged = this.tokenService.isLogged();
+    this.isAdmin = this.tokenService.getRol() === 'ADMIN';
+
+    if (!this.isLogged || this.isAdmin) {
+      this.cartItemCount = 0;
+      return;
+    }
+
+    const email = this.tokenService.getEmail();
+    if (!email) {
+      this.cartItemCount = 0;
+      return;
+    }
+
+    this.clienteService.getCartItemCount(email).subscribe({
+      next: (count) => {
+        this.cartItemCount = Number.isFinite(count) && count > 0 ? count : 0;
+      },
+      error: () => {
+        this.cartItemCount = 0;
+      }
+    });
   }
 
 }
