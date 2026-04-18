@@ -25,7 +25,7 @@
   inset: 0;
   background-image:
     linear-gradient(120deg, var(--auto-color-056) 0%, var(--auto-color-057) 42%, var(--auto-color-058) 100%),
-    url("https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1900&q=80");
+    url("https://scontent-bog2-1.xx.fbcdn.net/v/t39.30808-6/487158885_1472460670874037_6255519068876191470_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=13d280&_nc_eui2=AeFfGvgxP2d2eEBaYV8H6NDcxxvXL3l_azDHG9cveX9rMCF3ZUdxFGLQ7WLdezQ0wvvyBtoaiDT-AyxnfDeiHAWg&_nc_ohc=lvL8o411RCsQ7kNvwEQ9OUk&_nc_oc=AdogHlRvzGUDM73odQj-nt6RmG1epuipwQG9S6YaRAuq9wOWFUQUqDphx6f2DPRueYOhbPH1iqEWTYctOBZv7L0H&_nc_zt=23&_nc_ht=scontent-bog2-1.xx&_nc_gid=i3QbyDn5HKNkhlaMVM8uhQ&_nc_ss=7a3a8&oh=00_Af1P-AzCnAUsgIV6uyP3uU0HTuKzlT4GpDxTUL-y42nF1w&oe=69EA04A5");
   background-size: cover;
   background-position: center;
   transform: scale(1.04);
