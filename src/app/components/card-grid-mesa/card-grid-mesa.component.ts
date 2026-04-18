@@ -43,11 +43,6 @@ export class CardGridMesaComponent implements OnInit {
     void this.router.navigate(['/admin', 'tables'], { queryParams: { edit: mesa.id } });
   }
 
-  abrirDetalleDesdeBoton(event: Event, mesa: ItemMesaDTO): void {
-    event.stopPropagation();
-    this.irADetalleMesa(mesa.id);
-  }
-
   agregarAGestorReservas(event: Event, mesa: ItemMesaDTO): void {
     event.stopPropagation();
 

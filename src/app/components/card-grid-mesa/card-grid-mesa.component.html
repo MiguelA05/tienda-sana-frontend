@@ -33,9 +33,6 @@
             </button>
           } @else {
             <div class="card-footer-actions">
-              <button class="btn btn-custom btn-custom--ghost" (click)="abrirDetalleDesdeBoton($event, mesa)">
-                <i class="bi bi-eye me-2"></i>Ver detalle
-              </button>
               <button class="btn btn-custom" (click)="agregarAGestorReservas($event, mesa)" [disabled]="isLoading || estaMesaEnGestor(mesa.id)">
                 @if (!isLoading) {
                   @if (estaMesaEnGestor(mesa.id)) {
