@@ -1,9 +1,9 @@
 /* Contenedor principal */
 .card-grid-container {
   padding: 25px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, var(--surface-light) 0%, var(--surface-muted) 100%);
   border-radius: 15px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 25px var(--shadow-rgba-08);
   margin-bottom: 30px;
   box-sizing: border-box;
 }
@@ -24,8 +24,8 @@
   border-radius: 12px;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  background-color: #ffffff;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  background-color: var(--surface-white);
+  box-shadow: 0 5px 15px var(--shadow-rgba-08);
   will-change: transform, box-shadow;
   height: auto;
   display: flex;
@@ -34,7 +34,7 @@
 
 .custom-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 15px 30px var(--shadow-rgba-12);
 }
 
 /* Contenido de la tarjeta */
@@ -69,23 +69,23 @@
   flex-direction: column;
 }
 
-/* Título y texto */
+/* TÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­tulo y texto */
 .card-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #495057;
+  color: var(--text-dark);
   margin-bottom: 10px;
   transition: color 0.3s ease;
   text-align: center;
 }
 
 .custom-card:hover .card-title {
-  color: #198754;
+  color: var(--brand-primary);
 }
 
 .card-text {
   font-size: 1.2rem;
-  color: #6c757d;
+  color: var(--text-secondary);
   margin-bottom: 15px;
 }
 
@@ -93,34 +93,34 @@
 .card-text.text-success {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #198754 !important;
+  color: var(--brand-primary) !important;
   margin-top: auto;
   margin-bottom: 10px;
 }
 
 /* Footer de la tarjeta */
 .card-footer {
-  background-color: #f8f9fa;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  background-color: var(--surface-light);
+  border-top: 1px solid var(--shadow-rgba-05);
   padding: 15px;
 }
 
-/* Botón personalizado */
+/* BotÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n personalizado */
 .btn-custom {
-  background: linear-gradient(135deg, #198754 0%, #20c997 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+  color: var(--surface-white);
   font-weight: 600;
   padding: 10px 20px;
   border-radius: 8px;
   border: none;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+  box-shadow: 0 4px 10px var(--primary-rgba-20);
   font-size: 1.5rem;
   width: 100%;
 }
 
 .btn-custom:disabled {
-  background: linear-gradient(135deg, #6c757d 0%, #adb5bd 100%);
+  background: linear-gradient(135deg, var(--text-secondary) 0%, var(--text-muted) 100%);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
@@ -128,7 +128,7 @@
 
 .btn-custom:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 15px rgba(25, 135, 84, 0.3);
+  box-shadow: 0 8px 15px var(--primary-rgba-30);
 }
 
 .btn-custom:active {
@@ -195,3 +195,5 @@
     font-size: 0.8rem;
   }
 }
+
+

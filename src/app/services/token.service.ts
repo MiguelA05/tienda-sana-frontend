@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Buffer } from "buffer";
 
 const TOKEN_KEY = 'AuthToken';
 
@@ -76,7 +75,13 @@ export class TokenService {
    */
   private decodePayload(token: string): any {
     const payload = token!.split(".")[1];
-    const payloadDecoded = Buffer.from(payload, 'base64').toString('ascii');
+    const base64 = payload.replace(/-/g, '+').replace(/_/g, '/').padEnd(Math.ceil(payload.length / 4) * 4, '=');
+    const payloadDecoded = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((character) => `%${character.charCodeAt(0).toString(16).padStart(2, '0')}`)
+        .join('')
+    );
     const values = JSON.parse(payloadDecoded);
     return values;
   }

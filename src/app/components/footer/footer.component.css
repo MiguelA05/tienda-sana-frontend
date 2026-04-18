@@ -1,7 +1,7 @@
 /* Contenedor del footer */
 .footer-container {
   width: 100%;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, var(--surface-light) 0%, var(--surface-muted) 100%);
   padding: 10px 20px;
   transition: background 0.3s ease;
   position: relative;
@@ -16,13 +16,13 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid rgba(25, 135, 84, 0.2);
+  border-top: 1px solid var(--primary-rgba-20);
   transition: all 0.3s ease;
   position: relative;
   will-change: transform, box-shadow;
 }
 
-/* Sección de copyright */
+/* SecciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n de copyright */
 .footer-copyright {
   display: flex;
   align-items: center;
@@ -30,7 +30,7 @@
 }
 
 .copyright-text {
-  color: #495057;
+  color: var(--text-dark);
   font-weight: 500;
   letter-spacing: 0.3px;
   transition: color 0.3s ease;
@@ -45,7 +45,7 @@
   gap: 20px;
 }
 
-/* Íconos sociales */
+/* ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âconos sociales */
 .social-icon {
   width: 40px;
   height: 40px;
@@ -53,24 +53,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #198754 0%, #20c997 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+  color: var(--surface-white);
   font-size: 1.2rem;
   text-decoration: none;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+  box-shadow: 0 4px 10px var(--primary-rgba-20);
   transform: translateY(0);
 }
 
 .social-icon:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(25, 135, 84, 0.3);
-  background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+  box-shadow: 0 8px 15px var(--primary-rgba-30);
+  background: linear-gradient(135deg, var(--brand-dark) 0%, var(--primary-light) 100%);
 }
 
 .social-icon:active {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(25, 135, 84, 0.2);
+  box-shadow: 0 4px 8px var(--primary-rgba-20);
 }
 
 /* Responsive */
@@ -85,5 +85,8 @@
       justify-content: center;
   }
 }
+
+
+
 
 

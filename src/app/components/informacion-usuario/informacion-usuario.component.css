@@ -1,14 +1,14 @@
 /* Contenedor principal */
 input:disabled {
-  background-color: #e0e0e0;
-  color: #555;
-  border: 1px solid #ccc;
+  background-color: var(--border-subtle);
+  color: var(--auto-color-157);
+  border: 1px solid var(--auto-color-158);
   cursor: not-allowed;
 }
 
 /* Mensajes de error */
 .error-message {
-    color: #dc3545;
+    color: var(--status-error);
     font-size: 0.85rem;
     margin-top: 5px;
     transition: opacity 0.3s ease;
@@ -31,8 +31,8 @@ input:disabled {
     max-width: 500px;
     width: 100%;
     border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    background-color: #ffffff;
+    box-shadow: 0 8px 20px var(--shadow-rgba-10);
+    background-color: var(--surface-white);
     transform: translateY(0);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: visible;
@@ -43,7 +43,7 @@ input:disabled {
 
 .custom-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 12px 25px var(--shadow-rgba-15);
 }
 
 /* Encabezado y banner */
@@ -53,7 +53,7 @@ input:disabled {
     height: 180px;
     overflow: hidden;
     border-radius: 12px 12px 0 0 !important;
-    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+    box-shadow: 0 4px 10px var(--primary-rgba-20);
     z-index: 1; /* Increased z-index to bring header to front */
 }
 
@@ -77,15 +77,15 @@ input:disabled {
     transform: translateX(-50%);
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+    color: var(--surface-white);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 24px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    border: 3px solid #ffffff;
+    box-shadow: 0 4px 10px var(--shadow-rgba-20);
+    border: 3px solid var(--surface-white);
     transition: all 0.3s ease;
     z-index: 100; /* Increased z-index to bring icon to front */
 }
@@ -98,7 +98,7 @@ input:disabled {
 
 .custom-card:hover .icon-overlay {
     transform: translateX(-50%) scale(1.05);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 6px 15px var(--shadow-rgba-25);
 }
 
 /* Cuerpo de la tarjeta */
@@ -111,9 +111,9 @@ input:disabled {
 
 }
 
-/* Título del formulario */
+/* TÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­tulo del formulario */
 .card-body h5 {
-    color: #198754;
+    color: var(--brand-primary);
     font-size: 1.6rem;
     font-weight: 600;
     margin-bottom: 25px;
@@ -131,7 +131,7 @@ input:disabled {
     transform: translateX(-50%);
     width: 80px;
     height: 3px;
-    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
     border-radius: 3px;
 
 }
@@ -145,7 +145,7 @@ input:disabled {
 
 .form-group label {
     font-size: 0.9rem;
-    color: #198754;
+    color: var(--brand-primary);
     font-weight: 500;
     margin-bottom: 8px;
     display: block;
@@ -154,17 +154,17 @@ input:disabled {
 
 .form-control {
     border-radius: 8px;
-    border: 1.5px solid #e0e0e0;
+    border: 1.5px solid var(--border-subtle);
     padding: 12px 15px;
     font-size: 1rem;
     transition: all 0.3s ease;
-    background-color: #f9f9f9;
+    background-color: var(--surface-muted);
 }
 
 .form-control:focus {
-    border-color: #198754;
-    box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.2);
-    background-color: #ffffff;
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px var(--primary-rgba-20);
+    background-color: var(--surface-white);
 }
 
 /* Estilos para los botones */
@@ -176,62 +176,62 @@ input:disabled {
     cursor: pointer;
     transition: all 0.3s ease;
     letter-spacing: 0.5px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px var(--shadow-rgba-10);
     border: none;
 }
 
 .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 15px var(--shadow-rgba-15);
 }
 
 .btn:active {
     transform: translateY(0);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px var(--shadow-rgba-10);
 }
 
-/* Botones específicos */
+/* Botones especÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­ficos */
 .btn-update {
-    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+    color: var(--surface-white);
 }
 
 .btn-update:hover {
-    background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+    background: linear-gradient(135deg, var(--brand-dark) 0%, var(--primary-light) 100%);
 }
 
 .btn-save {
-    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+    color: var(--surface-white);
 }
 
 .btn-save:hover {
-    background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+    background: linear-gradient(135deg, var(--brand-dark) 0%, var(--primary-light) 100%);
 }
 
 .btn-back {
-    background: linear-gradient(135deg, #6c757d 0%, #adb5bd 100%);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--text-secondary) 0%, var(--text-muted) 100%);
+    color: var(--surface-white);
 }
 
 .btn-back:hover {
-    background: linear-gradient(135deg, #5a6268 0%, #98a2ac 100%);
+    background: linear-gradient(135deg, var(--auto-color-159) 0%, var(--auto-color-160) 100%);
 }
 
 .btn-delete {
-    background: linear-gradient(135deg, #dc3545 0%, #f66d7b 100%);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--status-error) 0%, var(--auto-color-161) 100%);
+    color: var(--surface-white);
 }
 
 .btn-delete:hover {
-    background: linear-gradient(135deg, #c82333 0%, #e35d6a 100%);
+    background: linear-gradient(135deg, var(--auto-color-162) 0%, var(--auto-color-163) 100%);
 }
 
 /* Alerta de error */
 .alert-danger {
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-    color: #721c24;
+    background-color: var(--auto-color-164);
+    border-color: var(--auto-color-165);
+    color: var(--auto-color-166);
     border-radius: 8px;
     padding: 12px 15px;
     margin-top: 5px;
@@ -268,7 +268,7 @@ input:disabled {
 }
 
 
-/* Modifica el estilo del botón de visibilidad */
+/* Modifica el estilo del botÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n de visibilidad */
 .password-input-container {
     position: relative;
     width: 100%;
@@ -283,11 +283,14 @@ input:disabled {
     border: none;
     cursor: pointer;
     font-size: 1.2rem;
-    color: #6c757d;
+    color: var(--text-secondary);
     z-index: 10;
   }
 
   .btn-visibility:hover {
-    color: #495057;
+    color: var(--text-dark);
   }
+
+
+
 

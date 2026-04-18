@@ -9,7 +9,7 @@
   <div class="register-page-inner">
     <div class="registration-card">
       <!-- Encabezado -->
-      <div class="card-header">
+      <div class="card-header auth-card-header">
         <i class="fa-solid fa-user-plus me-2"></i> Registro de Usuario
       </div>
 
@@ -211,7 +211,7 @@
 
         <!-- Botón de registro -->
         <div class="button-container">
-          <button type="submit" class="btn-primary"
+          <button type="submit" class="btn-primary auth-submit-btn"
             [disabled]="registroForm.invalid || isLoading">
             @if(isLoading) {
             <span class="spinner-border spinner-border-sm me-2" role="status"

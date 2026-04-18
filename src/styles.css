@@ -1,13 +1,197 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700&display=swap');
 
-/* Estilos globales */
 :root {
-  /* Colores primarios */
-  --primary-color: #198754;
-  --primary-light: #20c997;
-  --primary-dark: #157347;
-  
-  /* Colores neutrales */
+  --auto-color-111: rgba(18,47,35,0.32);
+  --auto-color-085: rgba(20,44,33,0.4);
+  --auto-color-020: rgba(255,255,255,0.15);
+  --auto-color-044: #146f49;
+  --auto-color-136: #ebefea;
+  --auto-color-045: #e3ece8;
+  --auto-color-052: #f8f5ec;
+  --auto-color-126: rgba(35,88,64,0.2);
+  --auto-color-144: #607468;
+  --auto-color-108: #476250;
+  --auto-color-107: #fff7e7;
+  --auto-color-083: #526654;
+  --auto-color-010: #e9f5ee;
+  --auto-color-103: #2d4437;
+  --auto-color-040: #d5e7de;
+  --auto-color-025: rgba(25,135,84,0.46);
+  --auto-color-015: #edf6f2;
+  --auto-color-177: #ff9c55;
+  --auto-color-145: rgba(42,104,77,0.12);
+  --auto-color-056: rgba(24,35,29,0.72);
+  --auto-color-087: #f5f8f1;
+  --auto-color-172: rgba(164,220,176,0.42);
+  --auto-color-073: #17352a;
+  --auto-color-148: rgba(46,96,72,0.25);
+  --auto-color-182: #2f6f49;
+  --auto-color-120: #607a6b;
+  --auto-color-049: #6b7680;
+  --auto-color-080: #204634;
+  --auto-color-167: rgba(42,164,120,0.18);
+  --auto-color-017: #86ffc9;
+  --auto-color-146: #2c5a46;
+  --auto-color-171: #e7ecee;
+  --auto-color-174: rgba(255,191,102,0.22);
+  --auto-color-175: rgba(248,153,76,0.1);
+  --auto-color-188: #ff5252;
+  --auto-color-016: rgba(255,255,255,0.14);
+  --auto-color-079: #2f6d51;
+  --auto-color-029: rgba(255,255,255,0.24);
+  --auto-color-121: #1d3f31;
+  --auto-color-072: rgba(255,255,255,0.18);
+  --auto-color-169: rgba(25,135,84,0);
+  --auto-color-149: rgba(255,255,255,0.8);
+  --auto-color-152: #2a5e45;
+  --auto-color-050: rgba(255,182,83,0.2);
+  --auto-color-156: rgba(49,95,72,0.45);
+  --auto-color-064: rgba(248,246,239,0.94);
+  --auto-color-100: rgba(24,56,41,0.08);
+  --auto-color-023: #1f7a5b;
+  --auto-color-036: rgba(220,53,69,0.42);
+  --auto-color-012: rgba(255,255,255,0.22);
+  --auto-color-053: #fdfbf6;
+  --auto-color-096: #456151;
+  --auto-color-154: rgba(9,18,14,0.4);
+  --auto-color-086: rgba(25,53,41,0.18);
+  --auto-color-091: #4b5f52;
+  --auto-color-030: rgba(255,255,255,0.62);
+  --auto-color-057: rgba(24,35,29,0.25);
+  --auto-color-063: rgba(8,18,14,0.55);
+  --auto-color-078: rgba(27,62,48,0.12);
+  --auto-color-003: #eef6f1;
+  --auto-color-104: rgba(47,109,81,0.14);
+  --auto-color-084: rgba(20,44,33,0.1);
+  --auto-color-106: #1f4936;
+  --auto-color-090: #16362a;
+  --auto-color-039: #126d47;
+  --auto-color-046: #37424a;
+  --auto-color-123: rgba(255,255,255,0.84);
+  --auto-color-187: #ff6b6b;
+  --auto-color-114: #396852;
+  --auto-color-105: #6a7f71;
+  --auto-color-089: #5f7d6d;
+  --auto-color-032: rgba(0,0,0,0.4);
+  --auto-color-060: rgba(12,23,18,0.08);
+  --auto-color-088: rgba(39,79,61,0.12);
+  --auto-color-033: #f0f0f0;
+  --auto-color-157: #555;
+  --auto-color-133: rgba(31,73,54,0.28);
+  --auto-color-160: #98a2ac;
+  --auto-color-026: rgba(255,255,255,0.38);
+  --auto-color-155: rgba(11,25,19,0.35);
+  --auto-color-043: #0f5f3e;
+  --auto-color-037: #b02a37;
+  --auto-color-024: #2a6f5a;
+  --auto-color-150: rgba(33,74,55,0.15);
+  --auto-color-004: #f7fbf9;
+  --auto-color-122: #2b5c46;
+  --auto-color-125: #335646;
+  --auto-color-183: #f6d765;
+  --auto-color-095: rgba(40,77,60,0.16);
+  --auto-color-006: rgba(43,106,79,0.35);
+  --auto-color-009: #f7fdf9;
+  --auto-color-137: #f8fbf6;
+  --auto-color-011: rgba(10,34,26,0.32);
+  --auto-color-124: #355846;
+  --auto-color-093: #1a3b2f;
+  --auto-color-101: #214936;
+  --auto-color-066: #f6f0df;
+  --auto-color-041: #f2f8f5;
+  --auto-color-116: #f2f7ef;
+  --auto-color-139: rgba(33,74,55,0.12);
+  --auto-color-054: #f2f5ef;
+  --auto-color-065: #285d45;
+  --auto-color-163: #e35d6a;
+  --auto-color-075: rgba(255,255,255,0.72);
+  --auto-color-055: #2f3a2f;
+  --auto-color-185: #f2c951;
+  --auto-color-069: #fff9ea;
+  --auto-color-170: #f3f6f6;
+  --auto-color-092: #255e44;
+  --auto-color-168: rgba(42,164,120,0);
+  --auto-color-076: rgba(18,60,44,0.08);
+  --auto-color-181: #2e8d58;
+  --auto-color-058: rgba(24,35,29,0.58);
+  --auto-color-129: #f5efe0;
+  --auto-color-173: rgba(115,182,131,0.22);
+  --auto-color-028: #fff4cf;
+  --auto-color-153: #f9f5e8;
+  --auto-color-165: #f5c6cb;
+  --auto-color-143: #203f31;
+  --auto-color-110: #2b7d5d;
+  --auto-color-014: #f4fff9;
+  --auto-color-099: rgba(28,72,53,0.11);
+  --auto-color-128: #2a684d;
+  --auto-color-102: rgba(34,79,58,0.2);
+  --auto-color-119: rgba(35,82,60,0.16);
+  --auto-color-127: #365746;
+  --auto-color-051: rgba(58,122,90,0.16);
+  --auto-color-008: #d9efe3;
+  --auto-color-161: #f66d7b;
+  --auto-color-062: #f6f2e8;
+  --auto-color-142: #4d6053;
+  --auto-color-070: #317053;
+  --auto-color-130: rgba(31,73,54,0.22);
+  --auto-color-035: rgba(13,110,253,0.12);
+  --auto-color-112: rgba(18,47,35,0.36);
+  --auto-color-138: #f3f8f0;
+  --auto-color-007: rgba(0,0,0,0.04);
+  --auto-color-013: rgba(0,0,0,0.16);
+  --auto-color-109: #1f5a42;
+  --auto-color-094: rgba(255,255,255,0.75);
+  --auto-color-135: rgba(31,73,54,0.12);
+  --auto-color-151: #325543;
+  --auto-color-019: rgba(255,255,255,0.55);
+  --auto-color-118: rgba(10,26,20,0.24);
+  --auto-color-113: #294f3f;
+  --auto-color-140: #1f4333;
+  --auto-color-158: #ccc;
+  --auto-color-034: rgba(253,126,20,0.1);
+  --auto-color-097: #264f3b;
+  --auto-color-180: #4f8d6f;
+  --auto-color-022: #2b6a4f;
+  --auto-color-082: #1f3f31;
+  --auto-color-027: #d7ffe9;
+  --auto-color-176: #ffd0a4;
+  --auto-color-067: rgba(30,44,34,0.28);
+  --auto-color-042: #d9e9e1;
+  --auto-color-159: #5a6268;
+  --auto-color-184: #ffe79e;
+  --auto-color-098: rgba(255,255,255,0.88);
+  --auto-color-166: #721c24;
+  --auto-color-047: #5b666f;
+  --auto-color-179: rgba(200,95,29,0.25);
+  --auto-color-186: rgba(255,243,208,0.88);
+  --auto-color-001: rgba(43,106,79,0.2);
+  --auto-color-038: #ddebe4;
+  --auto-color-059: rgba(12,23,18,0.45);
+  --auto-color-048: #cde2d8;
+  --auto-color-068: rgba(255,255,255,0.12);
+  --auto-color-081: #f8f2df;
+  --auto-color-077: rgba(27,62,48,0.08);
+  --auto-color-005: rgba(25,135,84,0.06);
+  --auto-color-002: #f4fbf7;
+  --auto-color-164: #f8d7da;
+  --auto-color-131: #7b9084;
+  --auto-color-074: #435646;
+  --auto-color-132: #214534;
+  --auto-color-134: #3f5c4c;
+  --auto-color-178: #eb7a2f;
+  --auto-color-141: #2d6a4f;
+  --auto-color-071: rgba(30,44,34,0.32);
+  --auto-color-061: #f9f4e8;
+  --auto-color-147: #5e7267;
+  --auto-color-018: rgba(255,255,255,0.25);
+  --auto-color-021: #2b6a4f;
+  --auto-color-115: #fcf9f2;
+  --auto-color-117: rgba(24,63,46,0.18);
+  --auto-color-031: rgba(0,0,0,0);
+  --auto-color-162: #c82333;
+  --primary-color: #1f6a4b;
+  --primary-light: #2b6a4f;
+  --primary-dark: #184d37;
   --neutral-100: #f8f9fa;
   --neutral-200: #e9ecef;
   --neutral-300: #dee2e6;
@@ -17,34 +201,82 @@
   --neutral-700: #495057;
   --neutral-800: #343a40;
   --neutral-900: #212529;
-  
-  /* Colores de estado */
-  --success-color: #198754;
+  --success-color: #1f6a4b;
   --danger-color: #dc3545;
   --warning-color: #ffc107;
   --info-color: #0dcaf0;
-  
-  /* Sombras */
-  --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.15);
-  
-  /* Transiciones */
-  --transition-fast: 0.2s ease;
-  --transition-normal: 0.3s ease;
-  --transition-slow: 0.5s ease;
-  
-  /* Bordes */
+  --brand-primary: var(--primary-color);
+  --brand-secondary: var(--primary-light);
+  --brand-dark: var(--primary-dark);
+  --status-success: var(--success-color);
+  --status-error: var(--danger-color);
+  --surface-white: #ffffff;
+  --surface-light: #f8f9fa;
+  --surface-muted: #e9ecef;
+  --border-light: #dee2e6;
+  --border-medium: #ced4da;
+  --text-muted: #adb5bd;
+  --text-secondary: #6c757d;
+  --text-dark: #495057;
+  --text-heading: #343a40;
+  --text-main: #212529;
   --border-radius-sm: 4px;
   --border-radius-md: 8px;
   --border-radius-lg: 12px;
   --border-radius-xl: 20px;
   --border-radius-circle: 50%;
-
-  /* Tipografia global */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
   --font-sans: "Manrope", "Segoe UI", "Helvetica Neue", sans-serif;
   --font-display: "Fraunces", Georgia, serif;
   --font-mono: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --border-subtle: #e0e0e0;
+  --primary-deep: #0f5132;
+  --primary-deep-rgba-16: rgba(25,135,84,0.16);
+  --primary-light-rgba-11: rgba(43,106,79,0.11);
+  --primary-light-rgba-15: rgba(43,106,79,0.15);
+  --primary-rgba-04: rgba(25,135,84,0.04);
+  --primary-rgba-05: rgba(25,135,84,0.05);
+  --primary-rgba-08: rgba(25,135,84,0.08);
+  --primary-rgba-09: rgba(25,135,84,0.09);
+  --primary-rgba-10: rgba(25,135,84,0.1);
+  --primary-rgba-12: rgba(25,135,84,0.12);
+  --primary-rgba-14: rgba(25,135,84,0.14);
+  --primary-rgba-15: rgba(25,135,84,0.15);
+  --primary-rgba-20: rgba(25,135,84,0.2);
+  --primary-rgba-22: rgba(25,135,84,0.22);
+  --primary-rgba-25: rgba(25,135,84,0.25);
+  --primary-rgba-26: rgba(25,135,84,0.26);
+  --primary-rgba-28: rgba(25,135,84,0.28);
+  --primary-rgba-30: rgba(25,135,84,0.3);
+  --primary-rgba-35: rgba(25,135,84,0.35);
+  --primary-rgba-40: rgba(25,135,84,0.4);
+  --primary-rgba-94: rgba(25,135,84,0.94);
+  --danger-rgba-08: rgba(220,53,69,0.08);
+  --danger-rgba-10: rgba(220,53,69,0.1);
+  --danger-rgba-14: rgba(220,53,69,0.14);
+  --danger-rgba-20: rgba(220,53,69,0.2);
+  --danger-rgba-25: rgba(220,53,69,0.25);
+  --danger-rgba-30: rgba(220,53,69,0.3);
+  --warning-soft: #e8b923;
+  --warning-strong: #fd7e14;
+  --warning-rgba-35: rgba(232,185,35,0.35);
+  --neutral-rgba-35: rgba(173,181,189,0.35);
+  --white-rgba-30: rgba(255,255,255,0.3);
+  --white-rgba-90: rgba(255,255,255,0.9);
+  --overlay-dark-52: rgba(9,22,18,0.52);
+  --info-strong: #0d6efd;
+  --shadow-rgba-04: rgba(0,0,0,0.04);
+  --shadow-rgba-05: rgba(0,0,0,0.05);
+  --shadow-rgba-06: rgba(0,0,0,0.06);
+  --shadow-rgba-08: rgba(0,0,0,0.08);
+  --shadow-rgba-10: rgba(0,0,0,0.1);
+  --shadow-rgba-12: rgba(0,0,0,0.12);
+  --shadow-rgba-15: rgba(0,0,0,0.15);
+  --shadow-rgba-20: rgba(0,0,0,0.2);
+  --shadow-rgba-22: rgba(0,0,0,0.22);
+  --shadow-rgba-25: rgba(0,0,0,0.25);
 }
 
 /* Reinicio y bases */
@@ -140,7 +372,7 @@ app-informacion-usuario > * {
   }
 }
 
-/* Tipografía */
+/* TipografÃ­a */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   margin-top: 0;
@@ -202,7 +434,7 @@ a:hover::after {
   box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.2);
 }
 
-/* Validación de formularios - Inválido */
+/* ValidaciÃ³n de formularios - InvÃ¡lido */
 .form-control.ng-invalid.ng-dirty {
   border-color: var(--danger-color);
   padding-right: calc(1.5em + 0.75rem);
@@ -214,7 +446,7 @@ a:hover::after {
   
 }
 
-/* Validación de formularios - Válido */
+/* ValidaciÃ³n de formularios - VÃ¡lido */
 .form-control.ng-valid.ng-dirty {
   border-color: var(--success-color);
   padding-right: calc(1.5em + 0.75rem);
@@ -225,3 +457,7 @@ a:hover::after {
   box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.15);
   
 }
+
+
+
+

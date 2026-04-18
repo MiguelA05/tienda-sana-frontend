@@ -10,7 +10,7 @@
   <div class="verification-container">
     <form [formGroup]="verificarCuentaForm" (ngSubmit)="activarCuenta()" class="verification-card">
       <!-- Encabezado -->
-      <div class="card-header">
+      <div class="card-header auth-card-header">
         <h2><i class="fa-solid fa-user-check me-2"></i>Valida tu cuenta</h2>
       </div>
 
@@ -69,7 +69,7 @@
         <div class="form-actions">
           <button
             type="submit"
-            class="btn-success"
+            class="btn-success auth-submit-btn"
             [disabled]="verificarCuentaForm.invalid || isLoading"
             [ngClass]="{'btn-loading': isLoading}">
             <i class="fa-solid fa-check me-2"></i>Verificar Cuenta

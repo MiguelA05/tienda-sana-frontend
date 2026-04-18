@@ -7,7 +7,7 @@
     </div>
     <div class="login-card">
         <!-- Encabezado -->
-        <div class="card-header">
+        <div class="card-header auth-card-header">
             <i class="fa-solid fa-right-to-bracket me-2"></i> Iniciar Sesión
         </div>
 
@@ -76,7 +76,7 @@
             <div class="d-grid">
                 <button
                     type="submit"
-                    class="btn-success"
+                    class="btn-success auth-submit-btn"
                     [disabled]="loginForm.invalid || isLoading"
                     [ngClass]="{'btn-loading': isLoading}">
                     <i class="fa-solid fa-arrow-right-to-bracket me-2"></i>Ingresar

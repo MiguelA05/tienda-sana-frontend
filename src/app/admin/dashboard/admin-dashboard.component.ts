@@ -254,8 +254,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
             {
               label: 'Proveedores',
               data: [this.activeSuppliers, inactive],
-              backgroundColor: ['#20c997', '#dee2e6'],
-              borderColor: ['#198754', '#adb5bd'],
+              backgroundColor: ['#2b6a4f', '#dee2e6'],
+              borderColor: ['#1f6a4b', '#adb5bd'],
               borderWidth: 1,
               borderRadius: 8,
             },

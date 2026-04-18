@@ -4,7 +4,7 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background: linear-gradient(135deg, var(--surface-light) 0%, var(--surface-muted) 100%);
     padding: 20px;
     text-align: center;
     position: relative;
@@ -12,7 +12,7 @@
 
 /* Mensajes de error */
 .error-message {
-    color: #dc3545;
+    color: var(--status-error);
     font-size: 0.85rem;
     margin-top: 5px;
     transition: opacity 0.3s ease;
@@ -25,8 +25,8 @@
 }
 
 /* Botones */
-.btn-success {
-    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+.auth-submit-btn {
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
     border: none;
     font-weight: 600;
     padding: 12px 20px;
@@ -35,15 +35,15 @@
     cursor: pointer;
     transition: all 0.3s ease;
     letter-spacing: 0.5px;
-    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
-    color: #ffffff;
+    box-shadow: 0 4px 10px var(--primary-rgba-20);
+    color: var(--surface-white);
     width: 100%;
 }
 
-.btn-success:hover {
-    background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+.auth-submit-btn:hover {
+    background: linear-gradient(135deg, var(--brand-dark) 0%, var(--primary-light) 100%);
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(25, 135, 84, 0.3);
+    box-shadow: 0 6px 15px var(--primary-rgba-30);
 }
 
 /* Elementos decorativos */
@@ -64,7 +64,7 @@
 .circle-one {
     width: 300px;
     height: 300px;
-    background: linear-gradient(135deg, rgba(25, 135, 84, 0.2) 0%, rgba(32, 201, 151, 0.2) 100%);
+    background: linear-gradient(135deg, var(--primary-rgba-20) 0%, var(--auto-color-001) 100%);
     top: -100px;
     right: -100px;
     animation: float 8s ease-in-out infinite;
@@ -73,7 +73,7 @@
 .circle-two {
     width: 200px;
     height: 200px;
-    background: linear-gradient(135deg, rgba(25, 135, 84, 0.15) 0%, rgba(32, 201, 151, 0.15) 100%);
+    background: linear-gradient(135deg, var(--primary-rgba-15) 0%, var(--primary-light-rgba-15) 100%);
     bottom: -50px;
     left: -50px;
     animation: float 6s ease-in-out infinite alternate;
@@ -83,19 +83,19 @@
     position: absolute;
     width: 100%;
     height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(25, 135, 84, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, var(--primary-rgba-20), transparent);
     top: 50%;
     animation: slide 15s linear infinite;
 }
 
-/* Tarjeta de recuperación */
+/* Tarjeta de recuperaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n */
 .changePasswordDiv {
     max-width: 400px;
     width: 100%;
     padding: 25px;
     border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    background-color: #ffffff;
+    box-shadow: 0 8px 20px var(--shadow-rgba-10);
+    background-color: var(--surface-white);
     transform: translateY(0);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     z-index: 1;
@@ -103,47 +103,47 @@
 
 .changePasswordDiv:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 12px 25px var(--shadow-rgba-15);
 }
 
 /* Encabezado */
 .changePasswordDiv .card-title {
     font-size: 1.6rem;
     font-weight: 600;
-    color: #198754;
+    color: var(--brand-primary);
     margin-bottom: 15px;
 }
 
 /* Campos del formulario */
 .correoRecuperacion .form-control {
     border-radius: 8px;
-    border: 1.5px solid #e0e0e0;
+    border: 1.5px solid var(--border-subtle);
     padding: 12px 15px;
     font-size: 1rem;
     transition: all 0.3s ease;
-    background-color: #f9f9f9;
+    background-color: var(--surface-muted);
     margin-top: 50px;
 }
 
 .correoRecuperacion .form-control:focus {
-    border-color: #198754;
-    box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.2);
-    background-color: #ffffff;
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px var(--primary-rgba-20);
+    background-color: var(--surface-white);
 }
 
 /* Etiquetas */
 .correoRecuperacion .form-label {
     font-size: 1rem;
-    color: #6c757d;
+    color: var(--text-secondary);
     margin-bottom: 5px;
     display: block;
 }
 
 
 
-/* Botón de envío */
+/* BotÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n de envÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­o */
 .btn-custom {
-    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
     border: none;
     font-weight: 600;
     padding: 12px 20px;
@@ -152,8 +152,8 @@
     cursor: pointer;
     transition: all 0.3s ease;
     letter-spacing: 0.5px;
-    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
-    color: #ffffff;
+    box-shadow: 0 4px 10px var(--primary-rgba-20);
+    color: var(--surface-white);
     margin-top: 20px;
     width: 100%;
 }
@@ -165,18 +165,18 @@
 
 .floating-field .form-control {
     border-radius: 8px;
-    border: 1.5px solid #e0e0e0;
+    border: 1.5px solid var(--border-subtle);
     padding: 12px 15px;
     padding-left: 40px;
     font-size: 1rem;
     transition: all 0.3s ease;
-    background-color: #f9f9f9;
+    background-color: var(--surface-muted);
 }
 
 .floating-field .form-control:focus {
-    border-color: #198754;
-    box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.2);
-    background-color: #ffffff;
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px var(--primary-rgba-20);
+    background-color: var(--surface-white);
 }
 
 .floating-field .form-control:focus ~ .form-label,
@@ -185,8 +185,8 @@
     left: 10px;
     transform: translateY(-50%);
     font-size: 0.8rem;
-    color: #198754;
-    background-color: #ffffff;
+    color: var(--brand-primary);
+    background-color: var(--surface-white);
     z-index: 1;
     padding: 0 5px;
 }
@@ -197,7 +197,7 @@
     left: 40px;
     transform: translateY(-50%);
     font-size: 1rem;
-    color: #6c757d;
+    color: var(--text-secondary);
     transition: all 0.3s ease;
     pointer-events: none;
 }
@@ -207,28 +207,28 @@
     top: 50%;
     left: 15px;
     transform: translateY(-50%);
-    color: #6c757d;
+    color: var(--text-secondary);
     transition: color 0.3s ease;
 }
 
 .floating-field .form-control:focus ~ .input-icon {
-    color: #198754;
+    color: var(--brand-primary);
 }
 
 .btn-custom:hover {
-    background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+    background: linear-gradient(135deg, var(--brand-dark) 0%, var(--primary-light) 100%);
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(25, 135, 84, 0.3);
+    box-shadow: 0 6px 15px var(--primary-rgba-30);
 }
 
 .btn-custom:disabled {
-    background: #cccccc;
+    background: var(--neutral-400);
     cursor: not-allowed;
 }
 
 /* Spinner de carga */
 .spinner-border {
-    color: #198754;
+    color: var(--brand-primary);
 }
 
 /* Responsive */
@@ -246,8 +246,10 @@
         font-size: 1rem;
     }
 
-    .btn-success {
+    .auth-submit-btn {
         padding: 10px 15px;
         font-size: 1rem;
     }
 }
+
+

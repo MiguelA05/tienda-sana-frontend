@@ -1,9 +1,9 @@
 /* Contenedor principal */
 .card-grid-container {
     padding: 25px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background: linear-gradient(135deg, var(--surface-light) 0%, var(--surface-muted) 100%);
     border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 25px var(--shadow-rgba-08);
     margin-bottom: 30px;
     box-sizing: border-box;
 }
@@ -24,8 +24,8 @@
     border-radius: 12px;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: #ffffff;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    background-color: var(--surface-white);
+    box-shadow: 0 5px 15px var(--shadow-rgba-08);
     will-change: transform, box-shadow;
     height: auto;
     display: flex;
@@ -34,7 +34,7 @@
 }
 
 .custom-card--in-gestor {
-    box-shadow: 0 7px 18px rgba(25, 135, 84, 0.22);
+    box-shadow: 0 7px 18px var(--primary-rgba-22);
 }
 
 .mesa-gestor-badge {
@@ -47,16 +47,16 @@
     gap: 6px;
     padding: 6px 10px;
     border-radius: 999px;
-    background: rgba(25, 135, 84, 0.94);
-    color: #ffffff;
+    background: var(--primary-rgba-94);
+    color: var(--surface-white);
     font-size: 0.78rem;
     font-weight: 700;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 4px 12px var(--shadow-rgba-22);
 }
 
 .custom-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 15px 30px var(--shadow-rgba-12);
 }
 
 /* Contenido de la tarjeta */
@@ -93,35 +93,35 @@
     flex-direction: column;
 }
 
-/* Título y texto */
+/* TÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­tulo y texto */
 .card-title {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #495057;
+    color: var(--text-dark);
     margin-bottom: 10px;
     transition: color 0.3s ease;
     text-align: center;
 }
 
 .custom-card:hover .card-title {
-    color: #198754;
+    color: var(--brand-primary);
 }
 
 .card-text {
     font-size: 1.2rem;
-    color: #6c757d;
+    color: var(--text-secondary);
     margin-bottom: 15px;
     text-align: center;
 }
 
-/* Información específica de mesas */
+/* InformaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n especÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­fica de mesas */
 .mesa-info {
     display: flex;
     justify-content: space-around;
     margin: 10px 0 15px;
     padding: 12px 0;
-    border-top: 1px dashed rgba(0, 0, 0, 0.1);
-    border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+    border-top: 1px dashed var(--shadow-rgba-10);
+    border-bottom: 1px dashed var(--shadow-rgba-10);
 }
 
 .info-item {
@@ -129,11 +129,11 @@
     flex-direction: column;
     align-items: center;
     font-size: 1rem;
-    color: #6c757d;
+    color: var(--text-secondary);
 }
 
 .info-item i {
-    color: #198754;
+    color: var(--brand-primary);
     font-size: 1.3rem;
     margin-bottom: 5px;
 }
@@ -142,15 +142,15 @@
 .card-text.text-success {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #198754 !important;
+    color: var(--brand-primary) !important;
     margin-top: auto;
     margin-bottom: 10px;
 }
 
 /* Footer de la tarjeta */
 .card-footer {
-    background-color: #f8f9fa;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    background-color: var(--surface-light);
+    border-top: 1px solid var(--shadow-rgba-05);
     padding: 15px;
 }
 
@@ -160,45 +160,45 @@
     gap: 10px;
 }
 
-/* Botón personalizado */
+/* BotÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n personalizado */
 .btn-custom {
-    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+    color: var(--surface-white);
     font-weight: 600;
     padding: 10px 20px;
     border-radius: 8px;
     border: none;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+    box-shadow: 0 4px 10px var(--primary-rgba-20);
     font-size: 1.5rem;
     width: 100%;
 }
 
 .btn-custom--ghost {
-    background: #ffffff;
-    color: #198754;
-    border: 1px solid rgba(25, 135, 84, 0.35);
+    background: var(--surface-white);
+    color: var(--brand-primary);
+    border: 1px solid var(--primary-rgba-35);
     box-shadow: none;
 }
 
 .btn-custom--ghost:hover:not(:disabled) {
-    background: #f4fbf7;
-    box-shadow: 0 6px 14px rgba(25, 135, 84, 0.16);
+    background: var(--auto-color-002);
+    box-shadow: 0 6px 14px var(--primary-deep-rgba-16);
 }
 
 .btn-custom:disabled {
-  background: linear-gradient(135deg, #6c757d 0%, #adb5bd 100%); /* Estilo para deshabilitado */
+  background: linear-gradient(135deg, var(--text-secondary) 0%, var(--text-muted) 100%); /* Estilo para deshabilitado */
   cursor: not-allowed;
   transform: none; /* Evitar transformaciones en estado deshabilitado */
   box-shadow: none; /* Sin sombra en estado deshabilitado */
 }
 
-.btn-custom:hover:not(:disabled) { /* Aplicar hover solo si no está deshabilitado */
+.btn-custom:hover:not(:disabled) { /* Aplicar hover solo si no estÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ deshabilitado */
   transform: translateY(-3px);
-  box-shadow: 0 8px 15px rgba(25, 135, 84, 0.3);
+  box-shadow: 0 8px 15px var(--primary-rgba-30);
 }
 
-.btn-custom:active:not(:disabled) { /* Aplicar active solo si no está deshabilitado */
+.btn-custom:active:not(:disabled) { /* Aplicar active solo si no estÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ deshabilitado */
   transform: translateY(-1px);
 }
 
@@ -209,7 +209,7 @@
 .btn-custom:hover {
    
     transform: translateY(-3px);
-    box-shadow: 0 8px 15px rgba(25, 135, 84, 0.3);
+    box-shadow: 0 8px 15px var(--primary-rgba-30);
 }
 
 .btn-custom:active {
@@ -291,3 +291,5 @@
         font-size: 0.8rem;
     }
 }
+
+

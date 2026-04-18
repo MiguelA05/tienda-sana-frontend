@@ -1,12 +1,12 @@
 /* Detalle de mesa: mantiene el mismo fondo visual del detalle de producto para consistencia */
 
 .mesa-detail-page {
-  --detail-bg-top: #eef6f1;
-  --detail-bg-mid: #f7fbf9;
-  --detail-bg-bottom: #ffffff;
-  --detail-glow-a: rgba(25, 135, 84, 0.09);
-  --detail-glow-b: rgba(32, 201, 151, 0.11);
-  --detail-glow-c: rgba(25, 135, 84, 0.06);
+  --detail-bg-top: var(--auto-color-003);
+  --detail-bg-mid: var(--auto-color-004);
+  --detail-bg-bottom: var(--surface-white);
+  --detail-glow-a: var(--primary-rgba-09);
+  --detail-glow-b: var(--primary-light-rgba-11);
+  --detail-glow-c: var(--auto-color-005);
 
   position: relative;
   isolation: isolate;
@@ -29,8 +29,8 @@
       105deg,
       transparent 0,
       transparent 11px,
-      rgba(25, 135, 84, 0.04) 11px,
-      rgba(25, 135, 84, 0.04) 12px
+      var(--primary-rgba-04) 11px,
+      var(--primary-rgba-04) 12px
     ),
     linear-gradient(
       180deg,
@@ -57,7 +57,7 @@
   height: min(420px, 55vw);
   top: 8%;
   left: -8%;
-  background: radial-gradient(circle at 30% 30%, rgba(32, 201, 151, 0.35), transparent 70%);
+  background: radial-gradient(circle at 30% 30%, var(--auto-color-006), transparent 70%);
 }
 
 .mesa-detail-page::after {
@@ -65,7 +65,7 @@
   height: min(380px, 50vw);
   bottom: 5%;
   right: -6%;
-  background: radial-gradient(circle at 70% 70%, rgba(25, 135, 84, 0.28), transparent 72%);
+  background: radial-gradient(circle at 70% 70%, var(--primary-rgba-28), transparent 72%);
 }
 
 .mesa-detail-inner {
@@ -86,12 +86,12 @@
 
 .mesa-breadcrumb {
   font-size: 0.875rem;
-  color: #6c757d;
+  color: var(--text-secondary);
   margin-bottom: 1.5rem;
 }
 
 .mesa-breadcrumb a {
-  color: #198754;
+  color: var(--brand-primary);
   text-decoration: none;
 }
 
@@ -105,7 +105,7 @@
 }
 
 .mesa-breadcrumb__current {
-  color: #495057;
+  color: var(--text-dark);
   font-weight: 500;
 }
 
@@ -117,9 +117,9 @@
 .mesa-gallery {
   border-radius: 16px;
   overflow: hidden;
-  background: #fff;
-  border: 1px solid #e9ecef;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  background: var(--surface-white);
+  border: 1px solid var(--surface-muted);
+  box-shadow: 0 4px 14px var(--shadow-rgba-06);
   aspect-ratio: 4 / 3;
   max-height: min(520px, 70vh);
 }
@@ -162,8 +162,8 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #0f5132;
-  background: rgba(25, 135, 84, 0.12);
+  color: var(--primary-deep);
+  background: var(--primary-rgba-12);
   padding: 0.35rem 0.75rem;
   border-radius: 999px;
   margin-bottom: 0.75rem;
@@ -172,7 +172,7 @@
 .mesa-title {
   font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 700;
-  color: #212529;
+  color: var(--text-main);
   line-height: 1.2;
   margin: 0 0 0.75rem;
 }
@@ -186,18 +186,18 @@
 .mesa-price {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #198754;
+  color: var(--brand-primary);
 }
 
 .mesa-price-caption {
   font-size: 0.95rem;
-  color: #6c757d;
+  color: var(--text-secondary);
 }
 
 .mesa-lead {
   font-size: 1.05rem;
   line-height: 1.65;
-  color: #495057;
+  color: var(--text-dark);
   margin: 0 0 1.5rem;
   max-width: 36rem;
 }
@@ -206,9 +206,9 @@
   margin: 0 0 1.75rem;
   padding: 1rem 1.15rem;
   border-radius: 12px;
-  background: #fff;
-  border: 1px solid #e9ecef;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  background: var(--surface-white);
+  border: 1px solid var(--surface-muted);
+  box-shadow: 0 2px 6px var(--auto-color-007);
 }
 
 .mesa-meta__row {
@@ -217,7 +217,7 @@
   align-items: center;
   gap: 1rem;
   padding: 0.55rem 0;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid var(--surface-muted);
 }
 
 .mesa-meta__row:last-child {
@@ -233,14 +233,14 @@
   margin: 0;
   font-size: 0.9rem;
   font-weight: 500;
-  color: #6c757d;
+  color: var(--text-secondary);
 }
 
 .mesa-meta dd {
   margin: 0;
   font-size: 0.95rem;
   font-weight: 600;
-  color: #212529;
+  color: var(--text-main);
   text-align: right;
   display: flex;
   align-items: center;
@@ -256,32 +256,32 @@
 }
 
 .mesa-status-dot--ok {
-  background: #198754;
-  box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.25);
+  background: var(--brand-primary);
+  box-shadow: 0 0 0 3px var(--primary-rgba-25);
 }
 
 .mesa-status-dot--warn {
-  background: #e8b923;
-  box-shadow: 0 0 0 3px rgba(232, 185, 35, 0.35);
+  background: var(--warning-soft);
+  box-shadow: 0 0 0 3px var(--warning-rgba-35);
 }
 
 .mesa-status-dot--out {
-  background: #adb5bd;
-  box-shadow: 0 0 0 3px rgba(173, 181, 189, 0.35);
+  background: var(--text-muted);
+  box-shadow: 0 0 0 3px var(--neutral-rgba-35);
 }
 
 .mesa-checkout {
   padding: 1.35rem 1.5rem;
   border-radius: 14px;
-  background: #fff;
-  border: 1px solid #dee2e6;
-  box-shadow: 0 8px 28px rgba(25, 135, 84, 0.08);
+  background: var(--surface-white);
+  border: 1px solid var(--border-light);
+  box-shadow: 0 8px 28px var(--primary-rgba-08);
 }
 
 .mesa-slots {
   margin: 0 0 1.2rem;
-  border: 1px solid #d9efe3;
-  background: #f7fdf9;
+  border: 1px solid var(--auto-color-008);
+  background: var(--auto-color-009);
   border-radius: 12px;
   padding: 0.9rem 1rem;
 }
@@ -290,7 +290,7 @@
   margin: 0 0 0.55rem;
   font-size: 0.95rem;
   font-weight: 700;
-  color: #0f5132;
+  color: var(--primary-deep);
 }
 
 .mesa-slots__list {
@@ -308,32 +308,32 @@
   gap: 0.75rem;
   padding: 0.45rem 0.55rem;
   border-radius: 8px;
-  background: #ffffff;
-  border: 1px solid #e9f5ee;
+  background: var(--surface-white);
+  border: 1px solid var(--auto-color-010);
 }
 
 .mesa-slots__date {
   font-size: 0.82rem;
   font-weight: 600;
-  color: #495057;
+  color: var(--text-dark);
 }
 
 .mesa-slots__time {
   font-size: 0.82rem;
-  color: #198754;
+  color: var(--brand-primary);
   font-weight: 700;
 }
 
 .mesa-slots__empty {
   margin: 0;
   font-size: 0.88rem;
-  color: #6c757d;
+  color: var(--text-secondary);
 }
 
 .mesa-checkout__title {
   font-size: 1.05rem;
   font-weight: 600;
-  color: #212529;
+  color: var(--text-main);
   margin: 0 0 1rem;
 }
 
@@ -344,7 +344,7 @@
   font-size: 0.9rem;
   margin-bottom: 1.125rem;
   padding-bottom: 1rem;
-  border-bottom: 1px dashed #dee2e6;
+  border-bottom: 1px dashed var(--border-light);
 }
 
 .mesa-reserva-form {
@@ -368,7 +368,7 @@
 .mesa-form-field label {
   display: block;
   font-size: 0.85rem;
-  color: #495057;
+  color: var(--text-dark);
   margin-bottom: 0.35rem;
   font-weight: 500;
 }
@@ -379,9 +379,9 @@
   border-radius: 10px;
   padding: 0.9rem 1rem;
   font-weight: 600;
-  color: #fff;
-  background: linear-gradient(135deg, #198754 0%, #20c997 100%);
-  box-shadow: 0 10px 22px rgba(25, 135, 84, 0.22);
+  color: var(--surface-white);
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+  box-shadow: 0 10px 22px var(--primary-rgba-22);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -391,7 +391,7 @@
 
 .mesa-btn-main:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 14px 28px rgba(25, 135, 84, 0.26);
+  box-shadow: 0 14px 28px var(--primary-rgba-26);
 }
 
 .mesa-btn-main:active:not(:disabled) {
@@ -406,23 +406,26 @@
 .mesa-total {
   margin-top: 0.9rem;
   font-size: 0.95rem;
-  color: #495057;
+  color: var(--text-dark);
 }
 
 .mesa-total strong {
-  color: #198754;
+  color: var(--brand-primary);
 }
 
 .mesa-out-stock {
   margin-top: 0.9rem;
   font-size: 0.92rem;
-  color: #6c757d;
+  color: var(--text-secondary);
 }
 
 .mesa-disclaimer {
   margin-top: 0.45rem;
   margin-bottom: 0;
   font-size: 0.84rem;
-  color: #495057;
+  color: var(--text-dark);
   line-height: 1.4;
 }
+
+
+

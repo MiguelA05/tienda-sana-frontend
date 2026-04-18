@@ -3,11 +3,11 @@
     margin: 0 auto;
     /* Centra las tarjetas dentro de su columna */
     max-width: 300px;
-    /* Limita el ancho máximo */
+    /* Limita el ancho mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ximo */
     border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 20px var(--shadow-rgba-10);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: #ffffff;
+    background-color: var(--surface-white);
     position: relative;
     will-change: transform, box-shadow;
     justify-content: center;
@@ -16,13 +16,13 @@
 
 .custom-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 12px 25px var(--shadow-rgba-15);
 }
 
 /* Encabezado de la tarjeta */
 .custom-card-header {
-    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+    color: var(--surface-white);
     text-align: center;
     padding: 15px;
     border-radius: 12px 12px 0 0;
@@ -35,7 +35,7 @@
 
 .custom-card-header mat-card-subtitle {
     font-size: 1rem;
-    color: #e9ecef;
+    color: var(--surface-muted);
 }
 
 /* Imagen destacada */
@@ -55,18 +55,18 @@
 /* Contenido de la tarjeta */
 mat-card-content {
     font-size: 1rem;
-    color: #495057;
+    color: var(--text-dark);
     text-align: center;
     padding: 15px;
 }
 
-/* Estilos específicos para información de reserva */
+/* Estilos especÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­ficos para informaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n de reserva */
 .reservation-info {
     display: flex;
     justify-content: space-around;
     margin-bottom: 15px;
     padding: 10px 0;
-    border-bottom: 1px dashed #e9ecef;
+    border-bottom: 1px dashed var(--surface-muted);
 }
 
 .table-detail {
@@ -74,14 +74,14 @@ mat-card-content {
     flex-direction: column;
     align-items: center;
     font-size: 0.9rem;
-    color: #6c757d;
+    color: var(--text-secondary);
 }
 
 .icon-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(25, 135, 84, 0.1);
+    background-color: var(--primary-rgba-10);
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -89,7 +89,7 @@ mat-card-content {
 }
 
 .icon-wrapper mat-icon {
-    color: #198754;
+    color: var(--brand-primary);
 }
 
 /* Botones de la tarjeta */
@@ -100,34 +100,34 @@ mat-card-content {
 }
 
 .btn-custom {
-    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+    color: var(--surface-white);
     font-weight: 600;
     padding: 10px 20px;
     border-radius: 8px;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.2);
+    box-shadow: 0 4px 10px var(--primary-rgba-20);
 }
 
 .btn-custom:hover {
-    background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
+    background: linear-gradient(135deg, var(--brand-dark) 0%, var(--primary-light) 100%);
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(25, 135, 84, 0.3);
+    box-shadow: 0 6px 15px var(--primary-rgba-30);
 }
 
 .btn-custom-outline {
     background: transparent;
-    color: #198754;
+    color: var(--brand-primary);
     font-weight: 600;
     padding: 10px 20px;
-    border: 2px solid #198754;
+    border: 2px solid var(--brand-primary);
     border-radius: 8px;
     transition: all 0.3s ease;
 }
 
 .btn-custom-outline:hover {
-    background: rgba(25, 135, 84, 0.1);
-    color: #157347;
+    background: var(--primary-rgba-10);
+    color: var(--brand-dark);
     transform: translateY(-2px);
 }
 
@@ -163,3 +163,5 @@ mat-card-content {
         font-size: 0.9rem;
     }
 }
+
+
