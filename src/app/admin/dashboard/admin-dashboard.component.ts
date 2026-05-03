@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   OnDestroy,
@@ -71,6 +72,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     private readonly products: ProductService,
     private readonly lots: LotService,
     private readonly tables: TableService,
+    private readonly cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -92,7 +94,9 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
         this.tableCount = t.length;
         this.occupiedOrReserved = t.filter((tab) => this.busy(tab)).length;
         this.loading = false;
-        setTimeout(() => this.buildCharts(), 0);
+        // Quitar [hidden] de los canvas antes de Chart.js (layout real).
+        this.cdr.detectChanges();
+        this.buildCharts();
       },
       error: () => {
         this.loading = false;

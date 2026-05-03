@@ -9,7 +9,8 @@
       <span class="visually-hidden">Cargando…</span>
     </div>
   </div>
-} @else {
+}
+@if (!loading) {
   <div class="row g-3">
     <div class="col-sm-6 col-xl-3">
       <a routerLink="/admin/suppliers" class="stat-card">
@@ -40,7 +41,10 @@
       </a>
     </div>
   </div>
+}
 
+<!-- Siempre en el DOM: Chart.js + ViewChild fallan si el canvas nace después con @if -->
+<div class="charts-outer" [hidden]="loading" [attr.aria-busy]="loading">
   <h2 class="charts-section-title">Métricas visuales</h2>
   <p class="charts-section-lead text-muted">
     Distribución de inventario, ocupación de mesas, catálogo por categoría y estado de proveedores.
@@ -84,4 +88,4 @@
       </div>
     </div>
   </div>
-}
+</div>
