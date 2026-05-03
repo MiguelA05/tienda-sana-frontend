@@ -3,5 +3,4 @@ export interface InformacionCuentaDTO {
     email: string,
     telefono: string,
     direccion: string,
-    dni: string,
 }

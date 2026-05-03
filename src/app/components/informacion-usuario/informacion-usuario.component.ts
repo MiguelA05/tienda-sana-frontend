@@ -193,7 +193,6 @@ export class InformacionUsuarioComponent implements OnInit {
     if (this.account) {
       this.userInforForm.patchValue({
         email: this.account.email,
-        dni: this.account.dni,
         name: this.account.nombre,
         phoneNumber: this.account.telefono,
         address: this.account.direccion

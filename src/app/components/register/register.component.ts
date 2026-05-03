@@ -35,7 +35,6 @@ export class RegisterComponent {
    */
   ngOnInit(): void {
     this.registroForm = this.fb.group({
-      dni: ['', [Validators.required, Validators.maxLength(10)]],
       nombre: [
         '',
         [
@@ -124,31 +123,13 @@ export class RegisterComponent {
           this.isLoading = false;
           Swal.fire({
             title: 'Error',
-            text: "Error al crear la cuenta, el correo electrónico o DNI ya está en uso y/o registrados en el sistema",
+            text: "Error al crear la cuenta, el correo electrónico ya está en uso y/o registrado en el sistema",
             icon: 'error',
             confirmButtonText: 'Aceptar'
           })
         }
       });
     }
-  }
-
-  /**
-   * Método para obtener el mensaje de error del campo DNI
-   * @returns Mensaje de error específico
-   */
-  getDniErrorMessage(): string {
-    const dniControl = this.registroForm.get('dni');
-
-    if (dniControl?.hasError('required')) {
-      return 'El número de cédula es obligatorio';
-    }
-
-    if (dniControl?.hasError('maxlength')) {
-      return `La cédula no debe exceder los ${dniControl.getError('maxlength').requiredLength} caracteres`;
-    }
-
-    return 'Por favor ingrese un número de cédula válido';
   }
 
   /**

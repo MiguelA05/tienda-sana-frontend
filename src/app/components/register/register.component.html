@@ -16,28 +16,6 @@
       <form [formGroup]="registroForm" (ngSubmit)="registrar()"
         class="registration-form" novalidate>
         <div class="row">
-          <!-- Cédula -->
-          <div class="col-md-6">
-            <div class="form-group">
-              <div class="floating-field">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="dni"
-                  formControlName="dni"
-                  placeholder=" "
-                  maxlength="10"
-                  pattern="[0-9]*"
-                  [ngClass]="{'is-invalid': shouldShowError('dni')}" />
-                <label for="dni" class="form-label">Cédula</label>
-                <i class="fa-solid fa-id-card input-icon"></i>
-              </div>
-              @if (shouldShowError('dni')) {
-              <div class="error-message">{{ getDniErrorMessage() }}</div>
-              }
-            </div>
-          </div>
-
           <!-- Nombre -->
           <div class="col-md-6">
             <div class="form-group">
