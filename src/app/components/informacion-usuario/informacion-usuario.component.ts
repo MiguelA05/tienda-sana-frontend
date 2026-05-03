@@ -41,7 +41,6 @@ export class InformacionUsuarioComponent implements OnInit {
   private createForm() {
     this.userInforForm = this.formBuilder.group({
       email: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
-      dni: [{ value: '', disabled: true }, [Validators.required]],
       name: [
         { value: '', disabled: true },
         [
@@ -202,7 +201,6 @@ export class InformacionUsuarioComponent implements OnInit {
 
   public obtenerInformacionUsuario() {
     const email = this.tokenService.getIDCuenta();
-    const rol = this.tokenService.getRol();
     this.cuentaService.obtenerInformacion(email).subscribe({
       next: (data) => {
         this.account = data.reply;
