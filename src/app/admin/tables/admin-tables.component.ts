@@ -1,13 +1,14 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   FormBuilder,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { TableService, TableOperationalStatus } from '../services/table.service';
+import { AdminAnalyticsService } from '../services/admin-analytics.service';
 import { NotificationService } from '../services/notification.service';
 import { AdminTable } from '../models/admin-table.model';
 import { AdminTableMapComponent } from './table-map/table-map.component';
@@ -20,19 +21,22 @@ const DURACIONES_RESERVA_MINUTOS = [30, 60, 90, 120] as const;
 @Component({
   selector: 'app-admin-tables',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, AdminTableMapComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, AdminTableMapComponent],
   templateUrl: './admin-tables.component.html',
   styleUrls: ['../styles/admin-form-layout.css', './admin-tables.component.css'],
 })
 export class AdminTablesComponent implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly tableService = inject(TableService);
+  private readonly analytics = inject(AdminAnalyticsService);
   private readonly notify = inject(NotificationService);
   private readonly cloudinaryUpload = inject(CloudinaryUploadService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
   tables: AdminTable[] = [];
+  /** Reservas tocadas en periodo e indicador de ocupación (analítica). */
+  tablePerf: Record<string, { reservations: number; occupancyPct: number }> = {};
   loading = true;
   editingId: string | null = null;
   imagePreview: string | null = null;
@@ -67,10 +71,25 @@ export class AdminTablesComponent implements OnInit, OnDestroy {
 
   refresh(): void {
     this.loading = true;
+    const to = new Date();
+    const from = new Date();
+    from.setDate(from.getDate() - 29);
+    const fromIso = from.toISOString().slice(0, 10);
+    const toIso = to.toISOString().slice(0, 10);
     this.sub.add(
-      this.tableService.getAll().subscribe({
-        next: (rows) => {
-          this.tables = rows;
+      forkJoin({
+        tables: this.tableService.getAll(),
+        perf: this.analytics.tablePerformance(fromIso, toIso),
+      }).subscribe({
+        next: ({ tables, perf }) => {
+          this.tables = tables;
+          this.tablePerf = {};
+          for (const p of perf) {
+            this.tablePerf[p.tableId] = {
+              reservations: p.reservationsInPeriod,
+              occupancyPct: p.occupancyRatePercent,
+            };
+          }
           this.loading = false;
           this.applyEditQueryParam();
         },
@@ -80,6 +99,10 @@ export class AdminTablesComponent implements OnInit, OnDestroy {
         },
       }),
     );
+  }
+
+  perfForTable(id: string): { reservations: number; occupancyPct: number } {
+    return this.tablePerf[id] ?? { reservations: 0, occupancyPct: 0 };
   }
 
   startCreate(): void {

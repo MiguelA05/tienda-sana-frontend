@@ -94,6 +94,48 @@
   height: 320px;
 }
 
+.chart-canvas-wrap--line {
+  height: 280px;
+}
+
+.card-like {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--neutral-200, #e9ecef);
+  box-shadow: var(--shadow-sm, 0 2px 5px rgba(0, 0, 0, 0.05));
+}
+
+.stat-card--kpi {
+  height: 100%;
+  cursor: default;
+}
+
+.kpi-row .stat-card--kpi:hover {
+  transform: none;
+  box-shadow: var(--shadow-sm, 0 2px 5px rgba(0, 0, 0, 0.05));
+}
+
+.trend-pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #198754;
+  white-space: nowrap;
+}
+
+.trend-pill--down {
+  color: #dc3545;
+}
+
+.activity-row {
+  cursor: pointer;
+}
+
+.activity-row:focus {
+  outline: 2px solid #198754;
+  outline-offset: -2px;
+}
+
 @media (max-width: 576px) {
   .chart-canvas-wrap,
   .chart-canvas-wrap--tall {

@@ -35,6 +35,11 @@ export class AdminLotsComponent implements OnInit, OnDestroy {
   suppliers: Supplier[] = [];
   /** Solo activos para altas de lote. */
   suppliersSelect: Supplier[] = [];
+  kpiOutOfStock = 0;
+  kpiProducts = 0;
+  kpiInventorySkus = 0;
+  kpiInventoryUnits = 0;
+  kpiLots = 0;
   loading = true;
   editingId: string | null = null;
   private sub = new Subscription();
@@ -70,6 +75,11 @@ export class AdminLotsComponent implements OnInit, OnDestroy {
           this.products = prods;
           this.suppliers = sups;
           this.suppliersSelect = sups.filter((s) => s.status === 'ACTIVE');
+          this.kpiLots = lots.length;
+          this.kpiProducts = prods.length;
+          this.kpiOutOfStock = prods.filter((p) => p.outOfStock).length;
+          this.kpiInventorySkus = inv.length;
+          this.kpiInventoryUnits = inv.reduce((s, l) => s + (l.totalQuantity ?? 0), 0);
           this.loading = false;
         },
         error: () => {

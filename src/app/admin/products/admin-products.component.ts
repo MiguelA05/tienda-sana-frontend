@@ -6,8 +6,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { ProductService } from '../services/product.service';
+import { AdminAnalyticsService } from '../services/admin-analytics.service';
 import { NotificationService } from '../services/notification.service';
 import { Product } from '../models/product.model';
 import { CloudinaryUploadService } from '../services/cloudinary-upload.service';
@@ -22,12 +23,15 @@ import { CloudinaryUploadService } from '../services/cloudinary-upload.service';
 export class AdminProductsComponent implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly productService = inject(ProductService);
+  private readonly analytics = inject(AdminAnalyticsService);
   private readonly notify = inject(NotificationService);
   private readonly cloudinaryUpload = inject(CloudinaryUploadService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
   products: Product[] = [];
+  /** Unidades vendidas (últimos 30 días, pagos acreditados) e indicador de popularidad. */
+  perfByProduct: Record<string, { unitsSold: number; popularity: string }> = {};
   loading = true;
   editingId: string | null = null;
   imagePreview: string | null = null;
@@ -55,10 +59,22 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
 
   refresh(): void {
     this.loading = true;
+    const to = new Date();
+    const from = new Date();
+    from.setDate(from.getDate() - 29);
+    const fromIso = from.toISOString().slice(0, 10);
+    const toIso = to.toISOString().slice(0, 10);
     this.sub.add(
-      this.productService.getAll().subscribe({
-        next: (rows) => {
-          this.products = rows;
+      forkJoin({
+        products: this.productService.getAll(),
+        perf: this.analytics.productPerformance(fromIso, toIso),
+      }).subscribe({
+        next: ({ products, perf }) => {
+          this.products = products;
+          this.perfByProduct = {};
+          for (const p of perf) {
+            this.perfByProduct[p.productId] = { unitsSold: p.unitsSold, popularity: p.popularity };
+          }
           this.loading = false;
           this.applyEditQueryParam();
         },
@@ -68,6 +84,10 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
         },
       }),
     );
+  }
+
+  perfFor(id: string): { unitsSold: number; popularity: string } {
+    return this.perfByProduct[id] ?? { unitsSold: 0, popularity: 'sin datos' };
   }
 
   startCreate(): void {

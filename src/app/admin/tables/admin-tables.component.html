@@ -4,6 +4,10 @@
     Mismo catálogo que ve el cliente: nombre, zona, precio de reserva, foto y visibilidad. El estado (disponible /
     reservada / ocupada) coincide con la sala.
   </p>
+  <p class="small text-muted mb-0">
+    Las columnas de reservas y ocupación usan los últimos 30 días (analítica). Para historial detallado, abre
+    <a routerLink="/admin/analytics/reservations">Analítica · Reservas</a>.
+  </p>
 </div>
 
 <div class="row g-4">
@@ -146,6 +150,8 @@
                   <th class="text-end">Precio</th>
                   <th class="text-center">Cap.</th>
                   <th class="text-center">Duración</th>
+                  <th class="text-end">Reservas (30d)</th>
+                  <th class="text-end">Ocup. ind.</th>
                   <th>Estado</th>
                   <th class="text-end">Acciones</th>
                 </tr>
@@ -158,6 +164,8 @@
                     <td class="text-end font-monospace small">{{ row.precioReserva | currency }}</td>
                     <td class="text-center">{{ row.capacidad }}</td>
                     <td class="text-center">{{ row.duracionReservaMinutos }} min</td>
+                    <td class="text-end small">{{ perfForTable(row.id).reservations }}</td>
+                    <td class="text-end small">{{ perfForTable(row.id).occupancyPct | number : '1.0-1' }}%</td>
                     <td>
                       @if (!row.visibleToClient) {
                         <span class="badge bg-secondary">Oculta</span>

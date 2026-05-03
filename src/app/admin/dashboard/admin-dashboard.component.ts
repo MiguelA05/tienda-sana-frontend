@@ -5,332 +5,281 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import {
-  ArcElement,
   BarController,
   BarElement,
   CategoryScale,
   Chart,
-  DoughnutController,
   Legend,
   LinearScale,
+  LineController,
+  LineElement,
+  PointElement,
   Tooltip,
 } from 'chart.js';
-import { SupplierService } from '../services/supplier.service';
-import { ProductService } from '../services/product.service';
-import { LotService } from '../services/lot.service';
-import { TableService } from '../services/table.service';
-import { AdminTable } from '../models/admin-table.model';
-import { effectiveTableStatus } from '../services/table.service';
-import { Product } from '../models/product.model';
-import { Supplier } from '../models/supplier.model';
+import { AdminAnalyticsService } from '../services/admin-analytics.service';
+import type { ActivityRowDto, DashboardOverviewDto, LabelValueDto, ProductRankDto } from '../models/admin-analytics.model';
 
 Chart.register(
-  ArcElement,
   BarElement,
   CategoryScale,
-  DoughnutController,
   BarController,
   Legend,
   LinearScale,
   Tooltip,
+  LineController,
+  LineElement,
+  PointElement,
 );
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css',
 })
 export class AdminDashboardComponent implements OnInit, OnDestroy {
-  @ViewChild('chartInventory') chartInventory?: ElementRef<HTMLCanvasElement>;
-  @ViewChild('chartTables') chartTables?: ElementRef<HTMLCanvasElement>;
-  @ViewChild('chartCategories') chartCategories?: ElementRef<HTMLCanvasElement>;
-  @ViewChild('chartSuppliers') chartSuppliers?: ElementRef<HTMLCanvasElement>;
+  private readonly analytics = inject(AdminAnalyticsService);
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly router = inject(Router);
+
+  @ViewChild('chartSalesLine') chartSalesLine?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('chartSalesWeekday') chartSalesWeekday?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('chartSalesHour') chartSalesHour?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('chartTopProducts') chartTopProducts?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('chartBottomProducts') chartBottomProducts?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('chartResDay') chartResDay?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('chartResHour') chartResHour?: ElementRef<HTMLCanvasElement>;
 
   loading = true;
-  supplierCount = 0;
-  activeSuppliers = 0;
-  productCount = 0;
-  outOfStockCount = 0;
-  lotCount = 0;
-  tableCount = 0;
-  occupiedOrReserved = 0;
+  refreshing = false;
+  data: DashboardOverviewDto | null = null;
+  dateFrom = '';
+  dateTo = '';
+  comparePrevious = true;
 
-  private chartInstances: Chart[] = [];
-  private productsList: Product[] = [];
-  private tablesList: AdminTable[] = [];
-  private suppliersList: Supplier[] = [];
-
-  constructor(
-    private readonly suppliers: SupplierService,
-    private readonly products: ProductService,
-    private readonly lots: LotService,
-    private readonly tables: TableService,
-    private readonly cdr: ChangeDetectorRef,
-  ) {}
+  private charts: Chart[] = [];
 
   ngOnInit(): void {
-    forkJoin({
-      s: this.suppliers.getAll(),
-      p: this.products.getAll(),
-      l: this.lots.getAll(),
-      t: this.tables.getAll(),
-    }).subscribe({
-      next: ({ s, p, l, t }) => {
-        this.suppliersList = s;
-        this.productsList = p;
-        this.tablesList = t;
-        this.supplierCount = s.length;
-        this.activeSuppliers = s.filter((x) => x.status === 'ACTIVE').length;
-        this.productCount = p.length;
-        this.outOfStockCount = p.filter((x) => x.outOfStock).length;
-        this.lotCount = l.length;
-        this.tableCount = t.length;
-        this.occupiedOrReserved = t.filter((tab) => this.busy(tab)).length;
-        this.loading = false;
-        // Quitar [hidden] de los canvas antes de Chart.js (layout real).
-        this.cdr.detectChanges();
-        this.buildCharts();
-      },
-      error: () => {
-        this.loading = false;
-      },
-    });
+    const to = new Date();
+    const from = new Date();
+    from.setDate(from.getDate() - 29);
+    this.dateTo = this.toIso(to);
+    this.dateFrom = this.toIso(from);
+    this.load();
   }
 
   ngOnDestroy(): void {
     this.destroyCharts();
   }
 
-  private busy(t: AdminTable): boolean {
-    if (!t.visibleToClient) {
-      return false;
+  private toIso(d: Date): string {
+    return d.toISOString().slice(0, 10);
+  }
+
+  load(): void {
+    if (this.loading && !this.data) {
+      this.loading = true;
+    } else {
+      this.refreshing = true;
     }
-    const e = effectiveTableStatus(t);
-    return e === 'OCCUPIED' || e === 'RESERVED';
+    this.analytics
+      .dashboard(this.dateFrom, this.dateTo, this.comparePrevious)
+      .subscribe({
+        next: (d) => {
+          this.data = d;
+          this.loading = false;
+          this.refreshing = false;
+          this.cdr.detectChanges();
+          requestAnimationFrame(() => this.buildCharts());
+        },
+        error: () => {
+          this.loading = false;
+          this.refreshing = false;
+          this.data = null;
+        },
+      });
+  }
+
+  trendText(k: { trendPercent: number | null }): string | null {
+    if (k.trendPercent == null || Number.isNaN(k.trendPercent)) {
+      return null;
+    }
+    const v = k.trendPercent;
+    const arrow = v >= 0 ? '▲' : '▼';
+    return `${arrow} ${Math.abs(v).toFixed(1)} %`;
+  }
+
+  onActivityClick(row: ActivityRowDto): void {
+    void this.router.navigateByUrl('/admin/' + row.drillRoute);
+  }
+
+  onChartClickSalesLine(): void {
+    this.router.navigate(['/admin/analytics/sales'], {
+      queryParams: { from: this.dateFrom, to: this.dateTo },
+    });
   }
 
   private destroyCharts(): void {
-    for (const c of this.chartInstances) {
-      c.destroy();
-    }
-    this.chartInstances = [];
+    this.charts.forEach((c) => c.destroy());
+    this.charts = [];
   }
 
   private buildCharts(): void {
     this.destroyCharts();
-    if (this.loading) {
+    if (!this.data) {
       return;
     }
-
     const text = '#495057';
     const grid = 'rgba(0,0,0,0.06)';
+    const d = this.data;
 
-    const invCanvas = this.chartInventory?.nativeElement;
-    if (invCanvas) {
-      const inStock = Math.max(0, this.productCount - this.outOfStockCount);
-      const out = this.outOfStockCount;
-      const c = new Chart(invCanvas, {
-        type: 'doughnut',
-        data: {
-          labels: ['Con stock', 'Agotados'],
-          datasets: [
-            {
-              data: [inStock, out],
-              backgroundColor: ['#198754', '#dc3545'],
-              borderWidth: 0,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: { color: text, usePointStyle: true, padding: 16 },
-            },
-            tooltip: {
-              callbacks: {
-                label: (ctx) => {
-                  const v = ctx.raw as number;
-                  const sum = (ctx.dataset.data as number[]).reduce((a, b) => a + b, 0);
-                  const pct = sum ? Math.round((v / sum) * 100) : 0;
-                  return ` ${ctx.label}: ${v} (${pct}%)`;
-                },
-              },
-            },
-          },
-        },
-      });
-      this.chartInstances.push(c);
-    }
-
-    const tblCanvas = this.chartTables?.nativeElement;
-    if (tblCanvas) {
-      const seg = this.tableSegments(this.tablesList);
-      const c = new Chart(tblCanvas, {
-        type: 'doughnut',
-        data: {
-          labels: ['Disponibles', 'Reservadas', 'Ocupadas', 'Ocultas al público'],
-          datasets: [
-            {
-              data: [
-                seg.disponibles,
-                seg.reservadas,
-                seg.ocupadas,
-                seg.inactivas,
-              ],
-              backgroundColor: ['#198754', '#0dcaf0', '#ffc107', '#adb5bd'],
-              borderWidth: 0,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: { color: text, usePointStyle: true, padding: 12 },
-            },
-          },
-        },
-      });
-      this.chartInstances.push(c);
-    }
-
-    const catCanvas = this.chartCategories?.nativeElement;
-    if (catCanvas) {
-      const { labels, values } = this.productsByCategory(this.productsList);
-      const c = new Chart(catCanvas, {
-        type: 'bar',
+    const lineEl = this.chartSalesLine?.nativeElement;
+    if (lineEl) {
+      const labels = d.salesByDayCurrent.map((p) => this.shortDate(p.date));
+      const cur = d.salesByDayCurrent.map((p) => p.amount);
+      const prev = d.salesByDayPrevious.length
+        ? d.salesByDayPrevious.map((p) => p.amount)
+        : [];
+      const c = new Chart(lineEl, {
+        type: 'line',
         data: {
           labels,
           datasets: [
             {
-              label: 'Productos',
-              data: values,
-              backgroundColor: 'rgba(25, 135, 84, 0.75)',
+              label: 'Periodo actual',
+              data: cur,
               borderColor: '#198754',
-              borderWidth: 1,
-              borderRadius: 6,
+              backgroundColor: 'rgba(25,135,84,0.12)',
+              tension: 0.25,
+              fill: true,
             },
-          ],
-        },
-        options: {
-          indexAxis: 'y',
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-          },
-          scales: {
-            x: {
-              beginAtZero: true,
-              ticks: { stepSize: 1, color: text },
-              grid: { color: grid },
-            },
-            y: {
-              ticks: { color: text },
-              grid: { display: false },
-            },
-          },
-        },
-      });
-      this.chartInstances.push(c);
-    }
-
-    const supCanvas = this.chartSuppliers?.nativeElement;
-    if (supCanvas) {
-      const inactive = Math.max(0, this.supplierCount - this.activeSuppliers);
-      const c = new Chart(supCanvas, {
-        type: 'bar',
-        data: {
-          labels: ['Activos', 'Inactivos'],
-          datasets: [
-            {
-              label: 'Proveedores',
-              data: [this.activeSuppliers, inactive],
-              backgroundColor: ['#2b6a4f', '#dee2e6'],
-              borderColor: ['#1f6a4b', '#adb5bd'],
-              borderWidth: 1,
-              borderRadius: 8,
-            },
+            ...(prev.length
+              ? [
+                  {
+                    label: 'Periodo anterior',
+                    data: prev,
+                    borderColor: '#6c757d',
+                    backgroundColor: 'transparent',
+                    tension: 0.25,
+                    fill: false,
+                  },
+                ]
+              : []),
           ],
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          onClick: () => this.onChartClickSalesLine(),
           plugins: {
-            legend: { display: false },
+            legend: { labels: { color: text } },
+            tooltip: { mode: 'index', intersect: false },
           },
           scales: {
-            y: {
-              beginAtZero: true,
-              ticks: { stepSize: 1, color: text },
-              grid: { color: grid },
-            },
-            x: {
-              ticks: { color: text },
-              grid: { display: false },
-            },
+            x: { ticks: { color: text, maxRotation: 45 }, grid: { color: grid } },
+            y: { ticks: { color: text }, grid: { color: grid }, beginAtZero: true },
           },
         },
       });
-      this.chartInstances.push(c);
+      this.charts.push(c);
     }
+
+    this.barH(this.chartSalesWeekday?.nativeElement, d.salesByWeekday, 'Ventas ($)', text, grid);
+    this.barH(this.chartSalesHour?.nativeElement, d.salesByHourSlot, 'Ventas ($)', text, grid);
+    this.hBarProducts(this.chartTopProducts?.nativeElement, d.topProducts, true, text, grid);
+    this.hBarProducts(this.chartBottomProducts?.nativeElement, d.bottomProducts, false, text, grid);
+    this.barH(
+      this.chartResDay?.nativeElement,
+      d.reservationsByDay,
+      'Reservas (nº)',
+      text,
+      grid,
+      true,
+    );
+    this.barH(this.chartResHour?.nativeElement, d.reservationsByHourSlot, 'Reservas (nº)', text, grid);
   }
 
-  private tableSegments(tables: AdminTable[]): {
-    disponibles: number;
-    reservadas: number;
-    ocupadas: number;
-    inactivas: number;
-  } {
-    let disponibles = 0;
-    let reservadas = 0;
-    let ocupadas = 0;
-    let inactivas = 0;
-    for (const t of tables) {
-      if (!t.visibleToClient) {
-        inactivas++;
-        continue;
-      }
-      const e = effectiveTableStatus(t);
-      if (e === 'AVAILABLE') {
-        disponibles++;
-      } else if (e === 'RESERVED') {
-        reservadas++;
-      } else if (e === 'OCCUPIED') {
-        ocupadas++;
-      }
-    }
-    return { disponibles, reservadas, ocupadas, inactivas };
+  private shortDate(iso: string): string {
+    return iso.length >= 10 ? iso.slice(5, 10) : iso;
   }
 
-  private productsByCategory(products: Product[]): {
-    labels: string[];
-    values: number[];
-  } {
-    const map = new Map<string, number>();
-    for (const p of products) {
-      const key = (p.category || 'Sin categoría').trim() || 'Sin categoría';
-      map.set(key, (map.get(key) ?? 0) + 1);
+  private barH(
+    canvas: HTMLCanvasElement | undefined,
+    rows: LabelValueDto[],
+    label: string,
+    text: string,
+    grid: string,
+    verticalLabels = false,
+  ): void {
+    if (!canvas || !rows.length) {
+      return;
     }
-    const pairs = [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
-    if (pairs.length === 0) {
-      return { labels: ['Sin datos'], values: [0] };
+    const c = new Chart(canvas, {
+      type: 'bar',
+      data: {
+        labels: rows.map((r) => r.label),
+        datasets: [{ label, data: rows.map((r) => r.value), backgroundColor: '#2b6a4f', borderRadius: 6 }],
+      },
+      options: {
+        indexAxis: verticalLabels ? 'x' : 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { mode: 'index' } },
+        scales: verticalLabels
+          ? {
+              x: { ticks: { color: text, maxRotation: 60 }, grid: { color: grid } },
+              y: { beginAtZero: true, ticks: { color: text }, grid: { display: false } },
+            }
+          : {
+              x: { beginAtZero: true, ticks: { color: text }, grid: { color: grid } },
+              y: { ticks: { color: text }, grid: { display: false } },
+            },
+      },
+    });
+    this.charts.push(c);
+  }
+
+  private hBarProducts(
+    canvas: HTMLCanvasElement | undefined,
+    rows: ProductRankDto[],
+    _top: boolean,
+    text: string,
+    grid: string,
+  ): void {
+    if (!canvas || !rows.length) {
+      return;
     }
-    return {
-      labels: pairs.map(([k]) => k),
-      values: pairs.map(([, v]) => v),
-    };
+    const c = new Chart(canvas, {
+      type: 'bar',
+      data: {
+        labels: rows.map((r) => r.name.slice(0, 28) + (r.name.length > 28 ? '…' : '')),
+        datasets: [
+          {
+            label: 'Unidades',
+            data: rows.map((r) => r.unitsSold),
+            backgroundColor: '#198754',
+            borderRadius: 6,
+          },
+        ],
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { beginAtZero: true, ticks: { stepSize: 1, color: text }, grid: { color: grid } },
+          y: { ticks: { color: text }, grid: { display: false } },
+        },
+      },
+    });
+    this.charts.push(c);
   }
 }

@@ -1,91 +1,161 @@
 <div class="page-header">
-  <h1>Panel administrativo</h1>
-  <p class="text-muted mb-0">Resumen del negocio: inventario, catálogo, proveedores y estado de las mesas.</p>
+  <h1>Dashboard</h1>
+  <p class="text-muted mb-0">Estado general del negocio: ingresos, pedidos, reservas y patrones recientes.</p>
 </div>
 
-@if (loading) {
+<div class="dash-toolbar card-like mb-3">
+  <div class="row g-2 align-items-end">
+    <div class="col-sm-6 col-md-auto">
+      <label class="form-label small text-muted mb-0">Desde</label>
+      <input type="date" class="form-control form-control-sm" [(ngModel)]="dateFrom" />
+    </div>
+    <div class="col-sm-6 col-md-auto">
+      <label class="form-label small text-muted mb-0">Hasta</label>
+      <input type="date" class="form-control form-control-sm" [(ngModel)]="dateTo" />
+    </div>
+    <div class="col-md-auto d-flex align-items-center gap-2 pt-2">
+      <input type="checkbox" class="form-check-input" id="cmp" [(ngModel)]="comparePrevious" />
+      <label class="form-check-label small" for="cmp">Comparar con periodo anterior</label>
+    </div>
+    <div class="col-md-auto">
+      <button type="button" class="btn btn-success btn-sm" (click)="load()" [disabled]="loading || refreshing">
+        @if (refreshing) {
+          <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+        }
+        Actualizar
+      </button>
+    </div>
+    <div class="col text-muted small pt-2">
+      Tipo de pedido (local/domicilio): no disponible en datos actuales.
+    </div>
+  </div>
+</div>
+
+@if (loading && !data) {
   <div class="text-center py-5">
     <div class="spinner-border text-success" role="status">
       <span class="visually-hidden">Cargando…</span>
     </div>
   </div>
-}
-@if (!loading) {
-  <div class="row g-3">
-    <div class="col-sm-6 col-xl-3">
-      <a routerLink="/admin/suppliers" class="stat-card">
-        <span class="stat-label">Proveedores</span>
-        <span class="stat-value">{{ supplierCount }}</span>
-        <span class="stat-hint">{{ activeSuppliers }} activos</span>
-      </a>
+} @else if (!data) {
+  <p class="text-danger">No se pudo cargar el dashboard.</p>
+} @else {
+  <section class="mb-4" aria-label="KPIs">
+    <div class="row g-3 kpi-row">
+      @for (k of data.kpis; track k.id) {
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card stat-card--kpi">
+            <span class="stat-label">{{ k.label }}</span>
+            <span class="stat-value">{{ k.value }}</span>
+            <span class="stat-hint d-flex justify-content-between align-items-center gap-2">
+              <span>{{ k.hint }}</span>
+              @if (trendText(k) !== null) {
+                <span class="trend-pill" [class.trend-pill--down]="(k.trendPercent ?? 0) < 0">{{ trendText(k) }}</span>
+              }
+            </span>
+          </div>
+        </div>
+      }
     </div>
-    <div class="col-sm-6 col-xl-3">
-      <a routerLink="/admin/products" class="stat-card">
-        <span class="stat-label">Productos</span>
-        <span class="stat-value">{{ productCount }}</span>
-        <span class="stat-hint">{{ outOfStockCount }} agotados</span>
-      </a>
-    </div>
-    <div class="col-sm-6 col-xl-3">
-      <a routerLink="/admin/lots" class="stat-card">
-        <span class="stat-label">Lotes registrados</span>
-        <span class="stat-value">{{ lotCount }}</span>
-        <span class="stat-hint">Inventario por producto</span>
-      </a>
-    </div>
-    <div class="col-sm-6 col-xl-3">
-      <a routerLink="/admin/tables" class="stat-card">
-        <span class="stat-label">Mesas</span>
-        <span class="stat-value">{{ tableCount }}</span>
-        <span class="stat-hint">{{ occupiedOrReserved }} ocupadas / reservadas</span>
-      </a>
-    </div>
-  </div>
-}
+  </section>
 
-<!-- Siempre en el DOM: Chart.js + ViewChild fallan si el canvas nace después con @if -->
-<div class="charts-outer" [hidden]="loading" [attr.aria-busy]="loading">
-  <h2 class="charts-section-title">Métricas visuales</h2>
-  <p class="charts-section-lead text-muted">
-    Distribución de inventario, ocupación de mesas, catálogo por categoría y estado de proveedores.
-  </p>
+  <h2 class="charts-section-title">Tendencia y comparativas</h2>
+  <p class="charts-section-lead text-muted">Líneas para evolución; barras para comparar franjas y días.</p>
 
-  <div class="row g-3 charts-grid">
-    <div class="col-lg-6">
+  <div class="row g-3 charts-grid mb-2">
+    <div class="col-12">
       <div class="chart-card">
-        <h3 class="chart-card-title">Inventario de productos</h3>
-        <p class="chart-card-desc">Referencias con stock frente a agotados en catálogo.</p>
-        <div class="chart-canvas-wrap">
-          <canvas #chartInventory aria-label="Gráfico inventario de productos"></canvas>
+        <h3 class="chart-card-title">Ventas en el tiempo</h3>
+        <p class="chart-card-desc">Ingresos por día. Clic en el gráfico para abrir analítica de ventas.</p>
+        <div class="chart-canvas-wrap chart-canvas-wrap--line">
+          <canvas #chartSalesLine aria-label="Tendencia de ventas"></canvas>
         </div>
       </div>
     </div>
     <div class="col-lg-6">
       <div class="chart-card">
-        <h3 class="chart-card-title">Estado de mesas</h3>
-        <p class="chart-card-desc">Disponibilidad operativa y mesas inactivas.</p>
+        <h3 class="chart-card-title">Ventas por día de la semana</h3>
+        <p class="chart-card-desc">Suma de ingresos acreditados por día de semana en el periodo.</p>
         <div class="chart-canvas-wrap">
-          <canvas #chartTables aria-label="Gráfico estado de mesas"></canvas>
+          <canvas #chartSalesWeekday aria-label="Ventas por día de semana"></canvas>
         </div>
       </div>
     </div>
     <div class="col-lg-6">
       <div class="chart-card">
-        <h3 class="chart-card-title">Productos por categoría</h3>
-        <p class="chart-card-desc">Hasta 10 categorías con más referencias.</p>
-        <div class="chart-canvas-wrap chart-canvas-wrap--tall">
-          <canvas #chartCategories aria-label="Gráfico productos por categoría"></canvas>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-6">
-      <div class="chart-card">
-        <h3 class="chart-card-title">Proveedores por estado</h3>
-        <p class="chart-card-desc">Activos frente a inactivos en la red de suministro.</p>
+        <h3 class="chart-card-title">Ventas por franja horaria</h3>
+        <p class="chart-card-desc">Distribución del ingreso por bloques horarios.</p>
         <div class="chart-canvas-wrap">
-          <canvas #chartSuppliers aria-label="Gráfico proveedores por estado"></canvas>
+          <canvas #chartSalesHour aria-label="Ventas por franja horaria"></canvas>
         </div>
       </div>
     </div>
   </div>
-</div>
+
+  <h2 class="charts-section-title">Productos y reservas</h2>
+  <div class="row g-3 charts-grid mb-2">
+    <div class="col-lg-6">
+      <div class="chart-card">
+        <h3 class="chart-card-title">Top 5 productos vendidos</h3>
+        <p class="chart-card-desc">Unidades vendidas (pagos acreditados).</p>
+        <div class="chart-canvas-wrap">
+          <canvas #chartTopProducts aria-label="Top productos"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="chart-card">
+        <h3 class="chart-card-title">Top 5 con menos rotación</h3>
+        <p class="chart-card-desc">Menor volumen entre los que registraron venta en el periodo.</p>
+        <div class="chart-canvas-wrap">
+          <canvas #chartBottomProducts aria-label="Productos menos vendidos"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="chart-card">
+        <h3 class="chart-card-title">Reservas por día</h3>
+        <p class="chart-card-desc">Conteo por fecha de servicio (o creación si no hay fecha de mesa).</p>
+        <div class="chart-canvas-wrap">
+          <canvas #chartResDay aria-label="Reservas por día"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="chart-card">
+        <h3 class="chart-card-title">Reservas por horario</h3>
+        <p class="chart-card-desc">Distribución por franja del día.</p>
+        <div class="chart-canvas-wrap">
+          <canvas #chartResHour aria-label="Reservas por horario"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="charts-section-title">Actividad reciente</h2>
+  <p class="charts-section-lead text-muted">Últimas transacciones. Clic en una fila para drill-down.</p>
+  <div class="table-responsive card-like">
+    <table class="table table-hover table-sm align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th>
+          <th>Fecha</th>
+          <th>Total</th>
+          <th>Tipo</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of data.recentActivity; track row.id + row.fecha) {
+          <tr class="activity-row" (click)="onActivityClick(row)" (keydown.enter)="onActivityClick(row)" tabindex="0" role="button">
+            <td><code>{{ row.id | slice : 0 : 12 }}…</code></td>
+            <td>{{ row.fecha | date : 'short' }}</td>
+            <td>{{ row.total | currency : 'COP' : 'symbol-narrow' : '1.0-0' }}</td>
+            <td>{{ row.tipo }}</td>
+            <td><span class="badge text-bg-secondary">{{ row.estado }}</span></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

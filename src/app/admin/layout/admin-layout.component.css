@@ -39,6 +39,16 @@
   flex: 1;
 }
 
+.sidebar-group-title {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.55);
+  padding: 0.85rem 0.85rem 0.25rem;
+  margin-top: 0.25rem;
+  font-weight: 600;
+}
+
 .sidebar-link {
   display: flex;
   align-items: center;

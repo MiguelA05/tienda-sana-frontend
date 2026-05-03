@@ -1,0 +1,126 @@
+<div class="page-header">
+  <h1>Analítica · Reservas</h1>
+  <p class="text-muted mb-0">Volumen, cancelaciones, distribución temporal y listado.</p>
+</div>
+
+<div class="toolbar card-like mb-3">
+  <div class="row g-2 align-items-end">
+    <div class="col-auto">
+      <label class="form-label small text-muted mb-0">Desde</label>
+      <input type="date" class="form-control form-control-sm" [(ngModel)]="dateFrom" />
+    </div>
+    <div class="col-auto">
+      <label class="form-label small text-muted mb-0">Hasta</label>
+      <input type="date" class="form-control form-control-sm" [(ngModel)]="dateTo" />
+    </div>
+    <div class="col-md">
+      <label class="form-label small text-muted mb-0">Buscar (id o usuario)</label>
+      <input type="search" class="form-control form-control-sm" [(ngModel)]="search" (keyup.enter)="page = 0; load()" />
+    </div>
+    <div class="col-md">
+      <label class="form-label small text-muted mb-0">Estado (contiene)</label>
+      <input type="text" class="form-control form-control-sm" [(ngModel)]="estado" (keyup.enter)="page = 0; load()" />
+    </div>
+    <div class="col-auto">
+      <button type="button" class="btn btn-success btn-sm" (click)="page = 0; load()">Aplicar</button>
+    </div>
+  </div>
+</div>
+
+@if (loading) {
+  <div class="text-center py-5">
+    <div class="spinner-border text-success" role="status"></div>
+  </div>
+} @else if (!data) {
+  <p class="text-danger">No se pudieron cargar los datos.</p>
+} @else {
+  <div class="row g-3 mb-3">
+    @for (k of data.kpis; track k.id) {
+      <div class="col-sm-6 col-xl-3">
+        <div class="stat-card stat-card--kpi">
+          <span class="stat-label">{{ k.label }}</span>
+          <span class="stat-value">{{ k.value }}</span>
+          <span class="stat-hint">{{ k.hint }}</span>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (data.avgOccupationHours != null || data.tableRotation != null) {
+    <div class="row g-2 mb-3 text-muted small">
+      @if (data.avgOccupationHours != null) {
+        <div class="col-auto">
+          <strong>Tiempo medio ocupación (h):</strong> {{ data.avgOccupationHours | number : '1.1-2' }}
+        </div>
+      }
+      @if (data.tableRotation != null) {
+        <div class="col-auto">
+          <strong>Rotación (reservas pagadas / mesa visible):</strong> {{ data.tableRotation | number : '1.2-2' }}
+        </div>
+      }
+    </div>
+  }
+
+  <div class="row g-3 mb-3">
+    <div class="col-lg-6">
+      <div class="chart-card">
+        <h3 class="chart-card-title">Reservas por día</h3>
+        <div class="chart-wrap">
+          <canvas #cDay></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="chart-card">
+        <h3 class="chart-card-title">Reservas por franja</h3>
+        <div class="chart-wrap">
+          <canvas #cHour></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="h5 mb-2">Listado</h2>
+  <div class="table-responsive card-like mb-2">
+    <table class="table table-sm table-hover mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th>
+          <th>Creación</th>
+          <th>Reserva</th>
+          <th>Usuario</th>
+          <th>Total</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of data.reservations.rows; track r.id) {
+          <tr>
+            <td><code>{{ r.id }}</code></td>
+            <td>{{ r.fechaCreacion | date : 'short' }}</td>
+            <td>{{ r.fechaReserva | date : 'short' }}</td>
+            <td>{{ r.usuarioId }}</td>
+            <td>{{ r.total | currency : 'COP' : 'symbol-narrow' : '1.0-0' }}</td>
+            <td>
+              <span class="badge text-bg-secondary">{{ r.estadoReserva }}</span>
+              @if (r.paid) {
+                <span class="badge text-bg-success ms-1">Pagada</span>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <div class="d-flex justify-content-between align-items-center">
+    <span class="text-muted small"
+      >Página {{ data.reservations.page + 1 }} de {{ data.reservations.totalPages }} ({{ data.reservations.totalElements }})</span
+    >
+    <div class="btn-group btn-group-sm">
+      <button type="button" class="btn btn-outline-secondary" (click)="prevPage()" [disabled]="page <= 0">Anterior</button>
+      <button type="button" class="btn btn-outline-secondary" (click)="nextPage()" [disabled]="page + 1 >= data.reservations.totalPages"
+        >Siguiente</button
+      >
+    </div>
+  </div>
+}

@@ -5,10 +5,12 @@ import { AdminSuppliersComponent } from './suppliers/admin-suppliers.component';
 import { AdminProductsComponent } from './products/admin-products.component';
 import { AdminLotsComponent } from './lots/admin-lots.component';
 import { AdminTablesComponent } from './tables/admin-tables.component';
+import { AdminAnalyticsSalesComponent } from './analytics/admin-analytics-sales.component';
+import { AdminAnalyticsReservationsComponent } from './analytics/admin-analytics-reservations.component';
 
 /**
  * Rutas hijas bajo /admin (carga perezosa desde app.routes).
- * La protección por rol ADMIN vive en la ruta padre.
+ * Dashboard = vista principal; Operaciones (CRUD); Analítica; Configuración.
  */
 export const ADMIN_ROUTES: Routes = [
   {
@@ -17,10 +19,21 @@ export const ADMIN_ROUTES: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
       { path: 'dashboard', component: AdminDashboardComponent },
-      { path: 'suppliers', component: AdminSuppliersComponent },
-      { path: 'products', component: AdminProductsComponent },
-      { path: 'lots', component: AdminLotsComponent },
-      { path: 'tables', component: AdminTablesComponent },
+
+      { path: 'operations/products', component: AdminProductsComponent },
+      { path: 'operations/tables', component: AdminTablesComponent },
+      { path: 'operations/inventory', component: AdminLotsComponent },
+
+      { path: 'analytics/sales', component: AdminAnalyticsSalesComponent },
+      { path: 'analytics/reservations', component: AdminAnalyticsReservationsComponent },
+
+      { path: 'settings/suppliers', component: AdminSuppliersComponent },
+
+      /* Compatibilidad rutas antiguas */
+      { path: 'suppliers', redirectTo: 'settings/suppliers', pathMatch: 'full' },
+      { path: 'products', redirectTo: 'operations/products', pathMatch: 'full' },
+      { path: 'lots', redirectTo: 'operations/inventory', pathMatch: 'full' },
+      { path: 'tables', redirectTo: 'operations/tables', pathMatch: 'full' },
     ],
   },
 ];

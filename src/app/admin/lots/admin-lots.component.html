@@ -1,7 +1,37 @@
 <div class="page-header">
-  <h1>Lotes e inventario</h1>
+  <h1>Inventario</h1>
   <p class="text-muted mb-0">Anota cada ingreso de mercancía y revisa cuántas unidades hay por producto.</p>
 </div>
+
+@if (!loading) {
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="inv-kpi">
+        <span class="inv-kpi-label">Referencias en catálogo</span>
+        <span class="inv-kpi-value">{{ kpiProducts }}</span>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="inv-kpi">
+        <span class="inv-kpi-label">Agotados</span>
+        <span class="inv-kpi-value text-warning">{{ kpiOutOfStock }}</span>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="inv-kpi">
+        <span class="inv-kpi-label">SKUs en inventario</span>
+        <span class="inv-kpi-value">{{ kpiInventorySkus }}</span>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="inv-kpi">
+        <span class="inv-kpi-label">Unidades totales</span>
+        <span class="inv-kpi-value">{{ kpiInventoryUnits }}</span>
+      </div>
+    </div>
+  </div>
+  <p class="small text-muted mb-3">Lotes registrados en el periodo de datos: {{ kpiLots }}.</p>
+}
 
 <div class="row g-4">
   <div class="col-xl-4 d-flex align-items-center">
