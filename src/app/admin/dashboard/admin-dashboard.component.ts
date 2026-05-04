@@ -23,6 +23,7 @@ import {
   Tooltip,
 } from 'chart.js';
 import { AdminAnalyticsService } from '../services/admin-analytics.service';
+import { errorMessage } from '../utils/admin-api.util';
 import type { ActivityRowDto, DashboardOverviewDto, LabelValueDto, ProductRankDto } from '../models/admin-analytics.model';
 
 Chart.register(
@@ -60,6 +61,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   loading = true;
   refreshing = false;
   data: DashboardOverviewDto | null = null;
+  errorMessage: string | null = null;
   dateFrom = '';
   dateTo = '';
   comparePrevious = true;
@@ -84,30 +86,66 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
+    // validate date range
+    this.errorMessage = null;
+    const f = new Date(this.dateFrom);
+    const t = new Date(this.dateTo);
+    if (!this.dateFrom || !this.dateTo || isNaN(f.getTime()) || isNaN(t.getTime())) {
+      this.errorMessage = 'Rango de fechas inválido.';
+      this.data = null;
+      this.loading = false;
+      this.refreshing = false;
+      return;
+    }
+    if (f.getTime() > t.getTime()) {
+      this.errorMessage = 'La fecha "Desde" no puede ser posterior a la fecha "Hasta".';
+      this.data = null;
+      this.loading = false;
+      this.refreshing = false;
+      return;
+    }
+
     if (this.loading && !this.data) {
       this.loading = true;
     } else {
       this.refreshing = true;
     }
-    this.analytics
-      .dashboard(this.dateFrom, this.dateTo, this.comparePrevious)
-      .subscribe({
-        next: (d) => {
-          this.data = d;
-          this.loading = false;
-          this.refreshing = false;
-          this.cdr.detectChanges();
-          requestAnimationFrame(() => this.buildCharts());
-        },
-        error: () => {
-          this.loading = false;
-          this.refreshing = false;
+
+    // El backend responde correctamente en modo comparativo; cuando el usuario desactiva
+    // la comparación, ocultamos la parte comparativa en el UI pero seguimos cargando
+    // el dashboard por la ruta estable.
+    this.analytics.dashboard(this.dateFrom, this.dateTo, true).subscribe({
+      next: (d) => {
+        // If backend returns an empty dataset (no transactions) show a friendly message
+        const totalAmount = (d.salesByDayCurrent ?? []).reduce((s, p) => s + (p?.amount ?? 0), 0);
+        const hasActivity = (d.recentActivity ?? []).length > 0;
+        if (totalAmount === 0 && !hasActivity) {
+          this.errorMessage = 'No hay transacciones en el periodo seleccionado.';
           this.data = null;
-        },
-      });
+          this.loading = false;
+          this.refreshing = false;
+          return;
+        }
+
+        this.data = d;
+        this.loading = false;
+        this.refreshing = false;
+        this.cdr.detectChanges();
+        requestAnimationFrame(() => this.buildCharts());
+      },
+      error: (err) => {
+        this.loading = false;
+        this.refreshing = false;
+        this.data = null;
+        this.errorMessage = errorMessage(err, 'No se pudo cargar el dashboard.');
+      },
+    });
   }
 
   trendText(k: { trendPercent: number | null }): string | null {
+    if (!this.comparePrevious) {
+      return null;
+    }
     if (k.trendPercent == null || Number.isNaN(k.trendPercent)) {
       return null;
     }
@@ -139,12 +177,13 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     const text = '#495057';
     const grid = 'rgba(0,0,0,0.06)';
     const d = this.data;
+    const showPrevious = this.comparePrevious;
 
     const lineEl = this.chartSalesLine?.nativeElement;
     if (lineEl) {
       const labels = d.salesByDayCurrent.map((p) => this.shortDate(p.date));
       const cur = d.salesByDayCurrent.map((p) => p.amount);
-      const prev = d.salesByDayPrevious.length
+      const prev = showPrevious && d.salesByDayPrevious.length
         ? d.salesByDayPrevious.map((p) => p.amount)
         : [];
       const c = new Chart(lineEl, {

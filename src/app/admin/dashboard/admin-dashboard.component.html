@@ -35,7 +35,7 @@
     </div>
   </div>
 } @else if (!data) {
-  <p class="text-danger">No se pudo cargar el dashboard.</p>
+  <p class="text-danger">{{ errorMessage ?? 'No se pudo cargar el dashboard.' }}</p>
 } @else {
   <section class="mb-4" aria-label="KPIs">
     <div class="row g-3 kpi-row">
