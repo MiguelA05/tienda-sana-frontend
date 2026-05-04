@@ -1,8 +1,8 @@
 <div class="admin-shell">
   <aside class="admin-sidebar" aria-label="Navegación administración">
     <div class="sidebar-brand">
-      <i class="fa-solid fa-seedling" aria-hidden="true"></i>
-      <span>Admin Tienda Sana</span>
+      <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+      <span>Panel de administración</span>
     </div>
     <nav class="sidebar-nav" aria-label="Secciones">
       @for (group of navGroups; track group.title ?? 'root') {
@@ -21,10 +21,6 @@
         }
       }
     </nav>
-    <a routerLink="/" class="sidebar-back">
-      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
-      Volver al sitio
-    </a>
   </aside>
   <main class="admin-main">
     <router-outlet />

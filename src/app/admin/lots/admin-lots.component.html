@@ -1,6 +1,8 @@
 <div class="page-header">
   <h1>Inventario</h1>
-  <p class="text-muted mb-0">Anota cada ingreso de mercancía y revisa cuántas unidades hay por producto.</p>
+  <p class="text-muted mb-0">
+    Los movimientos quedan registrados de forma inmutable. El stock mostrado se calcula desde el historial de transacciones.
+  </p>
 </div>
 
 @if (!loading) {
@@ -95,6 +97,77 @@
         </div>
       </div>
 
+      <div class="card admin-form-card w-100">
+        <div class="card-header admin-form-card-header">Ajustar inventario</div>
+        <div class="card-body admin-form-card-body">
+          <p class="small text-muted mb-3">
+            Las salidas reparten por FIFO entre los lotes (se verá en consumido/restante). Las entradas sin lote crean
+            una fila «Ajuste manual». Opcionalmente puede elegir un lote concreto.
+          </p>
+          <form [formGroup]="adjustForm" (ngSubmit)="submitAdjust()" class="admin-form d-flex flex-column gap-3">
+            <div>
+              <label class="form-label" for="adj-prod">Producto</label>
+              <select id="adj-prod" class="form-select" formControlName="productId">
+                <option value="">Seleccione…</option>
+                @for (p of products; track p.id) {
+                  <option [value]="p.id">{{ p.name }}</option>
+                }
+              </select>
+              @if (adjustForm.get('productId')?.value) {
+                <div class="form-text">
+                  Stock actual (suma ledger):
+                  <strong>{{ adjustSelectedStockTotal() }} u.</strong>
+                  @if (adjustForm.getRawValue().direction === 'OUT') {
+                    <span> — la salida no puede superar esta cantidad.</span>
+                  }
+                </div>
+              }
+            </div>
+            <div>
+              <label class="form-label" for="adj-dir">Tipo</label>
+              <select id="adj-dir" class="form-select" formControlName="direction">
+                <option value="IN">Entrada (+)</option>
+                <option value="OUT">Salida (−)</option>
+              </select>
+            </div>
+            @if (adjustForm.get('productId')?.value && adjustLotSelectOptions().length > 0) {
+              <div>
+                <label class="form-label" for="adj-lot">Lote (opcional)</label>
+                <select id="adj-lot" class="form-select" formControlName="targetLotId">
+                  <option value="">
+                    @if (adjustForm.getRawValue().direction === 'OUT') {
+                      Automático (FIFO entre lotes con saldo)
+                    } @else {
+                      Nuevo movimiento de ajuste (nueva fila en la tabla)
+                    }
+                  </option>
+                  @for (l of adjustLotSelectOptions(); track l.id) {
+                    <option [value]="l.id">
+                      {{ l.entryDate | date : 'short' }} · inicial {{ l.initialQuantity }} · restante
+                      {{ l.quantityRemaining }}
+                    </option>
+                  }
+                </select>
+              </div>
+            }
+            <div>
+              <label class="form-label" for="adj-qty">Cantidad</label>
+              <input id="adj-qty" type="number" class="form-control" formControlName="quantity" min="1" />
+            </div>
+            <div>
+              <label class="form-label" for="adj-reason">Motivo</label>
+              <textarea
+                id="adj-reason"
+                class="form-control"
+                rows="2"
+                formControlName="reason"
+                placeholder="Ej.: merma, conteo físico, corrección… (mín. 3 caracteres)"></textarea>
+            </div>
+            <button type="submit" class="btn btn-success px-4" [disabled]="adjustForm.invalid">Registrar ajuste</button>
+          </form>
+        </div>
+      </div>
+
       <div class="card admin-panel-card w-100">
         <div class="card-header admin-form-card-header">Inventario actual</div>
         <div class="card-body p-0">
@@ -129,23 +202,41 @@
                   <th>Fecha</th>
                   <th>Producto</th>
                   <th>Proveedor</th>
-                  <th>Cant.</th>
+                  <th>Inicial</th>
+                  <th>Consumida</th>
+                  <th>Restante</th>
+                  <th>Estado</th>
                   <th>V. unit.</th>
                   <th class="text-end">Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 @for (row of lots; track row.id) {
-                  <tr>
+                  <tr [class.table-secondary]="row.voided">
                     <td>{{ row.entryDate | date : 'yyyy-MM-dd HH:mm:ss' }}</td>
                     <td>{{ productName(row.productId) }}</td>
                     <td>{{ supplierName(row.supplierId) }}</td>
-                    <td>{{ row.quantity }}</td>
+                    <td>{{ row.initialQuantity }}</td>
+                    <td>{{ row.quantityConsumed }}</td>
+                    <td>{{ row.quantityRemaining }}</td>
+                    <td>
+                      @if (row.status === 'ACTIVO') {
+                        <span class="badge text-bg-success">Activo</span>
+                      } @else if (row.status === 'CONSUMIDO') {
+                        <span class="badge text-bg-secondary">Consumido</span>
+                      } @else {
+                        <span class="badge text-bg-dark">Anulado</span>
+                      }
+                    </td>
                     <td>{{ row.unitValue | currency : 'COP' : 'symbol-narrow' : '1.0-0' }}</td>
                     <td class="text-end">
                       @if (!isOpeningStock(row)) {
-                        <button type="button" class="btn btn-sm btn-outline-primary me-1" (click)="startEdit(row)">Editar</button>
-                        <button type="button" class="btn btn-sm btn-outline-danger" (click)="remove(row)">Eliminar</button>
+                        @if (canEditOrDelete(row)) {
+                          <button type="button" class="btn btn-sm btn-outline-primary me-1" (click)="startEdit(row)">Editar</button>
+                          <button type="button" class="btn btn-sm btn-outline-danger" (click)="remove(row)">Eliminar</button>
+                        } @else {
+                          <span class="small text-muted">—</span>
+                        }
                       } @else {
                         <span class="badge text-bg-light border">Protegido</span>
                       }

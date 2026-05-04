@@ -52,8 +52,26 @@ export class AdminLotsComponent implements OnInit, OnDestroy {
     unitValue: [0, [Validators.required, Validators.min(0)]],
   });
 
+  readonly adjustForm = this.fb.nonNullable.group({
+    productId: ['', Validators.required],
+    direction: ['IN' as 'IN' | 'OUT', Validators.required],
+    quantity: [1, [Validators.required, Validators.min(1)]],
+    reason: ['', [Validators.required, Validators.minLength(3)]],
+    targetLotId: [''],
+  });
+
   ngOnInit(): void {
     this.refresh();
+    this.sub.add(
+      this.adjustForm.get('direction')!.valueChanges.subscribe(() => {
+        this.adjustForm.patchValue({ targetLotId: '' }, { emitEvent: false });
+      }),
+    );
+    this.sub.add(
+      this.adjustForm.get('productId')!.valueChanges.subscribe(() => {
+        this.adjustForm.patchValue({ targetLotId: '' }, { emitEvent: false });
+      }),
+    );
   }
 
   ngOnDestroy(): void {
@@ -98,11 +116,42 @@ export class AdminLotsComponent implements OnInit, OnDestroy {
     if (id === '__OPENING_STOCK__') {
       return 'Inventario inicial';
     }
+    if (id === '__ADJUSTMENT__') {
+      return 'Ajuste manual';
+    }
     return this.suppliers.find((s) => s.id === id)?.name ?? id;
   }
 
   isOpeningStock(row: ProductLot): boolean {
     return row.supplierId === '__OPENING_STOCK__';
+  }
+
+  /** Stock total del producto seleccionado en el formulario de ajuste (desde GET /inventory). */
+  adjustSelectedStockTotal(): number {
+    const pid = this.adjustForm.getRawValue().productId;
+    if (!pid) return 0;
+    return this.inventory.find((l) => l.productId === pid)?.totalQuantity ?? 0;
+  }
+
+  /** Lotes del producto elegido para acotar salida a un lote o sumar entrada a un lote existente. */
+  adjustLotsForProduct(): ProductLot[] {
+    const pid = this.adjustForm.getRawValue().productId;
+    if (!pid) return [];
+    return this.lots.filter((l) => l.productId === pid && !l.voided);
+  }
+
+  adjustLotsForOutPick(): ProductLot[] {
+    return this.adjustLotsForProduct().filter((l) => l.quantityRemaining > 0);
+  }
+
+  adjustLotSelectOptions(): ProductLot[] {
+    return this.adjustForm.getRawValue().direction === 'OUT'
+      ? this.adjustLotsForOutPick()
+      : this.adjustLotsForProduct();
+  }
+
+  canEditOrDelete(row: ProductLot): boolean {
+    return !this.isOpeningStock(row) && row.status === 'ACTIVO' && !row.voided;
   }
 
   private nowLocalDateTime(): string {
@@ -119,7 +168,6 @@ export class AdminLotsComponent implements OnInit, OnDestroy {
     return v;
   }
 
-
   startCreate(): void {
     this.editingId = null;
     this.form.reset({
@@ -132,12 +180,16 @@ export class AdminLotsComponent implements OnInit, OnDestroy {
   }
 
   startEdit(row: ProductLot): void {
+    if (!this.canEditOrDelete(row)) {
+      this.notify.warning('Este lote no admite edición (consumido, anulado o inventario inicial).');
+      return;
+    }
     this.editingId = row.id;
     this.form.patchValue({
       productId: row.productId,
       supplierId: row.supplierId,
       entryDate: this.toDateTimeLocal(row.entryDate),
-      quantity: row.quantity,
+      quantity: row.initialQuantity,
       unitValue: row.unitValue,
     });
   }
@@ -180,14 +232,89 @@ export class AdminLotsComponent implements OnInit, OnDestroy {
   }
 
   remove(row: ProductLot): void {
+    if (!this.canEditOrDelete(row)) {
+      this.notify.warning('No se puede eliminar este lote.');
+      return;
+    }
+    const msg =
+      row.quantityConsumed > 0
+        ? 'Este lote ya ha sido utilizado. ¿Desea anularlo? Se registrará un ajuste compensatorio por el stock restante del lote.'
+        : '¿Eliminar este lote? Se compensará el ingreso en el historial de inventario.';
+    if (!confirm(msg)) {
+      return;
+    }
     this.sub.add(
       this.lotService.delete(row.id).subscribe({
-        next: () => {
-          this.notify.success('Lote eliminado');
+        next: (r) => {
+          if (r.code === 'DELETED') {
+            this.notify.success(r.message);
+          } else if (r.code === 'VOIDED_WITH_ADJUSTMENT' || r.code === 'VOIDED_CONSUMED_LOT') {
+            this.notify.success(r.message);
+          } else {
+            this.notify.info(r.message);
+          }
           this.refresh();
         },
         error: (e) => this.notify.error(e.message ?? 'Error'),
       }),
+    );
+  }
+
+  submitAdjust(): void {
+    if (this.adjustForm.invalid) {
+      this.adjustForm.markAllAsTouched();
+      this.notify.warning('Revise el formulario de ajuste');
+      return;
+    }
+    const v = this.adjustForm.getRawValue();
+    const reason = v.reason.trim();
+    if (reason.length < 3) {
+      this.notify.warning('El motivo debe tener al menos 3 caracteres');
+      return;
+    }
+
+    const stockTotal = this.adjustSelectedStockTotal();
+    if (v.direction === 'OUT') {
+      if (v.quantity > stockTotal) {
+        this.notify.error(
+          `No hay suficiente stock: hay ${stockTotal} unidades disponibles para este producto.`,
+        );
+        return;
+      }
+      const tid = v.targetLotId?.trim();
+      if (tid) {
+        const lot = this.lots.find((l) => l.id === tid);
+        if (!lot) {
+          this.notify.error('Lote no encontrado en la lista actual');
+          return;
+        }
+        if (v.quantity > lot.quantityRemaining) {
+          this.notify.error(
+            `En el lote seleccionado solo hay ${lot.quantityRemaining} unidades disponibles.`,
+          );
+          return;
+        }
+      }
+    }
+
+    const tid = v.targetLotId?.trim();
+    this.sub.add(
+      this.lotService
+        .adjustInventory({
+          productId: v.productId,
+          direction: v.direction,
+          quantity: v.quantity,
+          reason,
+          targetLotId: tid && tid.length > 0 ? tid : null,
+        })
+        .subscribe({
+          next: () => {
+            this.notify.success('Ajuste de inventario registrado');
+            this.adjustForm.patchValue({ reason: '', quantity: 1, targetLotId: '' });
+            this.refresh();
+          },
+          error: (e) => this.notify.error(e.message ?? 'Error'),
+        }),
     );
   }
 }

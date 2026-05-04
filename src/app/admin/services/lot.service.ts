@@ -4,7 +4,14 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { MensajeDTO } from '../../dto/mensaje-dto';
-import { InventoryLine, ProductLot, ProductLotCreateDto, ProductLotUpdateDto } from '../models/lot.model';
+import {
+  DeleteLotResult,
+  InventoryAdjustmentDto,
+  InventoryLine,
+  ProductLot,
+  ProductLotCreateDto,
+  ProductLotUpdateDto,
+} from '../models/lot.model';
 import { assertOkReply } from '../utils/admin-api.util';
 
 interface ProductLotApi {
@@ -12,8 +19,12 @@ interface ProductLotApi {
   productId: string;
   supplierId: string;
   entryDate: string;
-  quantity: number;
+  initialQuantity: number;
   unitValue: number;
+  quantityRemaining: number;
+  quantityConsumed: number;
+  status: string;
+  voided: boolean;
 }
 
 interface InventoryApi {
@@ -28,8 +39,12 @@ function lotFromApi(l: ProductLotApi): ProductLot {
     productId: l.productId,
     supplierId: l.supplierId,
     entryDate: typeof l.entryDate === 'string' ? l.entryDate : String(l.entryDate),
-    quantity: l.quantity,
+    initialQuantity: l.initialQuantity ?? (l as unknown as { quantity?: number }).quantity ?? 0,
     unitValue: l.unitValue,
+    quantityRemaining: l.quantityRemaining ?? 0,
+    quantityConsumed: l.quantityConsumed ?? 0,
+    status: (l.status as ProductLot['status']) ?? 'ACTIVO',
+    voided: l.voided ?? false,
   };
 }
 
@@ -100,8 +115,23 @@ export class LotService {
       .pipe(map((m) => lotFromApi(assertOkReply<ProductLotApi>(m))));
   }
 
-  delete(id: string): Observable<void> {
+  delete(id: string): Observable<DeleteLotResult> {
     return this.http.delete<MensajeDTO>(`${this.base}/lots/${id}`).pipe(
+      map((m) => assertOkReply<DeleteLotResult>(m)),
+    );
+  }
+
+  adjustInventory(dto: InventoryAdjustmentDto): Observable<void> {
+    const body: Record<string, unknown> = {
+      productId: dto.productId,
+      direction: dto.direction,
+      quantity: dto.quantity,
+      reason: dto.reason.trim(),
+    };
+    if (dto.targetLotId && dto.targetLotId.length > 0) {
+      body['targetLotId'] = dto.targetLotId;
+    }
+    return this.http.post<MensajeDTO>(`${this.base}/inventory/adjustment`, body).pipe(
       map((m) => {
         assertOkReply<string>(m);
       }),
