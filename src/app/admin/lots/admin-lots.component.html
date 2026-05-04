@@ -143,8 +143,12 @@
                     <td>{{ row.quantity }}</td>
                     <td>{{ row.unitValue | currency : 'COP' : 'symbol-narrow' : '1.0-0' }}</td>
                     <td class="text-end">
-                      <button type="button" class="btn btn-sm btn-outline-primary me-1" (click)="startEdit(row)">Editar</button>
-                      <button type="button" class="btn btn-sm btn-outline-danger" (click)="remove(row)">Eliminar</button>
+                      @if (!isOpeningStock(row)) {
+                        <button type="button" class="btn btn-sm btn-outline-primary me-1" (click)="startEdit(row)">Editar</button>
+                        <button type="button" class="btn btn-sm btn-outline-danger" (click)="remove(row)">Eliminar</button>
+                      } @else {
+                        <span class="badge text-bg-light border">Protegido</span>
+                      }
                     </td>
                   </tr>
                 }

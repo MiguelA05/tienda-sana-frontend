@@ -40,6 +40,7 @@ function toRequestBody(dto: {
   price: number;
   imageUrl: string;
   outOfStock?: boolean;
+  initialStock?: number;
 }): Record<string, unknown> {
   return {
     name: dto.name,
@@ -48,6 +49,7 @@ function toRequestBody(dto: {
     price: dto.price,
     imageUrl: dto.imageUrl,
     outOfStock: dto.outOfStock ?? false,
+    initialStock: dto.initialStock ?? 0,
   };
 }
 

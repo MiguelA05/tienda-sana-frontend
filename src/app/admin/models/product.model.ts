@@ -12,5 +12,7 @@ export interface Product {
   active?: boolean;
 }
 
-export type ProductCreateDto = Omit<Product, 'id' | 'stockQuantity' | 'active'>;
+export type ProductCreateDto = Omit<Product, 'id' | 'stockQuantity' | 'active'> & {
+  initialStock: number;
+};
 export type ProductUpdateDto = Partial<Omit<Product, 'id'>>;

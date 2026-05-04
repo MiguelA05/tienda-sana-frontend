@@ -95,7 +95,14 @@ export class AdminLotsComponent implements OnInit, OnDestroy {
   }
 
   supplierName(id: string): string {
+    if (id === '__OPENING_STOCK__') {
+      return 'Inventario inicial';
+    }
     return this.suppliers.find((s) => s.id === id)?.name ?? id;
+  }
+
+  isOpeningStock(row: ProductLot): boolean {
+    return row.supplierId === '__OPENING_STOCK__';
   }
 
 

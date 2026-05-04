@@ -70,10 +70,17 @@
             <label class="form-label" for="p-price">Precio</label>
             <input id="p-price" type="number" class="form-control" formControlName="price" min="0" step="1" />
           </div>
+          @if (!editingId) {
+            <div>
+              <label class="form-label" for="p-initial-stock">Inventario inicial</label>
+              <input id="p-initial-stock" type="number" class="form-control" formControlName="initialStock" min="0" step="1" />
+              <div class="form-text">Se crea como lote de apertura para que el producto quede visible de inmediato.</div>
+            </div>
+          }
           @if (editingId) {
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="p-stock" formControlName="outOfStock" />
-              <label class="form-check-label" for="p-stock">Agotado (out of stock)</label>
+              <input class="form-check-input" type="checkbox" id="p-oos" formControlName="outOfStock" />
+              <label class="form-check-label" for="p-oos">Agotado (out of stock)</label>
             </div>
           }
           <div class="admin-form-actions d-flex gap-2 flex-wrap">

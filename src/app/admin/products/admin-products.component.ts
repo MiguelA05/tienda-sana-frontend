@@ -46,6 +46,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
     description: ['', [Validators.required, Validators.maxLength(2000)]],
     category: ['', [Validators.required, Validators.maxLength(120)]],
     price: [0, [Validators.required, Validators.min(0)]],
+    initialStock: [0, [Validators.required, Validators.min(0)]],
     outOfStock: [false],
   });
 
@@ -97,7 +98,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
     this.uploadingImage = false;
     this.uploadProgress = 0;
     this.uploadErrorMessage = null;
-    this.form.reset({ name: '', description: '', category: '', price: 0, outOfStock: false });
+    this.form.reset({ name: '', description: '', category: '', price: 0, initialStock: 0, outOfStock: false });
   }
 
   startEdit(row: Product): void {
@@ -112,6 +113,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
       description: row.description,
       category: row.category,
       price: row.price,
+      initialStock: row.stockQuantity ?? 0,
       outOfStock: row.outOfStock,
     });
   }
@@ -142,7 +144,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
     this.uploadingImage = false;
     this.uploadProgress = 0;
     this.uploadErrorMessage = null;
-    this.form.reset({ price: 0, outOfStock: false });
+    this.form.reset({ price: 0, initialStock: 0, outOfStock: false });
   }
 
   onImagePick(event: Event): void {
@@ -174,13 +176,14 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
       return;
     }
     const v = this.form.getRawValue();
+    const { initialStock, ...updatePayload } = v;
 
     const persist = (imageUrl: string): void => {
       if (this.editingId) {
         this.sub.add(
           this.productService
             .update(this.editingId, {
-              ...v,
+              ...updatePayload,
               imageUrl,
             })
             .subscribe({
@@ -200,6 +203,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
               description: v.description,
               category: v.category,
               price: v.price,
+              initialStock: v.initialStock,
               outOfStock: v.outOfStock,
               imageUrl,
             })
