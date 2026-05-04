@@ -105,13 +105,27 @@ export class AdminLotsComponent implements OnInit, OnDestroy {
     return row.supplierId === '__OPENING_STOCK__';
   }
 
+  private nowLocalDateTime(): string {
+    const d = new Date();
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  }
+
+  private toDateTimeLocal(value: string): string {
+    const v = (value ?? '').trim();
+    if (!v) return this.nowLocalDateTime();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(v)) return `${v}T00:00:00`;
+    if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(v)) return `${v}:00`;
+    return v;
+  }
+
 
   startCreate(): void {
     this.editingId = null;
     this.form.reset({
       productId: '',
       supplierId: '',
-      entryDate: new Date().toISOString().slice(0, 10),
+      entryDate: this.nowLocalDateTime(),
       quantity: 1,
       unitValue: 0,
     });
@@ -122,7 +136,7 @@ export class AdminLotsComponent implements OnInit, OnDestroy {
     this.form.patchValue({
       productId: row.productId,
       supplierId: row.supplierId,
-      entryDate: row.entryDate,
+      entryDate: this.toDateTimeLocal(row.entryDate),
       quantity: row.quantity,
       unitValue: row.unitValue,
     });

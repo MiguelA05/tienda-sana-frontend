@@ -75,7 +75,7 @@
             </div>
             <div>
               <label class="form-label" for="lot-date">Fecha de ingreso</label>
-              <input id="lot-date" type="date" class="form-control" formControlName="entryDate" />
+              <input id="lot-date" type="datetime-local" step="1" class="form-control" formControlName="entryDate" />
             </div>
             <div>
               <label class="form-label" for="lot-qty">Cantidad</label>
@@ -137,7 +137,7 @@
               <tbody>
                 @for (row of lots; track row.id) {
                   <tr>
-                    <td>{{ row.entryDate }}</td>
+                    <td>{{ row.entryDate | date : 'yyyy-MM-dd HH:mm:ss' }}</td>
                     <td>{{ productName(row.productId) }}</td>
                     <td>{{ supplierName(row.supplierId) }}</td>
                     <td>{{ row.quantity }}</td>

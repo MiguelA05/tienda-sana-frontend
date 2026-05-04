@@ -27,10 +27,18 @@ function lotFromApi(l: ProductLotApi): ProductLot {
     id: l.id,
     productId: l.productId,
     supplierId: l.supplierId,
-    entryDate: typeof l.entryDate === 'string' ? l.entryDate.slice(0, 10) : String(l.entryDate),
+    entryDate: typeof l.entryDate === 'string' ? l.entryDate : String(l.entryDate),
     quantity: l.quantity,
     unitValue: l.unitValue,
   };
+}
+
+function normalizeToApiDateTime(value: string): string {
+  const v = (value ?? '').trim();
+  if (!v) return v;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(v)) return `${v}T00:00:00`;
+  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(v)) return `${v}:00`;
+  return v;
 }
 
 function invFromApi(i: InventoryApi): InventoryLine {
@@ -70,7 +78,7 @@ export class LotService {
     const body = {
       productId: dto.productId,
       supplierId: dto.supplierId,
-      entryDate: dto.entryDate,
+      entryDate: normalizeToApiDateTime(dto.entryDate),
       quantity: dto.quantity,
       unitValue: dto.unitValue,
     };
@@ -83,7 +91,7 @@ export class LotService {
     const body = {
       productId: dto.productId!,
       supplierId: dto.supplierId!,
-      entryDate: dto.entryDate!,
+      entryDate: normalizeToApiDateTime(dto.entryDate!),
       quantity: dto.quantity!,
       unitValue: dto.unitValue!,
     };
