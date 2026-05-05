@@ -22,6 +22,9 @@ export class TokenService {
    * @param token token a guardar
    */
   public setToken(token: string) {
+    if (typeof window === 'undefined') {
+      return;
+    }
     window.sessionStorage.removeItem(TOKEN_KEY);
     window.sessionStorage.setItem(TOKEN_KEY, token);
   }
@@ -31,6 +34,9 @@ export class TokenService {
    * @returns token guardado en el sessionStorage
    */
   public getToken(): string | null {
+    if (typeof window === 'undefined') {
+      return null;
+    }
     return sessionStorage.getItem(TOKEN_KEY);
   }
 
@@ -62,6 +68,9 @@ export class TokenService {
    * Metodo para cerrar sesion y redirigir al usuario a la pagina de login
    */
   public logout() {
+    if (typeof window === 'undefined') {
+      return;
+    }
     window.sessionStorage.clear();
     this.router.navigate(["/login"]).then(() => {
       window.location.reload();

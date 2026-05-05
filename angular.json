@@ -36,7 +36,15 @@
             ],
             "allowedCommonJsDependencies": [
               "sweetalert2"
-            ]
+            ],
+            "server": "src/main.server.ts",
+            "security": {
+              "allowedHosts": []
+            },
+            "prerender": false,
+            "ssr": {
+              "entry": "src/server.ts"
+            }
           },
           "configurations": {
             "production": {

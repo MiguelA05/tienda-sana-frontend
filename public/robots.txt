@@ -2,7 +2,12 @@
 User-agent: *
 Allow: /
 
-# Panel interno: no indexar
+# Rutas de autenticación y panel interno: no indexar
 Disallow: /admin/
+Disallow: /login
+Disallow: /register
+Disallow: /cambiar-password
+Disallow: /correo-recuperacion
+Disallow: /verificar-cuenta
 
 Sitemap: https://www.tiendasana.shop/sitemap.xml

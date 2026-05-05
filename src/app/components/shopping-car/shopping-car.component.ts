@@ -31,6 +31,29 @@ export class ShoppingCarComponent {
   isTableLoading: boolean = false;
   isLoading: boolean = false;
 
+  private canUseStorage(): boolean {
+    return typeof window !== 'undefined';
+  }
+
+  private getPendingVentaId(): string | null {
+    return this.canUseStorage() ? window.sessionStorage.getItem('pendingVentaId') : null;
+  }
+
+  private setPendingVentaId(value: string): void {
+    if (!this.canUseStorage()) {
+      return;
+    }
+    window.sessionStorage.removeItem('pendingVentaId');
+    window.sessionStorage.setItem('pendingVentaId', value);
+  }
+
+  private clearPendingVentaId(): void {
+    if (!this.canUseStorage()) {
+      return;
+    }
+    window.sessionStorage.removeItem('pendingVentaId');
+  }
+
   /**
    * Constructor de la clase ShoppingCarComponent
    * @param clienteService clienteService para manejar la lógica de negocio relacionada con el cliente
@@ -43,13 +66,13 @@ export class ShoppingCarComponent {
     this.route.queryParams.subscribe(params => {
       const paymentGatewayStatus = params['collection_status'] || params['status'];
       const paymentId = params['payment_id'];
-      const pendingVentaId = sessionStorage.getItem('pendingVentaId');
+      const pendingVentaId = this.getPendingVentaId();
 
       // Si hay venta pendiente y algún estado, procesa normalmente
       if (pendingVentaId && paymentGatewayStatus) {
         console.log(`Retorno de pasarela detectado. Venta pendiente: ${pendingVentaId}, Estado Pasarela: ${paymentGatewayStatus}, PaymentID: ${paymentId}`);
         this.procesarRetornoPasarela(paymentGatewayStatus, pendingVentaId);
-        sessionStorage.removeItem('pendingVentaId');
+        this.clearPendingVentaId();
       }
       // Si hay venta pendiente pero NO hay estado, asume retorno incompleto
       else if (pendingVentaId && !paymentGatewayStatus) {
@@ -60,7 +83,7 @@ export class ShoppingCarComponent {
           confirmButtonText: 'Entendido'
         }).then(() => {
           this.llamarCancelarVenta(pendingVentaId);
-          sessionStorage.removeItem('pendingVentaId');
+          this.clearPendingVentaId();
         });
       }
       // Si solo hay estado pero no venta pendiente
@@ -116,9 +139,10 @@ export class ShoppingCarComponent {
         next: (response: MensajeDTO) => {
           this.isLoading = false;
           const paymentUrl = response.reply.paymentUrl;
-          sessionStorage.removeItem('pendingVentaId'); // Limpia antes de guardar
-          sessionStorage.setItem('pendingVentaId', this.ventaId!);
-          window.location.href = paymentUrl;
+          this.setPendingVentaId(this.ventaId!);
+          if (this.canUseStorage()) {
+            window.location.href = paymentUrl;
+          }
         },
         error: (error) => {
           this.isLoading = false;
@@ -142,7 +166,7 @@ export class ShoppingCarComponent {
    * @param ventaId El ID de la venta que se intentó pagar.
    */
   private procesarRetornoPasarela(status: string | undefined, ventaId: string): void {
-    sessionStorage.removeItem('pendingVentaId');
+    this.clearPendingVentaId();
 
     if (status === 'approved' || status === 'success') {
       Swal.fire({
@@ -210,6 +234,12 @@ export class ShoppingCarComponent {
   obtenerItemsCarrito(): void {
     this.isTableLoading = true;
     const clienteId = this.tokenService.getIDCuenta();
+    if (!clienteId) {
+      this.itemsCarrito = [];
+      this.calcularTotales();
+      this.isTableLoading = false;
+      return;
+    }
     this.clienteService.obtenerItemsCarrito(clienteId).subscribe({
       next: (response) => {
         this.itemsCarrito = response.reply;

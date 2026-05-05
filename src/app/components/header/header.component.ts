@@ -17,6 +17,10 @@ import { ClienteService } from '../../services/cliente.service';
 export class HeaderComponent implements OnDestroy {
   private readonly subscriptions = new Subscription();
 
+  private canUseDom(): boolean {
+    return typeof window !== 'undefined' && typeof document !== 'undefined';
+  }
+
   isMenuOpen: boolean = false;
   /** Menú de usuario: control explícito (Bootstrap JS no siempre enlaza bien en Angular). */
   isUserDropdownOpen = false;
@@ -64,7 +68,9 @@ export class HeaderComponent implements OnDestroy {
 
     this.updateRouteState(this.router.url);
     this.refreshCartState();
-    this.onWindowScroll();
+    if (this.canUseDom()) {
+      this.onWindowScroll();
+    }
   }
 
   ngOnDestroy(): void {
@@ -83,6 +89,9 @@ export class HeaderComponent implements OnDestroy {
    */
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
+    if (!this.canUseDom()) {
+      return;
+    }
     this.hasScrolled = window.scrollY > 20;
     this.updateActiveNavByScroll();
   }
@@ -180,7 +189,7 @@ export class HeaderComponent implements OnDestroy {
   }
 
   private updateActiveNavByScroll(): void {
-    if (!this.isHomeRoute) {
+    if (!this.isHomeRoute || !this.canUseDom()) {
       return;
     }
 
@@ -225,6 +234,9 @@ export class HeaderComponent implements OnDestroy {
   }
 
   private scrollToSection(sectionId: 'inicio' | 'productos' | 'reservas'): void {
+    if (!this.canUseDom()) {
+      return;
+    }
     if (sectionId === 'inicio') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
