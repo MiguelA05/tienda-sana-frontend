@@ -1,59 +1,122 @@
-# TiendaSanaFrontend
+# Admin Panel - Restaurant System (Frontend)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.8.
+Aplicación web administrativa para la gestión de **productos, mesas, inventario y analítica (ventas y reservas)** de un restaurante.
 
-## Development server
+Incluye:
+- Dashboard analítico
+- Gestión de productos e inventario (lotes y ajustes)
+- Visualización de métricas (ventas y reservas)
 
-To start a local development server, run:
+## Tech Stack
 
-```bash
-ng serve
-```
+- Angular (standalone components) + Angular Router
+- TypeScript
+- Bootstrap + CSS
+- Charting (Chart.js)
+- HttpClient (REST) + Interceptor JWT
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Project Structure
 
-## Code scaffolding
+Estructura real (resumen) del proyecto:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+src/
+ ├── app/
+ │   ├── admin/                # Panel admin (lazy-loaded bajo /admin)
+ │   ├── components/           # Componentes UI (home, carrito, detalle producto, etc.)
+ │   ├── services/             # API calls (auth, cliente, público, cuenta)
+ │   ├── guardias/             # Guards (roles, permiso/login)
+ │   ├── interceptador/        # Interceptor JWT (Authorization: Bearer ...)
+ │   ├── dto/                  # DTOs de request/response usados por la UI
+ │   ├── core/                 # Utilidades transversales (SEO, constantes)
+ │   ├── app.routes.ts         # Rutas (público/cliente/admin)
+ │   └── app.config.ts         # Providers globales
+ ├── environments/             # Config por entorno (URLs del backend)
+ └── index.html                # HTML base + metatags SEO
 
-```bash
-ng generate component component-name
-```
+public/
+ ├── robots.txt                # Indexación (bloquea /admin)
+ └── sitemap.xml               # Sitemap estático (URLs base)
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+## Installation
 
 ```bash
-ng e2e
+git clone <repo>
+cd tienda-sana-frontend
+npm install
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+---
 
-## Additional Resources
+## Environment Variables
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Este frontend **no usa Vite**, por lo que no existe `VITE_API_URL`.
+
+La integración con backend se configura principalmente en:
+- `src/environments/environment.ts` (desarrollo)
+- `src/environments/environment.prod.ts` (producción)
+
+Variables típicas a ajustar (URLs base):
+- `authServiceUrl`
+- `clienteServiceUrl`
+- `cuentaServiceUrl`
+- `publicoServiceUrl`
+- `adminServiceUrl`
+
+Nota: el proyecto incluye un script `set-env.js` que se ejecuta antes del build (ver `npm run prebuild`).
+
+## Run
+
+```bash
+npm run start
+```
+
+La app queda disponible en `http://localhost:4200/`.
+
+## Features
+
+- Dashboard con métricas de ventas y reservas (panel admin)
+- Gestión de productos (CRUD)
+- Gestión de inventario (lotes, ajustes y stock)
+- Gestión de mesas y reservas
+- Analítica: reportes de ventas y reservas
+
+## UI Architecture
+
+- Diseño basado en módulos (feature-based) con separación por dominios:
+  - Operaciones (CRUD): productos, mesas, inventario, proveedores
+  - Analítica: dashboard, ventas, reservas
+- Componentes desacoplados y reutilizables (layout + componentes de grid/tarjetas)
+- Control de acceso:
+  - Rutas admin bajo `/admin` protegidas por `RolesGuard`
+  - Sesión y token manejados por `TokenService` + interceptor HTTP
+
+## API Integration
+
+El frontend consume endpoints REST desde el backend (Spring Boot), organizados por prefijo:
+
+- `/api/auth` (login, registro, activación, recuperación)
+- `/api/public` (catálogo público: productos, mesas, IA)
+- `/api/cliente` (carrito, compras/ventas, reservas, pagos)
+- `/api/account` (perfil y cuenta)
+- `/api/admin` (panel admin: productos, inventario/lotes, mesas, proveedores, analítica)
+
+## Scripts
+
+```bash
+npm run start
+npm run build
+npm run build:prod
+npm run test
+```
+
+## Future Improvements
+
+- Sitemap dinámico (incluir `/detalle-producto/:id` reales)
+- Filtros avanzados y guardado de vistas/segmentos
+- Exportación de reportes (CSV/PDF)
+- Notificaciones en tiempo real (stock bajo, reservas próximas, etc.)
+- SSR/Prerender para mejorar SEO social y tiempos de indexación
+
+## License
+
+MIT
