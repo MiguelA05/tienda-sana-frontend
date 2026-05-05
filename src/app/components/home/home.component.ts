@@ -1,6 +1,4 @@
-import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, inject } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
-import { Meta, Title } from '@angular/platform-browser';
+import { AfterViewInit, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { CardGridComponent } from '../card-grid/card-grid.component';
 import { PublicoService } from '../../services/publico.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -17,7 +15,6 @@ import { AiComboRecommendationDTO } from '../../dto/ai-combo-recommendation-dto'
 import { ItemCarritoDTO } from '../../dto/item-carrito-dto';
 import { concatMap, from, toArray } from 'rxjs';
 import Swal from 'sweetalert2';
-import { absoluteUrl, SITE_NAME, SITE_ORIGIN, upsertJsonLd } from '../../core/site-seo.constants';
 
 @Component({
   selector: 'app-home',
@@ -27,14 +24,7 @@ import { absoluteUrl, SITE_NAME, SITE_ORIGIN, upsertJsonLd } from '../../core/si
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
-  private readonly title = inject(Title);
-  private readonly meta = inject(Meta);
-  private readonly doc = inject(DOCUMENT);
   private revealObserver?: IntersectionObserver;
-
-  private canUseDom(): boolean {
-    return typeof document !== 'undefined' && typeof window !== 'undefined';
-  }
   private sheetTouchStartY: number | null = null;
   private sheetTouchDeltaY: number = 0;
 
@@ -148,9 +138,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   openAiAssistant(): void {
     this.assistantOpen = true;
-    if (!this.canUseDom()) {
-      return;
-    }
     document.body.style.overflow = 'hidden';
   }
 
@@ -158,9 +145,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.assistantOpen = false;
     this.sheetTouchStartY = null;
     this.sheetTouchDeltaY = 0;
-    if (!this.canUseDom()) {
-      return;
-    }
     document.body.style.overflow = '';
   }
 
@@ -459,7 +443,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.updateSeo();
     this.createForm();
     this.createMesaForm();
 
@@ -507,9 +490,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.revealObserver?.disconnect();
-    if (!this.canUseDom()) {
-      return;
-    }
     document.body.style.overflow = '';
   }
 
@@ -784,9 +764,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private scrollToSection(sectionId: string): void {
-    if (!this.canUseDom()) {
-      return;
-    }
     const targetId = (sectionId === 'productos' || sectionId === 'reservas') ? 'catalogo' : sectionId;
     const section = document.getElementById(targetId);
     if (!section) {
@@ -805,9 +782,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private inicializarAnimacionesScroll(): void {
-    if (!this.canUseDom()) {
-      return;
-    }
     const elements = Array.from(document.querySelectorAll('.reveal-on-scroll'));
     if (elements.length === 0) {
       return;
@@ -823,52 +797,5 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }, { threshold: 0.16 });
 
     elements.forEach((el) => this.revealObserver?.observe(el));
-  }
-
-  private updateSeo(): void {
-    const title = `${SITE_NAME} | Productos naturales y reservas online`;
-    const description =
-      'Compra productos naturales, reserva mesas y disfruta una experiencia saludable en Tienda Sana.';
-
-    this.title.setTitle(title);
-    this.meta.updateTag({ name: 'description', content: description });
-    this.meta.updateTag({ name: 'keywords', content: 'Tienda Sana, productos naturales, reservas, restaurante, comida saludable, Colombia' });
-    this.meta.updateTag({ property: 'og:type', content: 'website' });
-    this.meta.updateTag({ property: 'og:url', content: `${SITE_ORIGIN}/` });
-    this.meta.updateTag({ property: 'og:title', content: title });
-    this.meta.updateTag({ property: 'og:description', content: description });
-    this.meta.updateTag({ property: 'og:image', content: absoluteUrl('/favicon.ico') });
-    this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
-    this.meta.updateTag({ name: 'twitter:title', content: title });
-    this.meta.updateTag({ name: 'twitter:description', content: description });
-    this.meta.updateTag({ name: 'twitter:image', content: absoluteUrl('/favicon.ico') });
-
-    upsertJsonLd(this.doc, 'home-jsonld', {
-      '@context': 'https://schema.org',
-      '@graph': [
-        {
-          '@type': 'Organization',
-          name: SITE_NAME,
-          url: SITE_ORIGIN,
-          logo: absoluteUrl('/favicon.ico'),
-        },
-        {
-          '@type': 'WebSite',
-          name: SITE_NAME,
-          url: SITE_ORIGIN,
-          potentialAction: {
-            '@type': 'SearchAction',
-            target: `${SITE_ORIGIN}/?q={search_term_string}`,
-            'query-input': 'required name=search_term_string',
-          },
-        },
-        {
-          '@type': 'Restaurant',
-          name: SITE_NAME,
-          url: SITE_ORIGIN,
-          servesCuisine: ['Healthy', 'Natural'],
-        },
-      ],
-    });
   }
 }

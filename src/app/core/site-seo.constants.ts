@@ -1,6 +1,5 @@
 /** URL canónica del sitio en producción (con www). */
 export const SITE_ORIGIN = 'https://www.tiendasana.shop';
-export const SITE_NAME = 'Tienda Sana';
 
 export const DEFAULT_SITE_TITLE = 'Tienda Sana | Productos naturales y reservas online';
 
@@ -25,22 +24,4 @@ export function absoluteUrl(pathOrUrl: string): string {
   }
   const path = pathOrUrl.startsWith('/') ? pathOrUrl : `/${pathOrUrl}`;
   return `${SITE_ORIGIN}${path}`;
-}
-
-export function upsertJsonLd(doc: Document, id: string, data: unknown): void {
-  let script = doc.getElementById(id) as HTMLScriptElement | null;
-  if (!script) {
-    script = doc.createElement('script');
-    script.id = id;
-    script.type = 'application/ld+json';
-    doc.head.appendChild(script);
-  }
-  script.textContent = JSON.stringify(data);
-}
-
-export function removeJsonLd(doc: Document, id: string): void {
-  const script = doc.getElementById(id);
-  if (script?.parentNode) {
-    script.parentNode.removeChild(script);
-  }
 }

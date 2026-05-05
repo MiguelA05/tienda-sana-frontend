@@ -1,6 +1,5 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { Meta, Title } from '@angular/platform-browser';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -11,7 +10,6 @@ import { CrearReservaDirectaDTO } from '../../dto/crear-reserva-directa-dto';
 import { ClienteService } from '../../services/cliente.service';
 import { PublicoService } from '../../services/publico.service';
 import { TokenService } from '../../services/token.service';
-import { SITE_NAME, SITE_ORIGIN, absoluteUrl, truncateSeoDescription, upsertJsonLd } from '../../core/site-seo.constants';
 
 @Component({
   selector: 'app-detalle-mesa',
@@ -26,9 +24,6 @@ export class DetalleMesaComponent implements OnInit {
   private static readonly DURACION_DEFAULT_MINUTOS = 120;
 
   private readonly fb = inject(FormBuilder);
-  private readonly title = inject(Title);
-  private readonly meta = inject(Meta);
-  private readonly doc = inject(DOCUMENT);
 
   mesa?: ItemMesaDTO;
   horariosReservados: MesaHorarioReservadoDTO[] = [];
@@ -195,7 +190,6 @@ export class DetalleMesaComponent implements OnInit {
         const defaultPeople = Math.min(2, this.mesa.capacidad);
         this.reservaForm.patchValue({ cantidadPersonas: defaultPeople > 0 ? defaultPeople : 1 });
         this.initDateAndHourDefaults();
-        this.updateSeo();
         this.cargarHorariosReservados(this.mesa.id);
       },
       error: () => {
@@ -310,60 +304,6 @@ export class DetalleMesaComponent implements OnInit {
     const mm = String(now.getMonth() + 1).padStart(2, '0');
     const dd = String(now.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
-  }
-
-  private updateSeo(): void {
-    if (!this.mesa) {
-      return;
-    }
-
-    const title = `${this.mesa.nombre} | Reserva mesa en ${SITE_NAME}`;
-    const description = truncateSeoDescription(
-      `Reserva ${this.mesa.nombre} en ${this.mesa.localidad}. Capacidad para ${this.mesa.capacidad} personas y valor de reserva ${this.mesa.precioReserva}.`
-    );
-    const pageUrl = `${SITE_ORIGIN}/mesas/${this.mesa.id}`;
-    const imageAbs = absoluteUrl(this.mesa.imagen || '/favicon.ico');
-
-    this.title.setTitle(title);
-    this.meta.updateTag({ name: 'description', content: description });
-    this.meta.updateTag({ property: 'og:type', content: 'product' });
-    this.meta.updateTag({ property: 'og:url', content: pageUrl });
-    this.meta.updateTag({ property: 'og:title', content: title });
-    this.meta.updateTag({ property: 'og:description', content: description });
-    this.meta.updateTag({ property: 'og:image', content: imageAbs });
-    this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
-    this.meta.updateTag({ name: 'twitter:title', content: title });
-    this.meta.updateTag({ name: 'twitter:description', content: description });
-    this.meta.updateTag({ name: 'twitter:image', content: imageAbs });
-
-    upsertJsonLd(this.doc, `mesa-jsonld-${this.mesa.id}`, {
-      '@context': 'https://schema.org',
-      '@type': 'Service',
-      name: `Reserva ${this.mesa.nombre}`,
-      description,
-      url: pageUrl,
-      provider: {
-        '@type': 'Restaurant',
-        name: SITE_NAME,
-        url: SITE_ORIGIN,
-      },
-      offers: {
-        '@type': 'Offer',
-        url: pageUrl,
-        priceCurrency: 'COP',
-        price: this.mesa.precioReserva,
-      },
-    });
-
-    upsertJsonLd(this.doc, `mesa-breadcrumb-jsonld-${this.mesa.id}`, {
-      '@context': 'https://schema.org',
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Inicio', item: SITE_ORIGIN },
-        { '@type': 'ListItem', position: 2, name: 'Mesas', item: `${SITE_ORIGIN}/?view=mesas` },
-        { '@type': 'ListItem', position: 3, name: this.mesa.nombre, item: pageUrl },
-      ],
-    });
   }
 
   private buildLocalDateTime(fecha: string, hora: string): string {

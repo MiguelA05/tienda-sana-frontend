@@ -9,7 +9,6 @@ import {
   DEFAULT_SITE_DESCRIPTION,
   DEFAULT_SITE_TITLE,
   DEFAULT_KEYWORDS,
-  SITE_NAME,
   SITE_ORIGIN,
 } from './core/site-seo.constants';
 
@@ -35,50 +34,15 @@ export class AppComponent {
         this.isAdminLayout = path.startsWith('/admin');
         this.updateCanonical(path);
 
-        if (this.isNoIndexRoute(path)) {
-          this.title.setTitle(this.routeTitle(path));
-          this.updateRobots(false);
+        if (path.startsWith('/admin')) {
+          this.title.setTitle('Administración | Tienda Sana');
           return;
         }
-        this.updateRobots(true);
         if (path.startsWith('/detalle-producto')) {
           return;
         }
         this.applyDefaultMeta(path);
       });
-  }
-
-  private isNoIndexRoute(path: string): boolean {
-    return (
-      path.startsWith('/admin') ||
-      path.startsWith('/login') ||
-      path.startsWith('/register') ||
-      path.startsWith('/cambiar-password') ||
-      path.startsWith('/correo-recuperacion') ||
-      path.startsWith('/verificar-cuenta')
-    );
-  }
-
-  private routeTitle(path: string): string {
-    if (path.startsWith('/admin')) {
-      return `Administración | ${SITE_NAME}`;
-    }
-    if (path.startsWith('/login')) {
-      return `Iniciar sesión | ${SITE_NAME}`;
-    }
-    if (path.startsWith('/register')) {
-      return `Crear cuenta | ${SITE_NAME}`;
-    }
-    if (path.startsWith('/cambiar-password')) {
-      return `Cambiar contraseña | ${SITE_NAME}`;
-    }
-    if (path.startsWith('/correo-recuperacion')) {
-      return `Recuperar contraseña | ${SITE_NAME}`;
-    }
-    if (path.startsWith('/verificar-cuenta')) {
-      return `Verificar cuenta | ${SITE_NAME}`;
-    }
-    return DEFAULT_SITE_TITLE;
   }
 
   private updateCanonical(path: string): void {
@@ -106,12 +70,5 @@ export class AppComponent {
     this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.meta.updateTag({ name: 'twitter:title', content: DEFAULT_SITE_TITLE });
     this.meta.updateTag({ name: 'twitter:description', content: DEFAULT_SITE_DESCRIPTION });
-  }
-
-  private updateRobots(indexable: boolean): void {
-    this.meta.updateTag({
-      name: 'robots',
-      content: indexable ? 'index, follow' : 'noindex, nofollow',
-    });
   }
 }

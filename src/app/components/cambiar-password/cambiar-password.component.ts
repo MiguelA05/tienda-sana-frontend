@@ -38,7 +38,7 @@ export class CambiarPasswordComponent implements OnInit {
 
   }
   ngOnInit(): void {
-    this.email = typeof window !== 'undefined' ? localStorage.getItem('emailRecuperacion') || '' : '';
+    this.email = localStorage.getItem('emailRecuperacion') || '';
     this.createForm();
   }
 

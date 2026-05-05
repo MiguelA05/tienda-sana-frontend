@@ -1,5 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { ProductoDTO } from '../../dto/producto-dto';
 import { ItemCarritoDTO } from '../../dto/item-carrito-dto';
@@ -16,7 +15,6 @@ import {
   SITE_ORIGIN,
   absoluteUrl,
   truncateSeoDescription,
-  upsertJsonLd,
 } from '../../core/site-seo.constants';
 
 
@@ -28,7 +26,6 @@ import {
   styleUrls: ['./detalle-producto.component.css']
 })
 export class DetalleProductoComponent implements OnInit {
-  private readonly doc = inject(DOCUMENT);
   producto?: ProductoDTO;
   itemCarrito?: ItemCarritoDTO;
   detalleCarrtitoForm!: FormGroup;
@@ -193,52 +190,6 @@ export class DetalleProductoComponent implements OnInit {
     this.meta.updateTag({ name: 'twitter:title', content: titulo });
     this.meta.updateTag({ name: 'twitter:description', content: descripcion });
     this.meta.updateTag({ name: 'twitter:image', content: imagenAbs });
-
-    upsertJsonLd(this.doc, `product-jsonld-${id}`, {
-      '@context': 'https://schema.org',
-      '@type': 'Product',
-      name: this.producto.nombre,
-      description: this.producto.descripcion,
-      image: [imagenAbs],
-      sku: this.producto.id,
-      brand: {
-        '@type': 'Brand',
-        name: 'Tienda Sana',
-      },
-      offers: {
-        '@type': 'Offer',
-        url: pageUrl,
-        priceCurrency: 'COP',
-        price: this.producto.precioUnitario,
-        availability: this.producto.cantidad > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-      },
-      breadcrumb: undefined,
-    });
-
-    upsertJsonLd(this.doc, `breadcrumb-jsonld-${id}`, {
-      '@context': 'https://schema.org',
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        {
-          '@type': 'ListItem',
-          position: 1,
-          name: 'Inicio',
-          item: SITE_ORIGIN,
-        },
-        {
-          '@type': 'ListItem',
-          position: 2,
-          name: 'Productos',
-          item: `${SITE_ORIGIN}/?view=productos`,
-        },
-        {
-          '@type': 'ListItem',
-          position: 3,
-          name: this.producto.nombre,
-          item: pageUrl,
-        },
-      ],
-    });
   }
 
   /**
