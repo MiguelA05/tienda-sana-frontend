@@ -1,0 +1,8 @@
+# https://www.tiendasana.shop
+User-agent: *
+Allow: /
+
+# Panel interno: no indexar
+Disallow: /admin/
+
+Sitemap: https://www.tiendasana.shop/sitemap.xml

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Meta, Title } from '@angular/platform-browser';
 import { ProductoDTO } from '../../dto/producto-dto';
 import { ItemCarritoDTO } from '../../dto/item-carrito-dto';
 import { FormGroup, FormsModule, FormBuilder } from '@angular/forms';
@@ -10,6 +11,11 @@ import { TokenService } from '../../services/token.service'; // Adjust the path 
 import { MensajeDTO } from '../../dto/mensaje-dto'; // Adjust the path if necessary
 import { ActualizarItemCarritoDTO } from '../../dto/actualizar-item-carrito-dto'; // Adjust the path if necessary
 import Swal from 'sweetalert2';
+import {
+  SITE_ORIGIN,
+  absoluteUrl,
+  truncateSeoDescription,
+} from '../../core/site-seo.constants';
 
 
 @Component({
@@ -49,7 +55,9 @@ export class DetalleProductoComponent implements OnInit {
     private publicoService: PublicoService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private title: Title,
+    private meta: Meta
   ) {
     this.detalleCarrtitoForm = this.formBuilder.group({});
   }
@@ -155,7 +163,33 @@ export class DetalleProductoComponent implements OnInit {
         cantidad: this.producto.cantidad,
         imagen: this.producto.imagen
       });
+      this.actualizarMetaProducto();
     }
+  }
+
+  private actualizarMetaProducto(): void {
+    if (!this.producto) {
+      return;
+    }
+    const id = this.producto.id;
+    const pageUrl = `${SITE_ORIGIN}/detalle-producto/${id}`;
+    const titulo = `${this.producto.nombre} | Tienda Sana`;
+    const descripcion = truncateSeoDescription(
+      `${this.producto.nombre} — ${this.producto.categoria}. ${this.producto.descripcion}`
+    );
+    const imagenAbs = absoluteUrl(this.producto.imagen || '/favicon.ico');
+
+    this.title.setTitle(titulo);
+    this.meta.updateTag({ name: 'description', content: descripcion });
+    this.meta.updateTag({ property: 'og:type', content: 'product' });
+    this.meta.updateTag({ property: 'og:url', content: pageUrl });
+    this.meta.updateTag({ property: 'og:title', content: titulo });
+    this.meta.updateTag({ property: 'og:description', content: descripcion });
+    this.meta.updateTag({ property: 'og:image', content: imagenAbs });
+    this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
+    this.meta.updateTag({ name: 'twitter:title', content: titulo });
+    this.meta.updateTag({ name: 'twitter:description', content: descripcion });
+    this.meta.updateTag({ name: 'twitter:image', content: imagenAbs });
   }
 
   /**
@@ -235,11 +269,5 @@ export class DetalleProductoComponent implements OnInit {
   private obtenerIdUsuario(): string {
     return this.tokenService.getIDCuenta();
   }
-
-
-  }
-
-
-
-
+}
 
