@@ -19,6 +19,7 @@ Incluye:
 
 Estructura real (resumen) del proyecto:
 
+```text
 src/
  ├── app/
  │   ├── admin/                # Panel admin (lazy-loaded bajo /admin)
@@ -36,6 +37,7 @@ src/
 public/
  ├── robots.txt                # Indexación (bloquea /admin)
  └── sitemap.xml               # Sitemap estático (URLs base)
+```
 
 ## Installation
 
