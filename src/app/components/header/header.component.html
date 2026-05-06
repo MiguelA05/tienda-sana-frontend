@@ -131,6 +131,15 @@
         <button type="button" class="cart-button cart-button-reservas" routerLink="/gestor-reservas" aria-label="Ir al gestor de reservas">
           <i class="fa-solid fa-calendar-check"></i>
         </button>
+      } @else if (!isLogged) {
+        <button
+          type="button"
+          routerLink="/login"
+          class="btn-mobile-login"
+          aria-label="Iniciar sesión">
+          <i class="fa-solid fa-right-to-bracket"></i>
+          <span>Ingresar</span>
+        </button>
       }
     </div>
   </header>

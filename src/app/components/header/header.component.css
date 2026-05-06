@@ -297,6 +297,42 @@
   gap: 8px;
 }
 
+.btn-mobile-login {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1.5px solid var(--brand-primary);
+  background: var(--surface-white);
+  color: var(--brand-primary);
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-mobile-login:hover {
+  transform: translateY(-1px);
+  background: var(--primary-rgba-08);
+}
+
+.main-header.home-overlay .btn-mobile-login {
+  background: var(--auto-color-020);
+  color: var(--surface-white);
+  border-color: var(--auto-color-019);
+}
+
+.main-header.home-overlay .btn-mobile-login:hover {
+  background: var(--auto-color-029);
+}
+
+.btn-mobile-login i {
+  font-size: 0.95rem;
+}
+
 .cart-button {
   width: 36px;
   height: 36px;
@@ -654,6 +690,10 @@
   .cart-container-mobile {
     display: flex;
     align-items: center;
+  }
+
+  .btn-mobile-login {
+    display: inline-flex;
   }
 }
 
