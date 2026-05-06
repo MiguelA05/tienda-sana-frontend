@@ -398,13 +398,17 @@
   top: 0;
   left: -350px;
   width: 320px;
-  height: 100vh;
+  height: 100dvh;
+  min-height: 100dvh;
   background: var(--surface-white);
   box-shadow: 2px 0 12px var(--shadow-rgba-15);
   z-index: 999;
   transition: left 0.3s ease;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   padding-top: 0;
+  padding-bottom: env(safe-area-inset-bottom);
   display: flex;
   flex-direction: column;
 }
