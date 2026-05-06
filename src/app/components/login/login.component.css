@@ -189,6 +189,13 @@
     margin-top: 20px;
 }
 
+.login-card .auth-alt-link {
+    margin-top: 12px;
+    margin-bottom: 0;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
 .login-card a {
     color: var(--brand-primary);
     font-weight: 500;
