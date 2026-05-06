@@ -605,11 +605,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public filtrarProductos(pagina: number) {
     if (this.isProductoFilterEmpty()) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Por favor, completa al menos un filtro valido.'
-      });
+      this.filterUsed = false;
+      this.currentPage = Math.max(pagina, 0);
+      this.obtenerProductos(this.currentPage);
       return;
     }
 
@@ -664,11 +662,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public filterMesas(pagina: number) {
     if (this.isMesaFilterEmpty()) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Por favor, completa al menos un filtro valido.'
-      });
+      this.mesaFilterUsed = false;
+      this.mesasCurrentPage = Math.max(pagina, 0);
+      this.obtenerMesas(this.mesasCurrentPage);
       return;
     }
 
@@ -772,6 +768,20 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public resetMesaForm() {
     this.mesaFilterForm.reset();
+  }
+
+  limpiarFiltrosProductos(): void {
+    this.resetForm();
+    this.filterUsed = false;
+    this.currentPage = 0;
+    this.obtenerProductos(0);
+  }
+
+  limpiarFiltrosMesas(): void {
+    this.resetMesaForm();
+    this.mesaFilterUsed = false;
+    this.mesasCurrentPage = 0;
+    this.obtenerMesas(0);
   }
 
   private scrollToSection(sectionId: string): void {

@@ -369,13 +369,42 @@
   cursor: wait;
 }
 
-.reset-filters-hint {
-  margin: 0.95rem 0 0;
+.filter-button--stacked {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  justify-content: flex-end;
+  height: 100%;
+}
+
+.btn-filter-clear {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 14px;
+  border: 1px solid var(--auto-color-102);
+  background: var(--surface-white);
+  color: var(--auto-color-103);
+  font-weight: 650;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.btn-filter-clear:hover:not(:disabled) {
+  border-color: var(--auto-color-079);
+  background: var(--auto-color-050);
+}
+
+.btn-filter-clear:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.filter-help {
+  margin: 0.85rem 0 0;
   color: var(--auto-color-108);
-  font-size: 0.95rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  max-width: 72ch;
 }
 
 
