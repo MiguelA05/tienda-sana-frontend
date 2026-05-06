@@ -111,7 +111,7 @@
               <label for="categoriaProducto">Categoria</label>
             </div>
           </div>
-          <div class="filter-button filter-button--stacked">
+          <div class="filter-button filter-button-actions">
             <button class="btn-filter" type="submit" [disabled]="isLoading">
               @if (isLoading) {
               <i class="fas fa-circle-notch fa-spin fa-lg"></i>
@@ -119,17 +119,14 @@
               <i class="fas fa-search" style="margin-right: 8px;"></i>Filtrar
               }
             </button>
+            @if (filterUsed) {
             <button type="button" class="btn-filter-clear" (click)="limpiarFiltrosProductos()" [disabled]="isLoading">
-              <i class="fa-solid fa-eraser" style="margin-right: 8px;"></i>Limpiar
+              <i class="fa-solid fa-eraser" aria-hidden="true"></i>Limpiar
             </button>
+            }
           </div>
         </div>
       </form>
-
-      <p class="filter-help">
-        Con todos los campos vacíos y <strong>Filtrar</strong> ves el catálogo completo; <strong>Limpiar</strong> borra los
-        campos y vuelve al listado completo desde la primera página.
-      </p>
 
       <app-card-grid [products]="productos"></app-card-grid>
 
@@ -180,7 +177,7 @@
               <label for="localidadMesa">Localidad</label>
             </div>
           </div>
-          <div class="filter-button filter-button--stacked">
+          <div class="filter-button filter-button-actions">
             <button class="btn-filter" type="submit" [disabled]="isLoading">
               @if (isLoading) {
               <i class="fas fa-circle-notch fa-spin fa-lg"></i>
@@ -188,17 +185,14 @@
               <i class="fas fa-search" style="margin-right: 8px;"></i>Filtrar
               }
             </button>
+            @if (mesaFilterUsed) {
             <button type="button" class="btn-filter-clear" (click)="limpiarFiltrosMesas()" [disabled]="isLoading">
-              <i class="fa-solid fa-eraser" style="margin-right: 8px;"></i>Limpiar
+              <i class="fa-solid fa-eraser" aria-hidden="true"></i>Limpiar
             </button>
+            }
           </div>
         </div>
       </form>
-
-      <p class="filter-help">
-        Con todos los campos vacíos y <strong>Filtrar</strong> ves todas las mesas disponibles; <strong>Limpiar</strong> borra
-        los campos y vuelve al listado completo desde la primera página.
-      </p>
 
       <app-mesas-grid [mesas]="mesas"></app-mesas-grid>
 
