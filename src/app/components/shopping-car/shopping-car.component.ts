@@ -11,6 +11,9 @@ import { CrearVentaDTO } from '../../dto/crear-venta-dto';
 import { MensajeDTO } from '../../dto/mensaje-dto';
 import { PaymentResponseVentaDTO } from '../../dto/payment-response-venta-dto';
 import { ActivatedRoute } from '@angular/router';
+import { PublicoService } from '../../services/publico.service';
+import { forkJoin, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-shopping-car',
@@ -37,7 +40,12 @@ export class ShoppingCarComponent {
    * @param tokenService tokenService para manejar el token de autenticación
    * @param route route para obtener parámetros de la URL
    */
-  constructor(private clienteService: ClienteService, private tokenService: TokenService, private route: ActivatedRoute) {
+  constructor(
+    private clienteService: ClienteService,
+    private tokenService: TokenService,
+    private route: ActivatedRoute,
+    private publicoService: PublicoService
+  ) {
     this.obtenerItemsCarrito();
 
     this.route.queryParams.subscribe(params => {
@@ -123,7 +131,20 @@ export class ShoppingCarComponent {
         error: (error) => {
           this.isLoading = false;
           console.error('Error al obtener URL de pago:', error);
-          Swal.fire('Error', 'No se pudo redirigir a la pasarela de pago. Intenta nuevamente.', 'error');
+          const msg = (error?.error?.reply || error?.error?.message || error?.message || '')
+            .toString()
+            .trim();
+
+          // Caso especial: stock insuficiente (validación server-side antes de crear preferencia).
+          if (msg.toLowerCase().includes('stock insuficiente')) {
+            this.refrescarCarritoYMostrarStock(msg);
+            if (this.ventaId) {
+              this.llamarCancelarVenta(this.ventaId);
+            }
+            return;
+          }
+
+          Swal.fire('Error', msg || 'No se pudo redirigir a la pasarela de pago. Intenta nuevamente.', 'error');
           if (this.ventaId) {
             this.llamarCancelarVenta(this.ventaId);
           }
@@ -134,6 +155,71 @@ export class ShoppingCarComponent {
       console.error("realizarPago llamado sin ventaId");
       Swal.fire('Error Interno', 'No se pudo procesar el pago debido a un error interno (ventaId faltante).', 'error');
     }
+  }
+
+  private refrescarCarritoYMostrarStock(serverMessage: string): void {
+    // 1) refresca carrito
+    this.obtenerItemsCarrito();
+
+    // 2) valida por producto consultando stock actual y muestra detalle en modal
+    if (!this.itemsCarrito || this.itemsCarrito.length === 0) {
+      Swal.fire('Stock insuficiente', serverMessage, 'warning');
+      return;
+    }
+
+    const checks$ = this.itemsCarrito.map((item) =>
+      this.publicoService.obtenerProducto(item.idProducto).pipe(
+        map((res: MensajeDTO) => {
+          const p = res.reply as any;
+          const disponible = typeof p?.cantidad === 'number' ? p.cantidad : 0;
+          const nombre = (p?.nombre || item.nombreProducto || item.idProducto).toString();
+          return {
+            idProducto: item.idProducto,
+            nombre,
+            solicitado: item.cantidad,
+            disponible,
+            ok: item.cantidad <= disponible,
+          };
+        }),
+        catchError(() =>
+          of({
+            idProducto: item.idProducto,
+            nombre: item.nombreProducto || item.idProducto,
+            solicitado: item.cantidad,
+            disponible: 0,
+            ok: true, // si no se pudo validar, no marcamos como problema para no confundir
+          })
+        )
+      )
+    );
+
+    forkJoin(checks$).subscribe((results) => {
+      const issues = results.filter((r) => !r.ok);
+      if (issues.length === 0) {
+        Swal.fire('Stock insuficiente', serverMessage, 'warning');
+        return;
+      }
+
+      const html = `
+        <p style="margin:0 0 8px 0;">Algunos productos ya no tienen stock suficiente:</p>
+        <ul style="text-align:left; margin:0; padding-left:18px;">
+          ${issues
+            .map(
+              (i) =>
+                `<li><strong>${i.nombre}</strong>: solicitaste ${i.solicitado}, disponible ${i.disponible}.</li>`
+            )
+            .join('')}
+        </ul>
+        <p style="margin:10px 0 0 0;">Ajusta cantidades en el carrito e intenta de nuevo.</p>
+      `;
+
+      void Swal.fire({
+        title: 'Stock insuficiente',
+        html,
+        icon: 'warning',
+        confirmButtonText: 'Entendido',
+      });
+    });
   }
 
   /**
