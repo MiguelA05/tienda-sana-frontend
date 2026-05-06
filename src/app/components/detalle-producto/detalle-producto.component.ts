@@ -30,6 +30,7 @@ export class DetalleProductoComponent implements OnInit {
   itemCarrito?: ItemCarritoDTO;
   detalleCarrtitoForm!: FormGroup;
   cantidadSeleccionada: number = 1;
+  cantidadEnCarrito: number = 0;
   descuento: number = 0;
   precioOriginal: number = 0;
   isLoading: boolean=false;
@@ -37,6 +38,15 @@ export class DetalleProductoComponent implements OnInit {
   /** Sesión administrador: edición en panel en lugar de carrito. */
   get isAdmin(): boolean {
     return this.tokenService.getRol() === 'ADMIN';
+  }
+
+  /** Máximo que se puede agregar según stock y lo ya seleccionado en carrito. */
+  get maxSeleccionable(): number {
+    const stock = this.producto?.cantidad ?? 0;
+    if (!this.tokenService.isLogged()) {
+      return stock;
+    }
+    return Math.max(0, stock - (this.cantidadEnCarrito ?? 0));
   }
 
 
@@ -110,7 +120,8 @@ export class DetalleProductoComponent implements OnInit {
     if (this.isAdmin) {
       return;
     }
-    if (this.producto && this.cantidadSeleccionada < this.producto.cantidad) {
+    const max = this.maxSeleccionable;
+    if (this.producto && this.cantidadSeleccionada < max) {
       this.cantidadSeleccionada++;
     }
   }
@@ -125,6 +136,16 @@ export class DetalleProductoComponent implements OnInit {
     if (this.cantidadSeleccionada > 1) {
       this.cantidadSeleccionada--;
     }
+  }
+
+  onCantidadChange(value: number): void {
+    const v = Number(value);
+    if (!Number.isFinite(v)) {
+      this.cantidadSeleccionada = 1;
+      return;
+    }
+    const max = Math.max(1, this.maxSeleccionable);
+    this.cantidadSeleccionada = Math.min(Math.max(1, Math.floor(v)), max);
   }
 
   /** Navega al formulario de productos del admin con el producto seleccionado. */
@@ -145,6 +166,7 @@ export class DetalleProductoComponent implements OnInit {
       next: (data) => {
         this.producto = data.reply;
         this.cargarDatosProducto();
+        this.cargarCantidadEnCarrito();
       },
       error: () => {},
     })
@@ -165,6 +187,32 @@ export class DetalleProductoComponent implements OnInit {
       });
       this.actualizarMetaProducto();
     }
+  }
+
+  private cargarCantidadEnCarrito(): void {
+    if (!this.tokenService.isLogged()) {
+      this.cantidadEnCarrito = 0;
+      // clampa por si el usuario ya había cambiado el input
+      this.onCantidadChange(this.cantidadSeleccionada);
+      return;
+    }
+    const userId = this.obtenerIdUsuario();
+    const productId = this.producto?.id;
+    if (!userId || !productId) {
+      return;
+    }
+    this.clienteService.obtenerItemsCarrito(userId).subscribe({
+      next: (response: MensajeDTO) => {
+        const items: ItemCarritoDTO[] = response.reply || [];
+        this.cantidadEnCarrito = items.find(i => i.idProducto === productId)?.cantidad ?? 0;
+        this.onCantidadChange(this.cantidadSeleccionada);
+      },
+      error: () => {
+        // si falla, no bloqueamos el detalle; solo evitamos depender del dato
+        this.cantidadEnCarrito = 0;
+        this.onCantidadChange(this.cantidadSeleccionada);
+      }
+    });
   }
 
   private actualizarMetaProducto(): void {
@@ -226,6 +274,21 @@ export class DetalleProductoComponent implements OnInit {
       });
       return;
     }
+
+    const max = this.maxSeleccionable;
+    if (max <= 0) {
+      Swal.fire("Stock insuficiente", "Ya tienes todo el stock de este producto en tu carrito.", "info").then(() => {
+        this.isLoading = false;
+      });
+      return;
+    }
+    if (cantidad > max) {
+      Swal.fire("Stock insuficiente", `Solo puedes agregar ${max} unidades más.`, "warning").then(() => {
+        this.cantidadSeleccionada = Math.max(1, max);
+        this.isLoading = false;
+      });
+      return;
+    }
     const carItem: ItemCarritoDTO = {
       idUsuario: this.obtenerIdUsuario(),
       idProducto: this.producto?.id ?? '',
@@ -236,22 +299,56 @@ export class DetalleProductoComponent implements OnInit {
       total: +(this.producto?.precioUnitario ?? '0')*cantidad
     };
 
-    this.clienteService.obtenerItemsCarrito(this.obtenerIdUsuario()).subscribe({
+    const userId = this.obtenerIdUsuario();
+    this.clienteService.obtenerItemsCarrito(userId).subscribe({
       next: (response: MensajeDTO) => {
         const items: ItemCarritoDTO[] = response.reply;
         const existingItem = items.find(item => item.idProducto === carItem.idProducto);
-          this.clienteService.agregarItemCarrito(carItem).subscribe({
+
+        const currentQty = existingItem?.cantidad ?? 0;
+        const newQty = currentQty + cantidad;
+        const stock = this.producto?.cantidad ?? 0;
+        if (newQty > stock) {
+          Swal.fire("Stock insuficiente", `Ya tienes ${currentQty} en el carrito. Máximo disponible: ${stock}.`, "warning")
+            .then(() => { this.isLoading = false; });
+          return;
+        }
+
+        if (existingItem) {
+          const updateCarItemDTO: ActualizarItemCarritoDTO = {
+            idUsuario: userId,
+            idProducto: carItem.idProducto,
+            cantidad: newQty
+          };
+          this.clienteService.actualizarItemCarrito(updateCarItemDTO).subscribe({
             next: () => {
-              Swal.fire("Éxito!", "Se ha agregado el item al carrito", "success").then(() => {
-                this.isLoading = false; // Desactivamos después de que se cierre el diálogo
+              Swal.fire("Éxito!", "Se actualizó la cantidad en tu carrito", "success").then(() => {
+                this.isLoading = false;
+                this.cargarCantidadEnCarrito();
               });
             },
             error: (error) => {
-              Swal.fire("Error!", error.error.respuesta, "error").then(() => {
-                this.isLoading = false; // Desactivamos después de que se cierre el diálogo
+              Swal.fire("Error!", error.error?.respuesta ?? "No se pudo actualizar el carrito", "error").then(() => {
+                this.isLoading = false;
               });
             }
           });
+          return;
+        }
+
+        this.clienteService.agregarItemCarrito(carItem).subscribe({
+          next: () => {
+            Swal.fire("Éxito!", "Se ha agregado el item al carrito", "success").then(() => {
+              this.isLoading = false;
+              this.cargarCantidadEnCarrito();
+            });
+          },
+          error: (error) => {
+            Swal.fire("Error!", error.error?.respuesta ?? "No se pudo agregar el item", "error").then(() => {
+              this.isLoading = false;
+            });
+          }
+        });
       },
       error: () => {
         Swal.fire("Error!", "Hubo un problema al verificar el carrito", "error").then(() => {

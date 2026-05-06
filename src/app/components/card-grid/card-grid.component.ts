@@ -113,32 +113,86 @@ export class CardGridComponent {
       return;
     }
 
-    const carItem: ItemCarritoDTO = {
-      idUsuario: this.obtenerIdUsuario(),
-      idProducto: selectedProducto.id,
-      nombreProducto: selectedProducto.nombre,
-      categoria: selectedProducto.categoria,
-      precio: selectedProducto.precioUnitario,
-      cantidad: cantidad,
-      total: producto.precioUnitario * cantidad
-    };
+    const userId = this.obtenerIdUsuario();
 
-    if (!carItem.idProducto || !carItem.idUsuario || carItem.cantidad <= 0) {
-      console.error("Datos inválidos para agregar al carrito:", carItem);
-      Swal.fire("Error!", "Los datos enviados al servidor son inválidos.", "error");
-      this.isLoading = false;
-      return;
-    }
-    
     this.isLoading = true;
 
-    this.clienteService.agregarItemCarrito(carItem).subscribe({
-      next: () => {
-        Swal.fire("Éxito!", "Se ha agregado el item al carrito", "success");
-        this.isLoading = false;
+    // 1) Leer stock real del producto (detalle) y 2) cantidad ya en carrito
+    this.publicoService.obtenerProducto(selectedProducto.id).subscribe({
+      next: (productRes: MensajeDTO) => {
+        const p: ProductoDTO | undefined = productRes.reply;
+        const stock = typeof p?.cantidad === 'number' ? p.cantidad : 0;
+
+        this.clienteService.obtenerItemsCarrito(userId).subscribe({
+          next: (cartRes: MensajeDTO) => {
+            const items: ItemCarritoDTO[] = cartRes.reply || [];
+            const existingQty = items.find(i => i.idProducto === selectedProducto.id)?.cantidad ?? 0;
+            const newQty = existingQty + cantidad;
+
+            if (stock <= 0) {
+              Swal.fire("Sin stock", "Este producto está agotado.", "info");
+              this.isLoading = false;
+              return;
+            }
+            if (newQty > stock) {
+              Swal.fire(
+                "Stock insuficiente",
+                `Ya tienes ${existingQty} en tu carrito. Máximo disponible: ${stock}.`,
+                "warning"
+              );
+              this.isLoading = false;
+              return;
+            }
+
+            // Si ya existe en carrito, actualiza; si no, agrega.
+            if (existingQty > 0) {
+              const updateCarItemDTO: ActualizarItemCarritoDTO = {
+                idUsuario: userId,
+                idProducto: selectedProducto.id,
+                cantidad: newQty,
+              };
+              this.clienteService.actualizarItemCarrito(updateCarItemDTO).subscribe({
+                next: () => {
+                  Swal.fire("Éxito!", "Se actualizó la cantidad en tu carrito.", "success");
+                  this.isLoading = false;
+                },
+                error: (error) => {
+                  Swal.fire("Error!", error.error?.respuesta || "Hubo un problema al actualizar el carrito.", "error");
+                  this.isLoading = false;
+                }
+              });
+              return;
+            }
+
+            const carItem: ItemCarritoDTO = {
+              idUsuario: userId,
+              idProducto: selectedProducto.id,
+              nombreProducto: selectedProducto.nombre,
+              categoria: selectedProducto.categoria,
+              precio: selectedProducto.precioUnitario,
+              cantidad: cantidad,
+              total: producto.precioUnitario * cantidad
+            };
+
+            this.clienteService.agregarItemCarrito(carItem).subscribe({
+              next: () => {
+                Swal.fire("Éxito!", "Se ha agregado el item al carrito", "success");
+                this.isLoading = false;
+              },
+              error: (error) => {
+                Swal.fire("Error!", error.error?.respuesta || "Hubo un problema al agregar el item.", "error");
+                this.isLoading = false;
+              }
+            });
+          },
+          error: () => {
+            Swal.fire("Error!", "No se pudo validar el carrito. Intenta nuevamente.", "error");
+            this.isLoading = false;
+          }
+        });
       },
-      error: (error) => {
-        Swal.fire("Error!", error.error.respuesta || "Hubo un problema al agregar el item.", "error");
+      error: () => {
+        Swal.fire("Error!", "No se pudo validar el stock. Intenta nuevamente.", "error");
         this.isLoading = false;
       }
     });

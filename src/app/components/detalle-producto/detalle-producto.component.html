@@ -65,7 +65,7 @@
                   type="button"
                   class="product-qty__btn"
                   (click)="decrementarCantidad()"
-                  [disabled]="cantidadSeleccionada <= 1 || producto.cantidad <= 0">
+                  [disabled]="cantidadSeleccionada <= 1 || maxSeleccionable <= 0">
                   −
                 </button>
                 <input
@@ -73,14 +73,15 @@
                   type="number"
                   class="product-qty__input"
                   [(ngModel)]="cantidadSeleccionada"
+                  (ngModelChange)="onCantidadChange($event)"
                   min="1"
-                  [max]="producto.cantidad"
-                  [disabled]="producto.cantidad <= 0" />
+                  [max]="maxSeleccionable"
+                  [disabled]="maxSeleccionable <= 0" />
                 <button
                   type="button"
                   class="product-qty__btn"
                   (click)="incrementarCantidad()"
-                  [disabled]="cantidadSeleccionada >= producto.cantidad || producto.cantidad <= 0">
+                  [disabled]="cantidadSeleccionada >= maxSeleccionable || maxSeleccionable <= 0">
                   +
                 </button>
               </div>
@@ -99,7 +100,7 @@
             <button
               type="button"
               class="product-btn-cart"
-              [disabled]="producto.cantidad <= 0 || isLoading"
+              [disabled]="maxSeleccionable <= 0 || isLoading"
               (click)="agregarAlCarrito()">
               @if (!isLoading) {
                 <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
