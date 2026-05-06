@@ -615,14 +615,20 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.isLoading = true;
     this.filterUsed = true;
-    const filtroProductoDTO = this.filterForm.value as FiltroProductoDTO;
-    filtroProductoDTO.pagina = pagina;
+    const raw = this.filterForm.value as Partial<FiltroProductoDTO> & { cantidad?: unknown; nombre?: unknown; categoria?: unknown };
+    const filtroProductoDTO: FiltroProductoDTO = {
+      nombre: (raw.nombre ?? '').toString().trim(),
+      // El backend espera int; si no se usa el filtro, enviamos 0.
+      cantidad: Number(raw.cantidad) > 0 ? Math.floor(Number(raw.cantidad)) : 0,
+      categoria: (raw.categoria ?? '').toString().trim(),
+      pagina
+    };
 
     this.publicoService.filtrarProductos(filtroProductoDTO).subscribe({
       next: (data) => {
         this.isLoading = false;
         if (data.reply && data.reply.productos.length > 0) {
-          this.pages = new Array(data.reply.totalPages);
+          this.pages = Array.from({ length: data.reply.totalPages }, (_, i) => i + 1);
           this.productos = data.reply.productos;
           this.currentPage = filtroProductoDTO.pagina;
           this.filterUsed = true;
@@ -668,16 +674,21 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.isLoading = true;
     this.mesaFilterUsed = true;
-    const filtroMesaDTO = this.mesaFilterForm.value as FiltroMesaDTO;
-    filtroMesaDTO.pagina = pagina;
+    const raw = this.mesaFilterForm.value as Partial<FiltroMesaDTO> & { capacidad?: unknown; nombre?: unknown; localidad?: unknown };
+    const filtroMesaDTO: FiltroMesaDTO = {
+      nombre: (raw.nombre ?? '').toString().trim(),
+      capacidad: Number(raw.capacidad) > 0 ? Math.floor(Number(raw.capacidad)) : 0,
+      localidad: (raw.localidad ?? '').toString().trim(),
+      pagina
+    };
 
     this.publicoService.filtrarMesas(filtroMesaDTO).subscribe({
       next: (data) => {
         this.isLoading = false;
         if (data.reply && data.reply.mesas.length > 0) {
-          this.mesasPages = new Array(data.reply.totalPages);
+          this.mesasPages = Array.from({ length: data.reply.totalPages }, (_, i) => i + 1);
           this.mesas = data.reply.mesas;
-          this.currentPage = filtroMesaDTO.pagina;
+          this.mesasCurrentPage = filtroMesaDTO.pagina;
           this.mesaFilterUsed = true;
           this.actualizarMesasDisponibles();
         } else {

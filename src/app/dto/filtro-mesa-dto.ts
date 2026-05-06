@@ -1,6 +1,6 @@
 export interface FiltroMesaDTO {
     nombre: String,
-    capacidad: string,
+    capacidad: number,
     localidad: String,
     pagina: number
 }
