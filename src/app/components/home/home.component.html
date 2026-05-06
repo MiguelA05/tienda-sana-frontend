@@ -82,7 +82,15 @@
           </div>
           <div class="filter-field">
             <div class="floating-field">
-              <input type="text" id="cantidadProducto" class="form-control" formControlName="cantidad" placeholder=" " />
+              <input
+                type="number"
+                inputmode="numeric"
+                min="0"
+                step="1"
+                id="cantidadProducto"
+                class="form-control"
+                formControlName="cantidad"
+                placeholder=" " />
               <label for="cantidadProducto">Cantidad</label>
             </div>
           </div>
