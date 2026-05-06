@@ -5,6 +5,12 @@
   background: var(--neutral-100, #f8f9fa);
 }
 
+.admin-mobile-bar,
+.admin-sidebar-mobile,
+.admin-drawer-overlay {
+  display: none;
+}
+
 .admin-sidebar {
   width: 260px;
   flex-shrink: 0;
@@ -83,30 +89,113 @@
     flex-direction: column;
   }
 
-  .admin-sidebar {
-    width: 100%;
-    flex-direction: row;
-    flex-wrap: wrap;
+  .admin-mobile-bar {
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 1030;
     align-items: center;
-    padding: 0.75rem;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    background: linear-gradient(180deg, #184d37 0%, #1f6a4b 100%);
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
   }
 
-  .sidebar-brand {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding: 0.25rem 0.5rem;
-    flex: 1;
+  .admin-mobile-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    font-size: 1.1rem;
   }
 
-  .sidebar-nav {
-    flex-direction: row;
-    flex-wrap: wrap;
+  .admin-mobile-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+
+  .admin-sidebar-desktop {
+    display: none;
+  }
+
+  .admin-sidebar-mobile {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 300px;
+    max-width: 86vw;
+    height: 100dvh;
+    z-index: 1040;
+    transition: left 0.25s ease;
+    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.18);
+    padding-top: 0.75rem;
+  }
+
+  .admin-sidebar-mobile.open {
+    left: 0;
+  }
+
+  .sidebar-brand-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
-    padding: 0.5rem 0 0;
   }
 
-  .sidebar-link {
-    flex: 1 1 42%;
-    min-width: 140px;
+  .admin-mobile-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    font-size: 1rem;
+  }
+
+  .admin-drawer-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.34);
+    z-index: 1035;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+  }
+
+  .admin-drawer-overlay.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .admin-main {
+    padding: 1rem 1rem 2rem;
+  }
+}
+
+@media (min-width: 901px) {
+  .admin-sidebar-mobile,
+  .admin-mobile-bar,
+  .admin-drawer-overlay {
+    display: none !important;
+  }
+
+  .admin-sidebar-desktop {
+    display: flex !important;
   }
 }

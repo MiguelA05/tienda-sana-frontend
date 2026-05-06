@@ -1,5 +1,27 @@
 <div class="admin-shell">
-  <aside class="admin-sidebar" aria-label="Navegación administración">
+  <header class="admin-mobile-bar">
+    <button
+      type="button"
+      class="admin-mobile-toggle"
+      (click)="toggleMobileMenu()"
+      [attr.aria-expanded]="isMobileMenuOpen"
+      aria-controls="adminMobileDrawer"
+      aria-label="Abrir menú de administración">
+      <i class="fa-solid fa-bars" aria-hidden="true"></i>
+    </button>
+    <div class="admin-mobile-title">
+      <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+      <span>Panel de administración</span>
+    </div>
+  </header>
+
+  <div
+    class="admin-drawer-overlay"
+    [class.open]="isMobileMenuOpen"
+    (click)="closeMobileMenu()"
+    aria-hidden="true"></div>
+
+  <aside class="admin-sidebar admin-sidebar-desktop" aria-label="Navegación administración">
     <div class="sidebar-brand">
       <i class="fa-solid fa-sliders" aria-hidden="true"></i>
       <span>Panel de administración</span>
@@ -22,6 +44,43 @@
       }
     </nav>
   </aside>
+
+  <aside
+    id="adminMobileDrawer"
+    class="admin-sidebar admin-sidebar-mobile"
+    [class.open]="isMobileMenuOpen"
+    aria-label="Navegación administración móvil">
+    <div class="sidebar-brand sidebar-brand-mobile">
+      <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+      <span>Panel de administración</span>
+      <button
+        type="button"
+        class="admin-mobile-close"
+        (click)="closeMobileMenu()"
+        aria-label="Cerrar menú de administración">
+        <i class="fa-solid fa-times" aria-hidden="true"></i>
+      </button>
+    </div>
+    <nav class="sidebar-nav" aria-label="Secciones">
+      @for (group of navGroups; track group.title ?? 'root-mobile') {
+        @if (group.title) {
+          <div class="sidebar-group-title">{{ group.title }}</div>
+        }
+        @for (item of group.items; track item.path) {
+          <a
+            class="sidebar-link"
+            [routerLink]="item.path"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            (click)="closeMobileMenu()">
+            <i class="fa-solid {{ item.icon }}" aria-hidden="true"></i>
+            {{ item.label }}
+          </a>
+        }
+      }
+    </nav>
+  </aside>
+
   <main class="admin-main">
     <router-outlet />
   </main>

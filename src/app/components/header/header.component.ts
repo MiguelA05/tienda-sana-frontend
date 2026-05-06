@@ -28,6 +28,7 @@ export class HeaderComponent implements OnDestroy {
   isAdmin = false;
   isHomeRoute = false;
   isAuthRoute = false;
+  isAdminRoute = false;
   hasScrolled = false;
   cartItemCount = 0;
 
@@ -158,7 +159,13 @@ export class HeaderComponent implements OnDestroy {
     const primary = urlTree.root.children['primary'];
     const path = primary?.segments?.map(s => s.path).join('/') ?? '';
     this.isHomeRoute = path === '';
+    this.isAdminRoute = path === 'admin' || path.startsWith('admin/');
     this.isAuthRoute = ['login', 'register', 'cambiar-password', 'correo-recuperacion', 'verificar-cuenta'].includes(path);
+
+    if (this.isAdminRoute) {
+      this.closeMenu();
+      this.closeUserDropdown();
+    }
 
     if (this.isAuthRoute) {
       this.activeNav = null;

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
@@ -21,6 +21,8 @@ export interface AdminNavGroup {
   styleUrl: './admin-layout.component.css',
 })
 export class AdminLayoutComponent {
+  isMobileMenuOpen = false;
+
   readonly navGroups: AdminNavGroup[] = [
     {
       title: null,
@@ -46,4 +48,23 @@ export class AdminLayoutComponent {
       items: [{ path: '/admin/settings/suppliers', label: 'Proveedores', icon: 'fa-truck-field' }],
     },
   ];
+
+  openMobileMenu(): void {
+    this.isMobileMenuOpen = true;
+  }
+
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
+  }
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    if (window.innerWidth > 900) {
+      this.isMobileMenuOpen = false;
+    }
+  }
 }

@@ -10,6 +10,29 @@
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Center desktop navigation between brand (left) and auth (right) */
+@media (min-width: 993px) {
+  .main-header {
+    position: relative;
+  }
+
+  .main-nav-desktop {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    pointer-events: auto;
+  }
+
+  .nav-list {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+}
+
 .header-container.header-transparent {
   background-color: transparent;
   box-shadow: none;
@@ -57,9 +80,7 @@
   display: none !important;
 }
 
-.main-header.auth-route .brand-text {
-  display: none;
-}
+
 
 .main-header.scrolled {
   border-radius: 0 0 12px 12px;
@@ -734,7 +755,8 @@
   }
 
   .main-header.auth-route {
-    padding: 8px 10px;
+    /* match main-header padding so thickness is consistent on auth pages */
+    padding: 10px 12px;
   }
 
   .main-header.home-overlay {
@@ -744,7 +766,17 @@
   }
 
   .brand-text {
-    display: none;
+    display: inline-block;
+    max-width: 9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.98rem;
+  }
+
+  .brand-link {
+    gap: 0.4rem;
+    min-width: 0;
   }
 
   .brand-icon {
@@ -786,8 +818,9 @@
   }
 
   .main-header.auth-route {
-    margin: 6px 0;
-    padding: 7px 8px;
+    /* keep same sizing as main-header on very small screens */
+    margin: 8px 0;
+    padding: 8px 10px;
   }
 
   .main-header.auth-route .brand-icon {
@@ -808,6 +841,7 @@
 
   .brand {
     flex: 1;
+    min-width: 0;
   }
 
   .menu-toggle {
@@ -842,7 +876,8 @@
   }
 
   .brand-text {
-    display: none;
+    /* keep brand visible on mobile (controlled earlier) */
+    /* display rule intentionally left to the top definitions */
   }
 
   .btn-outline,

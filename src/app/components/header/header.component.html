@@ -2,9 +2,11 @@
 <div class="header-container" [class.header-transparent]="useTransparentHeader">
   <header class="main-header" [class.scrolled]="isHomeRoute && hasScrolled" [class.home-overlay]="useTransparentHeader" [class.auth-route]="isAuthRoute">
     <!-- Botón de menú para pantallas pequeñas (izquierda) -->
-    <button class="menu-toggle" (click)="toggleMenu()" aria-label="Toggle menu" [attr.aria-expanded]="isMenuOpen">
-      <i class="fa-solid fa-bars"></i>
-    </button>
+    @if (!isAdminRoute) {
+      <button class="menu-toggle" (click)="toggleMenu()" aria-label="Toggle menu" [attr.aria-expanded]="isMenuOpen">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    }
 
     <!-- Logo y título -->
     <div class="brand">
@@ -115,6 +117,7 @@
     </div>
 
     <!-- Carrito y Gestor de Reservas (mobile) -->
+    @if (!isAdminRoute) {
     <div class="cart-container cart-container-mobile">
       @if (isLogged && !isAdmin) {
         <button
@@ -142,6 +145,7 @@
         </button>
       }
     </div>
+    }
   </header>
 
   <!-- Menú lateral mobile/tablet (unificado) -->
