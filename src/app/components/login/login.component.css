@@ -11,11 +11,11 @@
         radial-gradient(circle at 12% 18%, var(--auto-color-167) 0, var(--auto-color-168) 40%),
         radial-gradient(circle at 86% 80%, var(--primary-rgba-14) 0, var(--auto-color-169) 34%),
         linear-gradient(120deg, var(--auto-color-170) 0%, var(--auto-color-171) 100%);
-    padding: 20px;
+    padding: 110px 20px 20px;
     transition: background 0.3s ease;
     text-align: center;
     position: relative;
-    margin-top: 100px;
+    overflow: hidden;
 }
 
 .login-page::before,

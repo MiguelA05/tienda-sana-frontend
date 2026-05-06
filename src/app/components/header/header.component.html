@@ -1,6 +1,6 @@
 <!-- HTML del header mejorado -->
 <div class="header-container" [class.header-transparent]="useTransparentHeader">
-  <header class="main-header" [class.scrolled]="hasScrolled" [class.home-overlay]="useTransparentHeader">
+  <header class="main-header" [class.scrolled]="isHomeRoute && hasScrolled" [class.home-overlay]="useTransparentHeader" [class.auth-route]="isAuthRoute">
     <!-- Botón de menú para pantallas pequeñas (izquierda) -->
     <button class="menu-toggle" (click)="toggleMenu()" aria-label="Toggle menu" [attr.aria-expanded]="isMenuOpen">
       <i class="fa-solid fa-bars"></i>
@@ -42,14 +42,14 @@
 
     <!-- Usuario / Login-Registro (desktop) -->
     <div class="auth-container auth-container-desktop">
-      @if(!isLogged) {
+      @if(!isLogged && !isAuthRoute) {
       <button type="button" routerLink="/login" class="btn-outline">
         <i class="fa-solid fa-sign-in-alt me-2" style="margin-right: 8px;"></i>Login
       </button>
       <button type="button" routerLink="/register" class="btn-primary">
         <i class="fa-solid fa-user-plus me-2" style="margin-right: 8px;"></i>Registro
       </button>
-      } @else {
+      } @else if (isLogged) {
       <div class="user-dropdown" (click)="$event.stopPropagation()">
         <button
           type="button"
@@ -131,7 +131,7 @@
         <button type="button" class="cart-button cart-button-reservas" routerLink="/gestor-reservas" aria-label="Ir al gestor de reservas">
           <i class="fa-solid fa-calendar-check"></i>
         </button>
-      } @else if (!isLogged) {
+      } @else if (!isLogged && !isAuthRoute) {
         <button
           type="button"
           routerLink="/login"

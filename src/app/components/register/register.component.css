@@ -12,8 +12,8 @@
         radial-gradient(circle at 12% 18%, var(--auto-color-167) 0, var(--auto-color-168) 40%),
         radial-gradient(circle at 86% 80%, var(--primary-rgba-14) 0, var(--auto-color-169) 34%),
         linear-gradient(120deg, var(--auto-color-170) 0%, var(--auto-color-171) 100%);
-    padding: 20px;
-    margin-top: 100px;
+    padding: 110px 20px 20px;
+    overflow: hidden;
 }
 
 .register-page::before,
