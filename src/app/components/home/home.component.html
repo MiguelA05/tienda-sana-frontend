@@ -102,13 +102,14 @@
                 class="form-control"
                 formControlName="categoria"
                 placeholder=" "
-                list="categoriasDisponibles" />
+                list="categoriasDisponibles"
+                autocomplete="off" />
+              <label for="categoriaProducto">Categoría</label>
               <datalist id="categoriasDisponibles">
                 @for (item of categoria; track item) {
                   <option [value]="item"></option>
                 }
               </datalist>
-              <label for="categoriaProducto">Categoria</label>
             </div>
           </div>
           <div class="filter-button filter-button-actions">
